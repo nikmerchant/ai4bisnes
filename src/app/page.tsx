@@ -1,25 +1,47 @@
 import Link from "next/link";
+import { createClient as createSbClient } from "@supabase/supabase-js";
 import { HARGA } from "@/lib/harga";
 import { Reveal } from "./reveal";
+
+// ISR: jana semula sekali sehari — kekal sepantas statik,
+// bar pengumuman bertukar sendiri ikut pek bulan semasa
+export const revalidate = 86400;
+
+async function tajukPekSemasa(): Promise<string | null> {
+  try {
+    const sb = createSbClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+    );
+    const { data } = await sb.rpc("pek_semasa_awam").maybeSingle<{
+      title_ms: string;
+    }>();
+    return data?.title_ms ?? null;
+  } catch {
+    return null;
+  }
+}
 
 const btnUtama =
   "rounded-full bg-violet-600 px-8 py-3.5 font-bold text-white transition-colors hover:bg-violet-700";
 const badge =
   "rounded-full bg-red-500 px-3 py-1 text-xs font-bold uppercase tracking-wide text-white";
 
-export default function Home() {
+export default async function Home() {
+  const pek = await tajukPekSemasa();
   return (
     <div className="bg-white text-zinc-900">
-      {/* BAR PENGUMUMAN */}
+      {/* BAR PENGUMUMAN — automatik ikut pek bulan semasa */}
       <Link
         href="/daftar"
         className="block bg-violet-600 py-2.5 text-center text-sm font-bold text-white hover:bg-violet-700"
       >
         <span className="mr-2 rounded-full bg-white px-2 py-0.5 text-xs font-bold text-violet-700">
-          BAHARU
+          BULAN INI
         </span>
-        Pek Kempen Merdeka kini tersedia — bersedia 8 minggu awal dari pesaing
-        anda ⟶
+        {pek
+          ? `Pek Kempen "${pek}" kini tersedia untuk ahli Pro — bersedia awal dari pesaing anda ⟶`
+          : "Pek Kempen Bulanan untuk ahli Pro — kempen siap-guna ikut kalendar Malaysia ⟶"}
       </Link>
 
       {/* HERO GELAP + AURORA + NAV KACA */}

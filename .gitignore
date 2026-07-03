@@ -41,8 +41,11 @@ yarn-error.log*
 
 # tetapan & sesi Claude Code tempatan — khusus komputer/pengguna ini
 /.claude/settings.local.json
+/.claude/scheduled_tasks.lock
 /.claude-flow/
 
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+.vercel

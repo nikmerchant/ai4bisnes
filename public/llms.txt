@@ -1,0 +1,18 @@
+# AI4Bisnes
+
+> AI4Bisnes (ai4bisnes.com) ialah platform SaaS Malaysia yang menyediakan 177+ prompt AI dalam Bahasa Melayu, ditala secara automatik dengan maklumat perniagaan pengguna (nama bisnes, produk, pelanggan sasaran, lokasi). Pengguna salin prompt yang sudah siap diisi dan tampal ke ChatGPT atau Claude.
+
+## Produk
+
+- **Basic (Percuma):** 90+ prompt asas perniagaan (strategi, pemasaran, jualan, kewangan, HR, undang-undang) + prompt khas mengikut 10 kategori bisnes (F&B, e-dagang, hartanah, kontraktor, dll.) + modul "Ajar AI Anda" (arahan induk siap-isi profil bisnes).
+- **Pro (RM49/bulan):** semua Basic + 58 prompt pemasaran lanjutan (iklan Facebook/TikTok, copywriting, newsletter, SEO, lead generation, SMS/WhatsApp) + Pek Kempen Bulanan mengikut kalendar Malaysia (Raya, Merdeka, 11.11) + Vault simpanan prompt.
+- **Max (RM69/bulan):** semua Pro + Coach Max — program coaching pemasaran 12 sesi berasaskan rangka kerja $100M (money model, offer, closing).
+
+## Sasaran
+
+SME, mikroperniagaan dan usahawan di Malaysia. Bahasa penghantar: Bahasa Melayu. Harga dalam Ringgit Malaysia (RM). Pembayaran melalui FPX (toyyibPay).
+
+## Halaman
+
+- Laman utama & harga: https://ai4bisnes.com
+- Daftar percuma: https://ai4bisnes.com/daftar

@@ -7,6 +7,86 @@ import { Reveal } from "./reveal";
 // bar pengumuman bertukar sendiri ikut pek bulan semasa
 export const revalidate = 86400;
 
+export const metadata = {
+  alternates: { canonical: "/" },
+};
+
+const SOALAN = [
+  {
+    s: "Perlu ke saya ada langganan ChatGPT atau Claude berbayar?",
+    j: "Tidak. Prompt kami berfungsi dengan versi percuma ChatGPT dan Claude. Versi berbayar memberi jawapan lebih baik, tapi bukan syarat.",
+  },
+  {
+    s: "Saya tak pandai IT — susah ke nak guna?",
+    j: "Kalau anda boleh salin dan tampal, anda boleh guna AI4Bisnes. Setiap prompt ada butang Salin & Buka — satu klik, terus jalan.",
+  },
+  {
+    s: "Apa beza dengan senarai prompt percuma di internet?",
+    j: "Prompt percuma ditulis generik dan dalam English. Prompt kami dalam Bahasa Melayu, konteks Malaysia (RM, LHDN, JAKIM, Shopee, musim perayaan) dan siap diisi maklumat bisnes anda secara automatik.",
+  },
+  {
+    s: "Boleh batal langganan bila-bila masa?",
+    j: "Ya. Akses kekal sehingga tamat tempoh yang dibayar, dan simpanan Vault anda masih boleh dibaca selepas itu — kami tak sandera data anda.",
+  },
+  {
+    s: "Maklumat bisnes saya selamat?",
+    j: "Maklumat profil anda disimpan selamat dan hanya digunakan untuk menala prompt anda. Kami tidak berkongsi data anda dengan pihak ketiga.",
+  },
+];
+
+// Structured data untuk rich results Google & AI engines
+const JSON_LD = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      name: "AI4Bisnes",
+      url: "https://ai4bisnes.com",
+      logo: "https://ai4bisnes.com/opengraph-image",
+      description:
+        "Platform prompt AI Bahasa Melayu untuk SME dan usahawan Malaysia.",
+    },
+    {
+      "@type": "SoftwareApplication",
+      name: "AI4Bisnes",
+      url: "https://ai4bisnes.com",
+      applicationCategory: "BusinessApplication",
+      operatingSystem: "Web",
+      inLanguage: "ms",
+      description:
+        "177+ prompt AI Bahasa Melayu siap diisi maklumat bisnes anda — salin, tampal ke ChatGPT atau Claude.",
+      offers: [
+        {
+          "@type": "Offer",
+          name: "Basic",
+          price: "0",
+          priceCurrency: "MYR",
+        },
+        {
+          "@type": "Offer",
+          name: "Pro",
+          price: String(HARGA.pro.bulanan),
+          priceCurrency: "MYR",
+        },
+        {
+          "@type": "Offer",
+          name: "Max",
+          price: String(HARGA.max.bulanan),
+          priceCurrency: "MYR",
+        },
+      ],
+    },
+    {
+      "@type": "FAQPage",
+      mainEntity: SOALAN.map((f) => ({
+        "@type": "Question",
+        name: f.s,
+        acceptedAnswer: { "@type": "Answer", text: f.j },
+      })),
+    },
+  ],
+};
+
 async function tajukPekSemasa(): Promise<string | null> {
   try {
     const sb = createSbClient(
@@ -31,6 +111,10 @@ export default async function Home() {
   const pek = await tajukPekSemasa();
   return (
     <div className="bg-white text-zinc-900">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(JSON_LD) }}
+      />
       {/* BAR PENGUMUMAN — automatik ikut pek bulan semasa */}
       <Link
         href="/daftar"
@@ -339,28 +423,7 @@ export default async function Home() {
           </h2>
         </Reveal>
         <div className="mx-auto mt-10 flex max-w-2xl flex-col gap-3">
-          {[
-            {
-              s: "Perlu ke saya ada langganan ChatGPT atau Claude berbayar?",
-              j: "Tidak. Prompt kami berfungsi dengan versi percuma ChatGPT dan Claude. Versi berbayar memberi jawapan lebih baik, tapi bukan syarat.",
-            },
-            {
-              s: "Saya tak pandai IT — susah ke nak guna?",
-              j: "Kalau anda boleh salin dan tampal, anda boleh guna AI4Bisnes. Setiap prompt ada butang Salin & Buka — satu klik, terus jalan.",
-            },
-            {
-              s: "Apa beza dengan senarai prompt percuma di internet?",
-              j: "Prompt percuma ditulis generik dan dalam English. Prompt kami dalam Bahasa Melayu, konteks Malaysia (RM, LHDN, JAKIM, Shopee, musim perayaan) dan siap diisi maklumat bisnes anda secara automatik.",
-            },
-            {
-              s: "Boleh batal langganan bila-bila masa?",
-              j: "Ya. Akses kekal sehingga tamat tempoh yang dibayar, dan simpanan Vault anda masih boleh dibaca selepas itu — kami tak sandera data anda.",
-            },
-            {
-              s: "Maklumat bisnes saya selamat?",
-              j: "Maklumat profil anda disimpan selamat dan hanya digunakan untuk menala prompt anda. Kami tidak berkongsi data anda dengan pihak ketiga.",
-            },
-          ].map((f) => (
+          {SOALAN.map((f) => (
             <Reveal key={f.s}>
               <details className="rounded-xl border-b-2 border-dashed border-zinc-300 p-4">
                 <summary className="cursor-pointer font-bold">{f.s}</summary>

@@ -238,7 +238,7 @@ export default async function Home() {
         <div className="mx-auto w-full max-w-4xl px-6 pt-20">
           <Reveal>
             <h2 className="text-center text-3xl font-extrabold uppercase tracking-tight sm:text-4xl">
-              Tonton <span className="text-violet-400">90 saat</span> ini
+              Jom Tonton Video <span className="text-violet-400">90 saat</span> ini
             </h2>
             <video
               controls
@@ -258,7 +258,7 @@ export default async function Home() {
         <div className="mx-auto w-full max-w-5xl px-6 py-20">
           <Reveal>
             <h2 className="text-center text-3xl font-extrabold uppercase tracking-tight sm:text-4xl">
-              3 langkah, <span className="text-violet-400">terus jalan</span>
+              Dengan hanya 3 langkah, <span className="text-violet-400">anda dah boleh mulakan strategi untuk roketkan bisnes anda</span>
             </h2>
           </Reveal>
           <div className="mt-12 grid gap-8 sm:grid-cols-3">
@@ -268,12 +268,12 @@ export default async function Home() {
                 d: "Nama bisnes, kategori, produk, pelanggan sasaran, lokasi — 2 minit semasa daftar.",
               },
               {
-                t: "Setiap prompt auto-tala",
-                d: "Semua 177+ prompt terus terisi maklumat bisnes anda. Ada tempat kosong? Isi dalam borang, siap.",
+                t: "Setiap prompt dah auto-isi maklumat",
+                d: "Semua 177+ prompt terus terisi maklumat bisnes anda. Ada tempat kosong? Isi dalam ruang disediakan, done siap!",
               },
               {
                 t: "Salin & buka ChatGPT/Claude",
-                d: "Satu klik — prompt tersalin dan AI kegemaran anda terbuka. Jawapan yang tepat, kali pertama.",
+                d: "Satu klik — prompt tersalin automatik dan pada masa yang sama AI kegemaran anda terus terbuka. Jawapan yang tepat terus dituju kepada bisnes anda, buat pertama kalinya.",
               },
             ].map((s, i) => (
               <Reveal key={s.t}>

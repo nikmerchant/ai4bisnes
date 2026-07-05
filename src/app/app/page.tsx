@@ -1,5 +1,7 @@
 import Link from "next/link";
 import { keluar } from "@/app/actions";
+import { CtaSpinner } from "@/app/cta-spinner";
+import { SubmitButton } from "@/app/submit-button";
 import { Library, type PromptItem } from "./library";
 import { dapatkanProfil, isiPrompt, PANGKAT } from "./shared";
 
@@ -52,17 +54,18 @@ function KadAkses({
       {ada ? (
         <Link
           href={href}
-          className="mt-5 inline-block rounded-full bg-white px-6 py-2.5 text-center text-sm font-bold text-violet-700 transition-transform hover:scale-[1.02]"
+          className="mt-5 inline-block rounded-full bg-white px-6 py-2.5 text-center text-sm font-bold text-violet-700 transition-transform hover:scale-[1.02] active:opacity-80"
         >
-          Masuk →
+          Masuk →<CtaSpinner />
         </Link>
       ) : (
         <div className="mt-5 flex flex-col gap-1.5">
           <Link
             href="/naik-taraf"
-            className="inline-block rounded-full bg-white px-6 py-2.5 text-center text-sm font-bold text-violet-700 transition-transform hover:scale-[1.02]"
+            className="inline-block rounded-full bg-white px-6 py-2.5 text-center text-sm font-bold text-violet-700 transition-transform hover:scale-[1.02] active:opacity-80"
           >
             🔒 Naik Taraf untuk Buka
+            <CtaSpinner />
           </Link>
           <p className="text-center text-xs text-white/60">
             dari RM49/bulan · batal bila-bila masa
@@ -116,28 +119,40 @@ export default async function Dashboard() {
           <p className="text-sm text-neutral-500">
             {profil.categories?.name_ms} ·{" "}
             <span className="font-medium uppercase">{profil.tier}</span> ·{" "}
-            <Link href="/onboarding" className="underline">
+            <Link
+              href="/onboarding"
+              className="rounded px-0.5 underline active:opacity-70"
+            >
               Kemaskini profil
+              <CtaSpinner />
             </Link>{" "}
             ·{" "}
-            <Link href="/app/vault" className="underline">
+            <Link
+              href="/app/vault"
+              className="rounded px-0.5 underline active:opacity-70"
+            >
               🗄 Vault
+              <CtaSpinner />
             </Link>
             {profil.tier !== "max" && (
               <>
                 {" "}
                 ·{" "}
-                <Link href="/naik-taraf" className="font-medium underline">
+                <Link
+                  href="/naik-taraf"
+                  className="rounded px-0.5 font-medium underline active:opacity-70"
+                >
                   Naik taraf ↑
+                  <CtaSpinner />
                 </Link>
               </>
             )}
           </p>
         </div>
         <form action={keluar}>
-          <button className="text-sm text-neutral-500 underline">
+          <SubmitButton className="text-sm text-neutral-500 underline">
             Log keluar
-          </button>
+          </SubmitButton>
         </form>
       </header>
 
@@ -158,7 +173,7 @@ export default async function Dashboard() {
       {/* BANNER PEK KEMPEN BULAN INI */}
       <Link
         href={pangkat >= 1 ? "/app/pek" : "/naik-taraf"}
-        className="mb-6 block overflow-hidden rounded-2xl bg-gradient-to-r from-violet-700 via-violet-600 to-fuchsia-600 p-5 text-white transition-transform hover:scale-[1.01]"
+        className="mb-6 block overflow-hidden rounded-2xl bg-gradient-to-r from-violet-700 via-violet-600 to-fuchsia-600 p-5 text-white transition-transform hover:scale-[1.01] active:opacity-90"
       >
         <div className="flex items-center justify-between gap-4">
           <div>
@@ -174,8 +189,9 @@ export default async function Dashboard() {
                 : "Kempen siap-guna setiap bulan ikut kalendar Malaysia — eksklusif ahli Pro."}
             </p>
           </div>
-          <span className="shrink-0 rounded-full bg-white px-5 py-2 text-sm font-bold text-violet-700">
+          <span className="flex shrink-0 items-center rounded-full bg-white px-5 py-2 text-sm font-bold text-violet-700">
             {pangkat >= 1 ? "Buka Pek →" : "🔒 Pro"}
+            <CtaSpinner />
           </span>
         </div>
       </Link>
@@ -215,9 +231,12 @@ export default async function Dashboard() {
 
       <Link
         href="/app/ajar-ai"
-        className="mb-8 block rounded-xl border-2 border-violet-600 p-4 transition-colors hover:bg-violet-50 dark:hover:bg-violet-950"
+        className="mb-8 block rounded-xl border-2 border-violet-600 p-4 transition-colors hover:bg-violet-50 active:opacity-80 dark:hover:bg-violet-950"
       >
-        <span className="font-semibold">🎓 Ajar AI Anda</span>
+        <span className="font-semibold">
+          🎓 Ajar AI Anda
+          <CtaSpinner />
+        </span>
         <span className="mt-1 block text-sm text-neutral-500">
           Arahan Induk siap diisi maklumat bisnes anda — tampal sekali, dan
           Claude/ChatGPT terus faham bisnes anda dalam setiap chat.

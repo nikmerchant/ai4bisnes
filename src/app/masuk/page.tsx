@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { masuk } from "@/app/actions";
 import { AuthShell, btnAuth, inputAuth, labelAuth } from "@/app/auth-shell";
+import { CtaSpinner } from "@/app/cta-spinner";
+import { SubmitButton } from "@/app/submit-button";
 
 export default async function Masuk({
   searchParams,
@@ -39,16 +41,22 @@ export default async function Masuk({
             className={inputAuth}
           />
         </label>
-        <button type="submit" className={btnAuth}>
-          Log Masuk
-        </button>
+        <SubmitButton className={btnAuth}>Log Masuk</SubmitButton>
       </form>
       <div className="mt-5 flex items-center justify-between text-sm">
-        <Link href="/lupa-kata-laluan" className="text-white/60 underline hover:text-white">
+        <Link
+          href="/lupa-kata-laluan"
+          className="rounded px-1 py-1 text-white/60 underline underline-offset-2 hover:text-white active:opacity-70"
+        >
           Lupa kata laluan?
+          <CtaSpinner />
         </Link>
-        <Link href="/daftar" className="text-violet-300 underline hover:text-violet-200">
+        <Link
+          href="/daftar"
+          className="rounded px-1 py-1 text-violet-300 underline underline-offset-2 hover:text-violet-200 active:opacity-70"
+        >
           Daftar percuma
+          <CtaSpinner />
         </Link>
       </div>
     </AuthShell>

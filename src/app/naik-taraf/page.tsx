@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { mulaBayar } from "@/app/actions";
+import { CtaSpinner } from "@/app/cta-spinner";
+import { SubmitButton } from "@/app/submit-button";
 import { HARGA, NAMA_TIER } from "@/lib/harga";
 
 const CIRI: Record<string, string[]> = {
@@ -69,17 +71,17 @@ function KadTier({
           <form action={mulaBayar}>
             <input type="hidden" name="tier" value={tier} />
             <input type="hidden" name="period" value="bulanan" />
-            <button className="w-full rounded-full bg-violet-600 py-2.5 text-sm font-bold text-white transition-colors hover:bg-violet-700">
+            <SubmitButton className="w-full rounded-full bg-violet-600 py-2.5 text-sm font-bold text-white transition-colors hover:bg-violet-700">
               Langgan Bulanan — RM{HARGA[tier].bulanan}
-            </button>
+            </SubmitButton>
           </form>
           <form action={mulaBayar}>
             <input type="hidden" name="tier" value={tier} />
             <input type="hidden" name="period" value="tahunan" />
-            <button className="w-full rounded-full border-2 border-violet-600 py-2.5 text-sm font-bold text-violet-700 transition-colors hover:bg-violet-50 dark:text-violet-400 dark:hover:bg-violet-950">
+            <SubmitButton className="w-full rounded-full border-2 border-violet-600 py-2.5 text-sm font-bold text-violet-700 transition-colors hover:bg-violet-50 dark:text-violet-400 dark:hover:bg-violet-950">
               Tahunan — RM{HARGA[tier].tahunan}{" "}
               <span className="font-normal opacity-70">(jimat 2 bulan)</span>
-            </button>
+            </SubmitButton>
           </form>
         </div>
       )}
@@ -107,8 +109,12 @@ export default async function NaikTaraf({
   return (
     <main className="mx-auto w-full max-w-4xl px-6 py-10">
       <p className="mb-2 text-sm">
-        <Link href="/app" className="text-neutral-500 underline">
+        <Link
+          href="/app"
+          className="rounded px-0.5 text-neutral-500 underline active:opacity-70"
+        >
           ← Kembali ke library
+          <CtaSpinner />
         </Link>
       </p>
       <h1 className="text-2xl font-bold">Naik Taraf</h1>

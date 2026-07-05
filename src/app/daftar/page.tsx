@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { daftar } from "@/app/actions";
 import { AuthShell, btnAuth, inputAuth, labelAuth } from "@/app/auth-shell";
+import { CtaSpinner } from "@/app/cta-spinner";
+import { SubmitButton } from "@/app/submit-button";
 
 export default async function Daftar({
   searchParams,
@@ -35,14 +37,16 @@ export default async function Daftar({
             placeholder="Sekurang-kurangnya 6 aksara"
           />
         </label>
-        <button type="submit" className={btnAuth}>
-          Daftar
-        </button>
+        <SubmitButton className={btnAuth}>Daftar</SubmitButton>
       </form>
       <p className="mt-5 text-sm text-white/60">
         Sudah ada akaun?{" "}
-        <Link href="/masuk" className="text-violet-300 underline hover:text-violet-200">
+        <Link
+          href="/masuk"
+          className="rounded px-1 py-1 text-violet-300 underline underline-offset-2 hover:text-violet-200 active:opacity-70"
+        >
           Log masuk
+          <CtaSpinner />
         </Link>
       </p>
     </AuthShell>

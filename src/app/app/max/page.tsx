@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import { CtaSpinner } from "@/app/cta-spinner";
 import { Library, type PromptItem } from "../library";
 import { dapatkanProfil, isiPrompt, PANGKAT } from "../shared";
 
@@ -24,8 +25,12 @@ export default async function LibraryMax() {
   return (
     <main className="mx-auto w-full max-w-2xl px-6 py-10">
       <p className="mb-2 text-sm">
-        <Link href="/app" className="text-neutral-500 underline">
+        <Link
+          href="/app"
+          className="rounded px-0.5 text-neutral-500 underline active:opacity-70"
+        >
           ← Kembali ke dashboard
+          <CtaSpinner />
         </Link>
       </p>
       <h1 className="text-2xl font-extrabold uppercase tracking-tight">

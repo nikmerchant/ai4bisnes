@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { CtaSpinner } from "@/app/cta-spinner";
 import { SalinBar } from "../library";
 
 type Profil = {
@@ -65,8 +66,12 @@ export default async function AjarAI() {
   return (
     <main className="mx-auto w-full max-w-2xl px-6 py-10">
       <p className="mb-2 text-sm">
-        <Link href="/app" className="text-neutral-500 underline">
+        <Link
+          href="/app"
+          className="rounded px-0.5 text-neutral-500 underline active:opacity-70"
+        >
           ← Kembali ke library
+          <CtaSpinner />
         </Link>
       </p>
       <h1 className="text-2xl font-bold">🎓 Ajar AI Anda</h1>
@@ -121,8 +126,12 @@ export default async function AjarAI() {
 
       <p className="mt-8 rounded-lg bg-neutral-50 p-3 text-xs text-neutral-500 dark:bg-neutral-900">
         💡 Kemaskini profil bisnes anda di halaman{" "}
-        <Link href="/onboarding" className="underline">
+        <Link
+          href="/onboarding"
+          className="rounded px-0.5 underline active:opacity-70"
+        >
           onboarding
+          <CtaSpinner />
         </Link>{" "}
         bila maklumat berubah, kemudian kembali ke sini untuk salin versi
         terbaru.

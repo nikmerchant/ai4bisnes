@@ -1,5 +1,6 @@
 import { setKataLaluan } from "@/app/actions";
 import { AuthShell, btnAuth, inputAuth, labelAuth } from "@/app/auth-shell";
+import { SubmitButton } from "@/app/submit-button";
 
 export default async function SetKataLaluan({
   searchParams,
@@ -30,9 +31,7 @@ export default async function SetKataLaluan({
             placeholder="Sekurang-kurangnya 6 aksara"
           />
         </label>
-        <button type="submit" className={btnAuth}>
-          Simpan & Log Masuk
-        </button>
+        <SubmitButton className={btnAuth}>Simpan & Log Masuk</SubmitButton>
       </form>
     </AuthShell>
   );

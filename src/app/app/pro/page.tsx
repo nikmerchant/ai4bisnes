@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import { CtaSpinner } from "@/app/cta-spinner";
 import { Library, type PromptItem } from "../library";
 import { dapatkanProfil, isiPrompt, PANGKAT } from "../shared";
 
@@ -28,8 +29,12 @@ export default async function LibraryPro() {
   return (
     <main className="mx-auto w-full max-w-2xl px-6 py-10">
       <p className="mb-2 text-sm">
-        <Link href="/app" className="text-neutral-500 underline">
+        <Link
+          href="/app"
+          className="rounded px-0.5 text-neutral-500 underline active:opacity-70"
+        >
           ← Kembali ke dashboard
+          <CtaSpinner />
         </Link>
       </p>
       <h1 className="text-2xl font-extrabold uppercase tracking-tight">
@@ -42,9 +47,12 @@ export default async function LibraryPro() {
 
       <Link
         href="/app/pek"
-        className="mt-6 mb-8 block rounded-xl bg-gradient-to-r from-violet-700 to-fuchsia-600 p-4 text-white transition-transform hover:scale-[1.01]"
+        className="mt-6 mb-8 block rounded-xl bg-gradient-to-r from-violet-700 to-fuchsia-600 p-4 text-white transition-transform hover:scale-[1.01] active:opacity-90"
       >
-        <span className="font-bold">🎁 Pek Kempen Bulan Ini</span>
+        <span className="font-bold">
+          🎁 Pek Kempen Bulan Ini
+          <CtaSpinner />
+        </span>
         <span className="ml-2 text-sm text-white/80">
           Kempen siap-guna bulan ini — buka →
         </span>

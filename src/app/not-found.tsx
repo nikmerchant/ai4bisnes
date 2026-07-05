@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { CtaSpinner } from "@/app/cta-spinner";
 
 export default function HalamanTiada() {
   return (
@@ -14,9 +15,10 @@ export default function HalamanTiada() {
         </p>
         <Link
           href="/"
-          className="mt-8 inline-block rounded-full bg-violet-600 px-8 py-3 font-bold transition-colors hover:bg-violet-500"
+          className="mt-8 inline-block rounded-full bg-violet-600 px-8 py-3 font-bold transition-colors hover:bg-violet-500 active:opacity-80"
         >
           ← Kembali ke Laman Utama
+          <CtaSpinner />
         </Link>
       </div>
     </main>

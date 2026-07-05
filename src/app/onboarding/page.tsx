@@ -1,5 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import { simpanProfil } from "@/app/actions";
+import { SubmitButton } from "@/app/submit-button";
 
 const inputCls =
   "rounded-lg border border-neutral-300 px-3 py-2 dark:border-neutral-700 dark:bg-neutral-900";
@@ -92,12 +93,9 @@ export default async function Onboarding({
             className={inputCls}
           />
         </label>
-        <button
-          type="submit"
-          className="mt-2 rounded-full bg-violet-600 py-2.5 font-bold text-white transition-colors hover:bg-violet-700"
-        >
+        <SubmitButton className="mt-2 rounded-full bg-violet-600 py-2.5 font-bold text-white transition-colors hover:bg-violet-700">
           Simpan &amp; Teruskan
-        </button>
+        </SubmitButton>
       </form>
     </main>
   );

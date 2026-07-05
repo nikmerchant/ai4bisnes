@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { padamVault } from "@/app/actions";
+import { CtaSpinner } from "@/app/cta-spinner";
+import { SubmitButton } from "@/app/submit-button";
 import { SalinBar } from "../library";
 
 export default async function Vault() {
@@ -23,8 +25,12 @@ export default async function Vault() {
   return (
     <main className="mx-auto w-full max-w-2xl px-6 py-10">
       <p className="mb-2 text-sm">
-        <Link href="/app" className="text-neutral-500 underline">
+        <Link
+          href="/app"
+          className="rounded px-0.5 text-neutral-500 underline active:opacity-70"
+        >
           ← Kembali ke library
+          <CtaSpinner />
         </Link>
       </p>
       <h1 className="text-2xl font-bold">🗄 Vault Bisnes Saya</h1>
@@ -37,8 +43,12 @@ export default async function Vault() {
         <p className="mt-4 rounded-lg bg-neutral-50 p-3 text-sm text-neutral-600 dark:bg-neutral-900 dark:text-neutral-300">
           Langganan anda tidak aktif — simpanan lama masih boleh dibaca dan
           disalin, tetapi untuk menyimpan item baharu,{" "}
-          <Link href="/naik-taraf" className="font-medium underline">
+          <Link
+            href="/naik-taraf"
+            className="rounded px-0.5 font-medium underline active:opacity-70"
+          >
             aktifkan semula Pro
+            <CtaSpinner />
           </Link>
           .
         </p>
@@ -69,9 +79,9 @@ export default async function Vault() {
               <div className="flex flex-wrap items-center gap-2">
                 <SalinBar teks={v.content} />
                 <form action={padamVault.bind(null, v.id)}>
-                  <button className="rounded-md border border-red-200 px-3 py-1.5 text-xs font-medium text-red-600 hover:bg-red-50 dark:border-red-900 dark:text-red-400 dark:hover:bg-red-950">
+                  <SubmitButton className="rounded-md border border-red-200 px-3 py-1.5 text-xs font-medium text-red-600 hover:bg-red-50 dark:border-red-900 dark:text-red-400 dark:hover:bg-red-950">
                     Padam
-                  </button>
+                  </SubmitButton>
                 </form>
               </div>
             </div>

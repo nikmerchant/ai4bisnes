@@ -418,7 +418,7 @@ export default async function Home() {
                 </p>
                 <ul className="mt-4 space-y-2.5 text-sm text-zinc-300">
                   <li>✓ Semua dalam Pro</li>
-                  <li>✓ Coach Max — 13 sesi coaching pemasaran</li>
+                  <li>✓ Coach Max — 12 sesi coaching + diagnostik</li>
                   <li>✓ Money model & Grand Slam Offer anda</li>
                   <li>✓ Audit bisnes setiap suku tahun</li>
                 </ul>

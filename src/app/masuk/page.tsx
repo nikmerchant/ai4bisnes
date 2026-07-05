@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { masuk } from "@/app/actions";
+import { AuthShell, btnAuth, inputAuth, labelAuth } from "@/app/auth-shell";
 
 export default async function Masuk({
   searchParams,
@@ -8,50 +9,48 @@ export default async function Masuk({
 }) {
   const { ralat, mesej } = await searchParams;
   return (
-    <main className="mx-auto flex min-h-screen w-full max-w-sm flex-col justify-center gap-6 px-6">
+    <AuthShell>
       <h1 className="text-2xl font-bold">Log Masuk</h1>
+      <p className="mt-1 text-sm text-white/60">
+        Selamat kembali — AI anda dah rindu.
+      </p>
       {mesej && (
-        <p className="rounded-lg bg-green-50 p-3 text-sm text-green-700 dark:bg-green-950 dark:text-green-300">
+        <p className="mt-4 rounded-lg bg-emerald-500/15 p-3 text-sm text-emerald-300">
           {mesej}
         </p>
       )}
       {ralat && (
-        <p className="rounded-lg bg-red-50 p-3 text-sm text-red-700 dark:bg-red-950 dark:text-red-300">
+        <p className="mt-4 rounded-lg bg-red-500/15 p-3 text-sm text-red-300">
           {ralat}
         </p>
       )}
-      <form action={masuk} className="flex flex-col gap-4">
-        <label className="flex flex-col gap-1 text-sm font-medium">
+      <form action={masuk} className="mt-6 flex flex-col gap-4">
+        <label className={labelAuth}>
           Emel
-          <input
-            type="email"
-            name="email"
-            required
-            className="rounded-lg border border-neutral-300 px-3 py-2 dark:border-neutral-700 dark:bg-neutral-900"
-          />
+          <input type="email" name="email" required className={inputAuth} />
         </label>
-        <label className="flex flex-col gap-1 text-sm font-medium">
+        <label className={labelAuth}>
           Kata Laluan
           <input
             type="password"
             name="password"
             required
-            className="rounded-lg border border-neutral-300 px-3 py-2 dark:border-neutral-700 dark:bg-neutral-900"
+            minLength={6}
+            className={inputAuth}
           />
         </label>
-        <button
-          type="submit"
-          className="rounded-full bg-violet-600 py-2.5 font-bold text-white transition-colors hover:bg-violet-700"
-        >
+        <button type="submit" className={btnAuth}>
           Log Masuk
         </button>
       </form>
-      <p className="text-sm text-neutral-500">
-        Belum ada akaun?{" "}
-        <Link href="/daftar" className="underline">
+      <div className="mt-5 flex items-center justify-between text-sm">
+        <Link href="/lupa-kata-laluan" className="text-white/60 underline hover:text-white">
+          Lupa kata laluan?
+        </Link>
+        <Link href="/daftar" className="text-violet-300 underline hover:text-violet-200">
           Daftar percuma
         </Link>
-      </p>
-    </main>
+      </div>
+    </AuthShell>
   );
 }

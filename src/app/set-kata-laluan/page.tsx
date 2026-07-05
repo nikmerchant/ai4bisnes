@@ -1,8 +1,7 @@
-import Link from "next/link";
-import { daftar } from "@/app/actions";
+import { setKataLaluan } from "@/app/actions";
 import { AuthShell, btnAuth, inputAuth, labelAuth } from "@/app/auth-shell";
 
-export default async function Daftar({
+export default async function SetKataLaluan({
   searchParams,
 }: {
   searchParams: Promise<{ ralat?: string }>;
@@ -10,22 +9,18 @@ export default async function Daftar({
   const { ralat } = await searchParams;
   return (
     <AuthShell>
-      <h1 className="text-2xl font-bold">Daftar Akaun</h1>
+      <h1 className="text-2xl font-bold">Kata Laluan Baharu</h1>
       <p className="mt-1 text-sm text-white/60">
-        Percuma · 2 minit · tiada kad kredit
+        Tetapkan kata laluan baharu untuk akaun anda.
       </p>
       {ralat && (
         <p className="mt-4 rounded-lg bg-red-500/15 p-3 text-sm text-red-300">
           {ralat}
         </p>
       )}
-      <form action={daftar} className="mt-6 flex flex-col gap-4">
+      <form action={setKataLaluan} className="mt-6 flex flex-col gap-4">
         <label className={labelAuth}>
-          Emel
-          <input type="email" name="email" required className={inputAuth} />
-        </label>
-        <label className={labelAuth}>
-          Kata Laluan
+          Kata laluan baharu
           <input
             type="password"
             name="password"
@@ -36,15 +31,9 @@ export default async function Daftar({
           />
         </label>
         <button type="submit" className={btnAuth}>
-          Daftar
+          Simpan & Log Masuk
         </button>
       </form>
-      <p className="mt-5 text-sm text-white/60">
-        Sudah ada akaun?{" "}
-        <Link href="/masuk" className="text-violet-300 underline hover:text-violet-200">
-          Log masuk
-        </Link>
-      </p>
     </AuthShell>
   );
 }

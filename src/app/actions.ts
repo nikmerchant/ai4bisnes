@@ -6,6 +6,24 @@ import { createClient } from "@/lib/supabase/server";
 import { HARGA, type TierBayar, type Tempoh } from "@/lib/harga";
 import { ciptaBil, toyyibDikonfigurasi } from "@/lib/toyyibpay";
 
+// Terjemah ralat Supabase yang biasa ke BM — jangan dedah butiran teknikal
+function ralatBM(mesej: string): string {
+  const m = mesej.toLowerCase();
+  if (m.includes("invalid login credentials"))
+    return "Emel atau kata laluan salah.";
+  if (m.includes("already registered") || m.includes("already been registered"))
+    return "Emel ini sudah berdaftar — cuba log masuk.";
+  if (m.includes("password") && m.includes("6"))
+    return "Kata laluan mesti sekurang-kurangnya 6 aksara.";
+  if (m.includes("invalid email") || m.includes("valid email"))
+    return "Sila masukkan emel yang sah.";
+  if (m.includes("not confirmed"))
+    return "Emel belum disahkan — sila klik pautan dalam emel pendaftaran anda.";
+  if (m.includes("rate limit") || m.includes("too many"))
+    return "Terlalu banyak percubaan — sila tunggu sebentar dan cuba lagi.";
+  return "Maaf, ada masalah. Sila cuba lagi.";
+}
+
 export async function daftar(formData: FormData) {
   const email = (formData.get("email") as string)?.trim();
   const password = formData.get("password") as string;
@@ -13,7 +31,7 @@ export async function daftar(formData: FormData) {
 
   const supabase = await createClient();
   const { error } = await supabase.auth.signUp({ email, password });
-  if (error) redirect(`/daftar?ralat=${encodeURIComponent(error.message)}`);
+  if (error) redirect(`/daftar?ralat=${encodeURIComponent(ralatBM(error.message))}`);
 
   redirect("/masuk?mesej=Pendaftaran+berjaya.+Sila+semak+emel+anda+untuk+pengesahan,+kemudian+log+masuk.");
 }
@@ -25,7 +43,7 @@ export async function masuk(formData: FormData) {
 
   const supabase = await createClient();
   const { error } = await supabase.auth.signInWithPassword({ email, password });
-  if (error) redirect(`/masuk?ralat=${encodeURIComponent(error.message)}`);
+  if (error) redirect(`/masuk?ralat=${encodeURIComponent(ralatBM(error.message))}`);
 
   const {
     data: { user },
@@ -37,6 +55,36 @@ export async function masuk(formData: FormData) {
     .single();
 
   redirect(profil?.onboarded ? "/app" : "/onboarding");
+}
+
+export async function lupaKataLaluan(formData: FormData) {
+  const email = (formData.get("email") as string)?.trim();
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
+
+  if (email) {
+    const supabase = await createClient();
+    await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: `${appUrl}/auth/confirm?next=/set-kata-laluan`,
+    });
+  }
+  // mesej sama tak kira emel wujud atau tidak — elak dedah kewujudan akaun
+  redirect(
+    "/lupa-kata-laluan?mesej=Jika+emel+itu+berdaftar,+pautan+reset+telah+dihantar.+Semak+inbox+anda."
+  );
+}
+
+export async function setKataLaluan(formData: FormData) {
+  const password = formData.get("password") as string;
+  if (!password || password.length < 6)
+    redirect("/set-kata-laluan?ralat=Kata+laluan+mesti+sekurang-kurangnya+6+aksara");
+
+  const supabase = await createClient();
+  const { error } = await supabase.auth.updateUser({ password });
+  if (error)
+    redirect(
+      "/set-kata-laluan?ralat=Pautan+reset+tidak+sah+atau+telah+luput+—+minta+pautan+baharu."
+    );
+  redirect("/app");
 }
 
 export async function keluar() {

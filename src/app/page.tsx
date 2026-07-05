@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { createClient as createSbClient } from "@supabase/supabase-js";
 import { HARGA } from "@/lib/harga";
+import { CtaSpinner } from "./cta-spinner";
 import { Reveal } from "./reveal";
 
 // ISR: jana semula sekali sehari — kekal sepantas statik,
@@ -142,15 +143,17 @@ export default async function Home() {
             <div className="flex items-center gap-4 text-sm">
               <Link
                 href="/masuk"
-                className="font-medium text-white/80 transition-colors hover:text-white"
+                className="rounded-full px-2 py-2 font-medium text-white/80 transition-colors hover:text-white active:opacity-70"
               >
                 Log Masuk
+                <CtaSpinner />
               </Link>
               <Link
                 href="/daftar"
-                className="rounded-full bg-violet-600 px-5 py-2 font-bold transition-colors hover:bg-violet-500"
+                className="rounded-full bg-violet-600 px-5 py-2 font-bold transition-colors hover:bg-violet-500 active:opacity-80"
               >
                 Daftar Percuma
+                <CtaSpinner />
               </Link>
             </div>
           </div>
@@ -179,8 +182,9 @@ export default async function Home() {
             terus bekerja seperti staf yang dah lama kenal bisnes anda sejak bertahun-tahun lamanya.
           </p>
           <div className="fade-up fade-up-4 mt-10 flex flex-wrap justify-center gap-4">
-            <Link href="/daftar" className={btnUtama}>
+            <Link href="/daftar" className={`${btnUtama} active:opacity-80`}>
               MULA PERCUMA — 2 MINIT
+              <CtaSpinner />
             </Link>
             <a
               href="#harga"
@@ -423,8 +427,9 @@ export default async function Home() {
           </div>
           <Reveal>
             <div className="mt-10 text-center">
-              <Link href="/daftar" className={btnUtama}>
+              <Link href="/daftar" className={`${btnUtama} active:opacity-80`}>
                 MULA PERCUMA DULU
+                <CtaSpinner />
               </Link>
               <p className="mt-4 text-xs font-medium text-zinc-500">
                 Naik taraf bila-bila masa dari dalam app · Bayaran FPX & kad ·
@@ -477,9 +482,10 @@ export default async function Home() {
             </p>
             <Link
               href="/daftar"
-              className={`${btnUtama} mt-8 inline-block`}
+              className={`${btnUtama} mt-8 inline-block active:opacity-80`}
             >
               DAFTAR PERCUMA SEKARANG
+              <CtaSpinner />
             </Link>
           </Reveal>
         </div>

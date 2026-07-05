@@ -233,6 +233,26 @@ export default async function Home() {
         </div>
       </section>
 
+      {/* VIDEO PROMO */}
+      <section className="bg-zinc-950 text-white">
+        <div className="mx-auto w-full max-w-4xl px-6 pt-20">
+          <Reveal>
+            <h2 className="text-center text-3xl font-extrabold uppercase tracking-tight sm:text-4xl">
+              Tonton <span className="text-violet-400">90 saat</span> ini
+            </h2>
+            <video
+              controls
+              preload="metadata"
+              poster="/opengraph-image"
+              className="mt-10 w-full rounded-2xl ring-2 ring-violet-600/50"
+            >
+              <source src="/video/promo.mp4" type="video/mp4" />
+              Browser anda tidak menyokong video.
+            </video>
+          </Reveal>
+        </div>
+      </section>
+
       {/* CARA BERFUNGSI */}
       <section className="bg-zinc-950 text-white">
         <div className="mx-auto w-full max-w-5xl px-6 py-20">

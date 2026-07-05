@@ -141,6 +141,20 @@ export default async function Dashboard() {
         </form>
       </header>
 
+      {/* VIDEO PANDUAN */}
+      <details className="mb-6 rounded-2xl border-2 border-violet-600 p-4">
+        <summary className="cursor-pointer font-semibold">
+          🎬 Baru di sini? Tonton panduan langkah demi langkah (3 minit)
+        </summary>
+        <video
+          controls
+          preload="metadata"
+          className="mt-4 w-full rounded-xl"
+        >
+          <source src="/video/tutorial.mp4" type="video/mp4" />
+        </video>
+      </details>
+
       {/* BANNER PEK KEMPEN BULAN INI */}
       <Link
         href={pangkat >= 1 ? "/app/pek" : "/naik-taraf"}

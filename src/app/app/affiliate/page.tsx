@@ -17,7 +17,7 @@ export default async function Affiliate() {
       .single(),
     supabase
       .from("affiliate_commissions")
-      .select("amount_rm, status, created_at")
+      .select("id, amount_rm, status, created_at")
       .eq("referrer_id", user!.id)
       .order("created_at", { ascending: false }),
   ]);
@@ -84,9 +84,9 @@ export default async function Affiliate() {
         </p>
       ) : (
         <div className="flex flex-col gap-2">
-          {rows.map((r, i) => (
+          {rows.map((r) => (
             <div
-              key={i}
+              key={r.id}
               className="flex items-center justify-between rounded-lg border border-neutral-200 px-4 py-2.5 text-sm dark:border-neutral-800"
             >
               <span className="text-neutral-500">

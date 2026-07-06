@@ -6,6 +6,8 @@ import { createClient } from "@/lib/supabase/server";
 import { HARGA, type TierBayar, type Tempoh } from "@/lib/harga";
 import { ciptaBil, toyyibDikonfigurasi } from "@/lib/toyyibpay";
 import { hantarEmel, resendDikonfigurasi } from "@/lib/resend";
+import { cookies } from "next/headers";
+import { createClient as createAdminClient } from "@supabase/supabase-js";
 
 // Terjemah ralat Supabase yang biasa ke BM — jangan dedah butiran teknikal
 function ralatBM(mesej: string): string {
@@ -31,10 +33,43 @@ export async function daftar(formData: FormData) {
   if (!email || !password) redirect("/daftar?ralat=Sila+isi+semua+medan");
 
   const supabase = await createClient();
-  const { error } = await supabase.auth.signUp({ email, password });
+  const { data, error } = await supabase.auth.signUp({ email, password });
   if (error) redirect(`/daftar?ralat=${encodeURIComponent(ralatBM(error.message))}`);
 
+  await kaitkanRujukan(data.user?.id);
+
   redirect("/masuk?mesej=Pendaftaran+berjaya.+Sila+semak+emel+anda+untuk+pengesahan,+kemudian+log+masuk.");
+}
+
+// Kaitkan pengguna baharu dengan affiliate yang rujuk mereka (jika ada cookie
+// ai4b_ref yang padan kod rujukan sah). Guna admin client sebab pengguna
+// baharu belum ada sesi (email confirmation wajib) — sama sebab route.ts
+// callback bayaran guna service role.
+async function kaitkanRujukan(userId: string | undefined) {
+  if (!userId) return;
+  const kod = (await cookies()).get("ai4b_ref")?.value;
+  if (!kod) return;
+
+  const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  if (!serviceKey) return;
+
+  const admin = createAdminClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    serviceKey
+  );
+
+  const { data: referrer } = await admin
+    .from("profiles")
+    .select("id")
+    .eq("referral_code", kod)
+    .maybeSingle();
+
+  if (referrer && referrer.id !== userId) {
+    await admin
+      .from("profiles")
+      .update({ referred_by: referrer.id })
+      .eq("id", userId);
+  }
 }
 
 export async function masuk(formData: FormData) {

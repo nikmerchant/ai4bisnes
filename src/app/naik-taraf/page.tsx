@@ -78,7 +78,7 @@ function KadTier({
           <form action={mulaBayar}>
             <input type="hidden" name="tier" value={tier} />
             <input type="hidden" name="period" value="tahunan" />
-            <SubmitButton className="w-full rounded-full border-2 border-violet-600 py-2.5 text-sm font-bold text-violet-700 transition-colors hover:bg-violet-50 dark:text-violet-400 dark:hover:bg-violet-950">
+            <SubmitButton className="w-full rounded-full bg-zinc-800 py-2.5 text-sm font-bold text-white ring-1 ring-white/10 transition-colors hover:bg-zinc-700">
               Tahunan — RM{HARGA[tier].tahunan}{" "}
               <span className="font-normal opacity-70">(jimat 2 bulan)</span>
             </SubmitButton>

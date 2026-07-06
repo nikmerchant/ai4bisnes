@@ -133,6 +133,14 @@ export default async function Dashboard() {
             >
               🗄 Vault
               <CtaSpinner />
+            </Link>{" "}
+            ·{" "}
+            <Link
+              href="/app/affiliate"
+              className="rounded px-0.5 underline active:opacity-70"
+            >
+              🤝 Affiliate
+              <CtaSpinner />
             </Link>
             {profil.tier !== "max" && (
               <>

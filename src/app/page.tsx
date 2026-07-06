@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { createClient as createSbClient } from "@supabase/supabase-js";
 import { HARGA } from "@/lib/harga";
@@ -509,6 +510,16 @@ export default async function Home() {
             Daftar
           </Link>
         </p>
+        <div className="mt-5 flex items-center justify-center gap-2 opacity-70">
+          <Image
+            src="/brand/niagaiq-logo-dark.jpg"
+            alt="NiagaIQ Technologies"
+            width={28}
+            height={28}
+            className="rounded-sm"
+          />
+          <span>AI4Bisnes dikendalikan oleh NiagaIQ Technologies</span>
+        </div>
       </footer>
     </div>
   );

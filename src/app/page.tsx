@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { createClient as createSbClient } from "@supabase/supabase-js";
-import { HARGA } from "@/lib/harga";
+import { HARGA, SLOT_FOUNDING } from "@/lib/harga";
 import { CtaSpinner } from "./cta-spinner";
 import { Reveal } from "./reveal";
 
@@ -104,6 +104,20 @@ async function tajukPekSemasa(): Promise<string | null> {
   }
 }
 
+// Baki tempat harga founding member — angka sebenar dari DB (bukan palsu).
+async function bakiFounding(): Promise<number> {
+  try {
+    const sb = createSbClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+    );
+    const { data } = await sb.rpc("founding_count");
+    return Math.max(0, SLOT_FOUNDING - (data ?? 0));
+  } catch {
+    return SLOT_FOUNDING;
+  }
+}
+
 const btnUtama =
   "rounded-full bg-violet-600 px-8 py-3.5 font-bold text-white transition-colors hover:bg-violet-700";
 const badge =
@@ -111,6 +125,7 @@ const badge =
 
 export default async function Home() {
   const pek = await tajukPekSemasa();
+  const baki = await bakiFounding();
   return (
     <div className="bg-white text-zinc-900">
       <script
@@ -365,6 +380,9 @@ export default async function Home() {
               <strong className="text-zinc-900">dikunci selama-lamanya</strong>{" "}
               selagi langganan aktif — walaupun harga baharu naik nanti.
             </p>
+            <p className="mx-auto mt-4 w-fit rounded-full bg-red-500 px-4 py-1.5 text-center text-xs font-bold uppercase tracking-wide text-white">
+              🔥 Baki {baki}/{SLOT_FOUNDING} tempat harga founding member
+            </p>
           </Reveal>
           <div className="mt-12 grid gap-6 sm:grid-cols-3">
             <Reveal>
@@ -435,6 +453,9 @@ export default async function Home() {
               <p className="mt-4 text-xs font-medium text-zinc-500">
                 Naik taraf bila-bila masa dari dalam app · Bayaran FPX & kad ·
                 Batal bila-bila masa
+              </p>
+              <p className="mt-3 text-sm font-bold text-violet-700">
+                ✅ Guarantee 14 hari — tak berbaloi, refund penuh
               </p>
             </div>
           </Reveal>

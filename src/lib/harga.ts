@@ -8,6 +8,10 @@ export const HARGA = {
   max: { bulanan: 69, tahunan: 690 },
 } as const;
 
+// Had tempat harga founding member — bilangan sebenar diambil dari
+// RPC founding_count() (kira subscriptions price_rm founding, tak boleh dipalsukan).
+export const SLOT_FOUNDING = 50;
+
 export type TierBayar = keyof typeof HARGA;
 export type Tempoh = keyof (typeof HARGA)["pro"];
 

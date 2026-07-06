@@ -6,11 +6,12 @@ export async function proxy(request: NextRequest) {
 
   // Landing page: tangkap kod rujukan affiliate, tiada semakan auth di sini
   if (request.nextUrl.pathname === "/") {
-    const ref = request.nextUrl.searchParams.get("ref");
+    const ref = request.nextUrl.searchParams.get("ref")?.slice(0, 32);
     if (ref) {
       response.cookies.set("ai4b_ref", ref, {
         maxAge: 60 * 60 * 24 * 30, // 30 hari
         path: "/",
+        httpOnly: true,
       });
     }
     return response;

@@ -528,6 +528,10 @@ export default async function Home() {
           ·{" "}
           <Link href="/daftar" className="underline hover:text-white">
             Daftar
+          </Link>{" "}
+          ·{" "}
+          <Link href="/hubungi" className="underline hover:text-white">
+            Hubungi Kami
           </Link>
         </p>
         <div className="mt-5 flex items-center justify-center gap-2 opacity-70">

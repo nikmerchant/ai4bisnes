@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { HARGA, type TierBayar, type Tempoh } from "@/lib/harga";
 import { ciptaBil, toyyibDikonfigurasi } from "@/lib/toyyibpay";
+import { hantarEmel, resendDikonfigurasi } from "@/lib/resend";
 
 // Terjemah ralat Supabase yang biasa ke BM — jangan dedah butiran teknikal
 function ralatBM(mesej: string): string {
@@ -228,4 +229,30 @@ export async function simpanProfil(formData: FormData) {
 
   if (error) redirect(`/onboarding?ralat=${encodeURIComponent(error.message)}`);
   redirect("/app");
+}
+
+export async function hantarHubungi(formData: FormData) {
+  const nama = (formData.get("nama") as string)?.trim().slice(0, 100);
+  const emel = (formData.get("emel") as string)?.trim().slice(0, 200);
+  const mesej = (formData.get("mesej") as string)?.trim().slice(0, 2000);
+  const emelSah = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emel ?? "");
+
+  if (!nama || !emelSah || !mesej)
+    redirect("/hubungi?ralat=Sila+isi+semua+medan+dengan+emel+yang+sah");
+
+  if (!resendDikonfigurasi())
+    redirect("/hubungi?ralat=Borang+tidak+tersedia+buat+masa+ini,+sila+emel+admin@ai4bisnes.com+terus");
+
+  try {
+    await hantarEmel({
+      kepada: "admin@ai4bisnes.com",
+      balasKe: emel,
+      tajuk: `[Hubungi Kami] ${nama}`,
+      teks: `Nama: ${nama}\nEmel: ${emel}\n\nMesej:\n${mesej}`,
+    });
+  } catch {
+    redirect("/hubungi?ralat=Gagal+hantar,+sila+cuba+lagi+atau+emel+admin@ai4bisnes.com+terus");
+  }
+
+  redirect("/hubungi?mesej=Terima+kasih!+Mesej+anda+telah+dihantar,+kami+akan+balas+secepat+mungkin.");
 }

@@ -462,6 +462,26 @@ export default async function Home() {
         </div>
       </section>
 
+      {/* VISI */}
+      <section className="mx-auto w-full max-w-4xl px-6 py-20 text-center">
+        <Reveal>
+          <p className="text-xs font-bold uppercase tracking-[0.25em] text-violet-600">
+            Visi Kami
+          </p>
+          <p className="mx-auto mt-6 max-w-2xl text-2xl font-medium leading-snug text-zinc-700 sm:text-3xl">
+            Hari ini, AI4Bisnes bantu ChatGPT faham bisnes anda.
+            <br />
+            <span
+              className="italic text-violet-600"
+              style={{ fontFamily: "var(--font-serif-aksen), serif" }}
+            >
+              Esok, AI4Bisnes sendiri akan jadi pembantu AI bisnes tempatan
+              anda.
+            </span>
+          </p>
+        </Reveal>
+      </section>
+
       {/* CTA AKHIR */}
       <section className="relative overflow-hidden bg-zinc-950 text-white">
         <div className="aurora-a" aria-hidden />

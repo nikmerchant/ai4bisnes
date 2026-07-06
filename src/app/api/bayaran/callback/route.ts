@@ -1,4 +1,4 @@
-import { createClient as createAdminClient } from "@supabase/supabase-js";
+import { createClient as createAdminClient, type SupabaseClient } from "@supabase/supabase-js";
 import { bilTelahDibayar } from "@/lib/toyyibpay";
 
 // Callback tanpa auth dari toyyibPay — JANGAN percaya payload;
@@ -50,32 +50,49 @@ export async function POST(req: Request) {
     .eq("id", sub.user_id);
 
   // Kalau pengguna yang bayar ini dirujuk oleh affiliate, rekod komisen 20%.
-  const janaKomisenAffiliate = async () => {
-    const { data: pembayar } = await admin
-      .from("profiles")
-      .select("referred_by")
-      .eq("id", sub.user_id)
-      .single();
-    if (!pembayar?.referred_by) return;
-
-    const { data: langganan } = await admin
-      .from("subscriptions")
-      .select("price_rm")
-      .eq("id", sub.id)
-      .single();
-    if (!langganan) return;
-
-    await admin.from("affiliate_commissions").upsert(
-      {
-        referrer_id: pembayar.referred_by,
-        referred_user_id: sub.user_id,
-        subscription_id: sub.id,
-        amount_rm: Number(langganan.price_rm) * 0.2,
-      },
-      { onConflict: "subscription_id", ignoreDuplicates: true }
+  // Kegagalan di sini TIDAK boleh menjejaskan respons "ok" ke toyyibPay —
+  // aktivasi langganan (di atas) dah berjaya, jangan sampai toyyibPay retry
+  // seluruh callback sebab bookkeeping komisen gagal.
+  try {
+    await janaKomisenAffiliate(
+      admin,
+      sub as { id: number; user_id: string; tier: string; period: string }
     );
-  };
-  await janaKomisenAffiliate();
+  } catch (e) {
+    console.error("Gagal jana komisen affiliate:", e);
+  }
 
   return new Response("ok");
+}
+
+async function janaKomisenAffiliate(
+  admin: SupabaseClient,
+  sub: { id: number; user_id: string; tier: string; period: string }
+) {
+  const { data: pembayar } = await admin
+    .from("profiles")
+    .select("referred_by")
+    .eq("id", sub.user_id)
+    .single();
+  if (!pembayar?.referred_by) return;
+
+  const { data: langganan } = await admin
+    .from("subscriptions")
+    .select("price_rm")
+    .eq("id", sub.id)
+    .single();
+  if (!langganan) {
+    console.error("langganan hilang selepas aktivasi — sub.id:", sub.id);
+    return;
+  }
+
+  await admin.from("affiliate_commissions").upsert(
+    {
+      referrer_id: pembayar.referred_by,
+      referred_user_id: sub.user_id,
+      subscription_id: sub.id,
+      amount_rm: Number(langganan.price_rm) * 0.2,
+    },
+    { onConflict: "subscription_id", ignoreDuplicates: true }
+  );
 }

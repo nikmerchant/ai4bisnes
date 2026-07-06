@@ -51,7 +51,10 @@ async function kaitkanRujukan(userId: string | undefined) {
   if (!kod) return;
 
   const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-  if (!serviceKey) return;
+  if (!serviceKey) {
+    console.error("SUPABASE_SERVICE_ROLE_KEY tidak diset — rujukan tidak dikaitkan");
+    return;
+  }
 
   const admin = createAdminClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,

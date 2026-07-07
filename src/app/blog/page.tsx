@@ -39,7 +39,7 @@ export default function BlogIndex() {
                 <div className="relative h-24 w-32 shrink-0 overflow-hidden rounded-lg bg-zinc-100">
                   <Image
                     src={p.heroImage}
-                    alt={p.title}
+                    alt=""
                     fill
                     className="object-cover"
                   />

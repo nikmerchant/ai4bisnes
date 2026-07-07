@@ -13,7 +13,9 @@ export type BlogPost = {
   description: string;
   date: string; // ISO 'YYYY-MM-DD'
   tags: string[];
-  heroImage: string; // path relatif ke /public, cth "/blog/nama-slug.png"
+  // Path relatif ke /public sahaja, cth "/blog/nama-slug.png" — next/image
+  // tak dikonfigur untuk host luar (remotePatterns), JANGAN letak URL jauh di sini.
+  heroImage: string;
   faq: BlogFaq[];
   html: string;
 };
@@ -30,7 +32,7 @@ function parseFile(slug: string): BlogPost {
     title: data.title ?? slug,
     description: data.description ?? "",
     date: data.date ?? "",
-    tags: Array.isArray(data.tags) ? data.tags : [],
+    tags: Array.isArray(data.tags) ? Array.from(new Set(data.tags)) : [],
     heroImage: data.heroImage ?? "/opengraph-image",
     faq: Array.isArray(data.faq) ? data.faq : [],
     html: marked.parse(content, { async: false }) as string,

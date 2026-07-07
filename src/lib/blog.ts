@@ -22,6 +22,9 @@ export type BlogPost = {
 function parseFile(slug: string): BlogPost {
   const raw = fs.readFileSync(path.join(BLOG_DIR, `${slug}.md`), "utf8");
   const { data, content } = matter(raw);
+  if (!data.date || Number.isNaN(Date.parse(data.date))) {
+    console.warn(`Artikel blog "${slug}" tiada/tarikh tak sah — semak frontmatter "date"`);
+  }
   return {
     slug,
     title: data.title ?? slug,
@@ -47,7 +50,8 @@ export function getAllPosts(): BlogPost[] {
 }
 
 export function getPostBySlug(slug: string): BlogPost | null {
-  const file = path.join(BLOG_DIR, `${slug}.md`);
+  const namaSelamat = path.basename(slug);
+  const file = path.join(BLOG_DIR, `${namaSelamat}.md`);
   if (!fs.existsSync(file)) return null;
-  return parseFile(slug);
+  return parseFile(namaSelamat);
 }

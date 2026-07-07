@@ -30,7 +30,9 @@ sebelum publish — sejajar corak retention/kempen sedia ada dalam projek ni
 
 - Fail `content/blog/<slug>.md` — frontmatter YAML (`title`, `description`,
   `date`, `tags: string[]`, `heroImage: string` path relatif ke
-  `public/blog/`).
+  `public/blog/`, `faq: {q: string, a: string}[]` untuk seksyen FAQ akhir
+  artikel — dipisah dari body markdown supaya boleh dijana JSON-LD
+  `FAQPage` terus dari data berstruktur, bukan diparse dari HTML).
 - Parse guna `gray-matter` (frontmatter) + `marked` (Markdown→HTML) — dua
   dependency baharu sahaja (belum ada `@next/mdx` dalam projek, dan tak
   perlu — kandungan blog prosa sahaja, tiada komponen React tersisip).
@@ -46,7 +48,36 @@ sebelum publish — sejajar corak retention/kempen sedia ada dalam projek ni
   implementasi, minta kelulusan user sekali sebelum proses mingguan mula
   guna senarai ni.
 
-### 3. Proses mingguan (scheduled task baharu `blog-mingguan`)
+### 3. Struktur artikel (GEO/AEO — wajib setiap post, keputusan user 6 Julai 2026)
+
+Setiap artikel yang dijana MESTI ikut struktur ni (untuk AI Overviews/ChatGPT
+search, bukan cuma Google klasik):
+
+1. **Jawapan dulu (inverted pyramid):** perenggan pertama terus jawab
+   soalan teras topik (2-4 ayat) — bukan intro umum/basa-basi. Butiran,
+   data, contoh datang selepas.
+2. **Boleh diimbas:** subtajuk H2/H3 deskriptif (bukan gimik), perenggan
+   pendek, senarai bullet/nombor untuk langkah/tip/pro-kontra — bukan
+   ditulis dalam prosa panjang.
+3. **Kata kunci conversational:** sekurang-kurangnya satu subtajuk dalam
+   bentuk soalan panjang macam orang tanya AI assistant terus (bukan cuma
+   kata kunci pendek gaya carian Google klasik).
+4. **Seksyen FAQ di penghujung:** 3-5 soalan+jawapan berkaitan topik,
+   disimpan dalam frontmatter `faq:` (data berstruktur, bukan markdown
+   body) — jana JSON-LD `FAQPage` (lihat seksyen 5).
+5. **E-E-A-T:** sekurang-kurangnya satu pautan keluar ke sumber primer
+   dipercayai (rasmi kerajaan Malaysia — LHDN/SSM/Bank Negara/MDEC — atau
+   data industri) BILA relevan kepada topik (bukan paksa kalau topik tak
+   sesuai). Sisipkan sekurang-kurangnya satu perspektif/contoh asli
+   spesifik konteks SME Malaysia (bukan fakta generik yang senang
+   dijumpai di blog lain) — elak artikel jadi "template kosong".
+6. **HTML semantik:** guna elemen Markdown yang betul (heading `#`/`##`,
+   senarai `-`/`1.`, `**bold**` untuk penekanan sebenar sahaja) — `marked`
+   akan hasilkan `<h2>`, `<ul>`, `<strong>` dsb. secara automatik; JANGAN
+   guna bold sebagai ganti heading/senarai (elak "palsukan" struktur guna
+   format visual sahaja).
+
+### 4. Proses mingguan (scheduled task baharu `blog-mingguan`)
 
 Cron Khamis petang. Sama pola dengan `pek-kempen-bulanan` (rujuk fail
 sedia ada `C:\Users\USER\.claude\scheduled-tasks\pek-kempen-bulanan\SKILL.md`):
@@ -54,8 +85,9 @@ sedia ada `C:\Users\USER\.claude\scheduled-tasks\pek-kempen-bulanan\SKILL.md`):
 1. Baca `content/blog/topik-senarai.md`, ambil topik pertama bertanda
    `- [ ]` (belum ditulis).
 2. Tulis artikel 600-900 patah perkataan BM, konteks Malaysia (RM, contoh
-   tempatan), 1-2 pautan dalaman lembut (`/daftar` atau kategori app
-   berkaitan) sebagai CTA — bukan hard-sell.
+   tempatan), ikut struktur GEO/AEO wajib (seksyen 3 di atas) termasuk
+   `faq:` frontmatter, 1-2 pautan dalaman lembut (`/daftar` atau kategori
+   app berkaitan) sebagai CTA — bukan hard-sell.
 3. Jana gambar hero (guna tool image-generation MCP sedia ada — arahan
    seni: gelap zinc-950/gradient violet, sama nada dengan
    `opengraph-image.tsx`), simpan `public/blog/<slug>.png`.
@@ -67,14 +99,14 @@ sedia ada `C:\Users\USER\.claude\scheduled-tasks\pek-kempen-bulanan\SKILL.md`):
    (sama disiplin macam `pek-kempen-bulanan` — kandungan customer-facing
    perlu manusia lulus).
 
-### 4. Publish
+### 5. Publish
 
 Bila user kata "ok publish" (dalam mana-mana sesi akan datang): alih fail
 draf dari `content/blog/drafts/<slug>.md` ke `content/blog/<slug>.md`,
 commit, push — Vercel auto-deploy ambil alih (sama pola git sedia ada
 seluruh projek ni).
 
-### 5. Halaman
+### 6. Halaman
 
 - `/blog` — listing: baca semua `.md` dalam `content/blog/` (bukan
   `drafts/`), susun `date` menurun, papar kad (gambar hero, tajuk, tarikh,
@@ -84,9 +116,11 @@ seluruh projek ni).
 - `sitemap.ts` (sedia ada) — tambah loop baca semua slug live, masukkan
   URL `https://ai4bisnes.com/blog/<slug>` dengan `lastModified` dari
   frontmatter `date`.
-- JSON-LD `Article` schema per halaman `/blog/[slug]` (headline,
-  datePublished, image, author Organization AI4Bisnes) — ikut pola
-  `JSON_LD` sedia ada di `page.tsx`.
+- JSON-LD `@graph` per halaman `/blog/[slug]` — `Article` (headline,
+  datePublished, image, author Organization AI4Bisnes) DAN `FAQPage`
+  (dari frontmatter `faq:`, sama corak `mainEntity` macam JSON-LD FAQ
+  landing page sedia ada di `page.tsx`) — hanya sertakan `FAQPage` kalau
+  `faq:` tak kosong.
 - OG image per artikel: guna `heroImage` yang dijana (bukan
   `opengraph-image.tsx` generik) untuk preview medsos lebih relevan.
 

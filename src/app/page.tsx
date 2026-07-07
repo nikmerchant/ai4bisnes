@@ -551,6 +551,10 @@ export default async function Home() {
             Daftar
           </Link>{" "}
           ·{" "}
+          <Link href="/blog" className="underline hover:text-white">
+            Blog
+          </Link>{" "}
+          ·{" "}
           <Link href="/hubungi" className="underline hover:text-white">
             Hubungi Kami
           </Link>

@@ -557,6 +557,14 @@ export default async function Home() {
           ·{" "}
           <Link href="/hubungi" className="underline hover:text-white">
             Hubungi Kami
+          </Link>{" "}
+          ·{" "}
+          <Link href="/terma" className="underline hover:text-white">
+            Terma
+          </Link>{" "}
+          ·{" "}
+          <Link href="/privasi" className="underline hover:text-white">
+            Privasi
           </Link>
         </p>
         <div className="mt-5 flex items-center justify-center gap-2 opacity-70">

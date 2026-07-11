@@ -36,6 +36,16 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "monthly",
       priority: 0.5,
     },
+    {
+      url: "https://ai4bisnes.com/terma",
+      changeFrequency: "yearly",
+      priority: 0.2,
+    },
+    {
+      url: "https://ai4bisnes.com/privasi",
+      changeFrequency: "yearly",
+      priority: 0.2,
+    },
     ...posts,
   ];
 }

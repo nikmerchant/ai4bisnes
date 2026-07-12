@@ -4,7 +4,7 @@ Format: `- [ ] Tajuk` (belum ditulis) / `- [x] Tajuk (slug: xxx)` (dah ditulis).
 Proses mingguan (scheduled task `blog-mingguan`) ambil topik PERTAMA
 bertanda `- [ ]` dari atas.
 
-- [ ] Cara Guna ChatGPT untuk Tulis Caption Instagram Kedai Makanan
+- [x] Cara Guna ChatGPT untuk Tulis Caption Instagram Kedai Makanan (slug: cara-guna-chatgpt-tulis-caption-instagram-kedai-makanan)
 - [ ] 5 Prompt AI untuk Bantu Kedai Runcit Anda Jual Lebih Banyak di Shopee
 - [ ] Macam Mana AI Boleh Bantu Perniagaan Servis Kurangkan Masa Balas Pelanggan
 - [ ] Panduan Guna AI untuk Salon/Spa Tulis Post Promosi Tanpa Bunyi Generik

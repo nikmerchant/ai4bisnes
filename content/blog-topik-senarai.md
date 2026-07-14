@@ -8,7 +8,7 @@ bertanda `- [ ]` dari atas.
 - [x] 5 Prompt AI untuk Bantu Kedai Runcit Anda Jual Lebih Banyak di Shopee (slug: 5-prompt-ai-bantu-kedai-runcit-jual-lebih-banyak-shopee)
 - [x] Macam Mana AI Boleh Bantu Perniagaan Servis Kurangkan Masa Balas Pelanggan (slug: ai-bantu-perniagaan-servis-kurangkan-masa-balas-pelanggan)
 - [x] Panduan Guna AI untuk Salon/Spa Tulis Post Promosi Tanpa Bunyi Generik (slug: panduan-guna-ai-salon-spa-tulis-post-promosi-tanpa-bunyi-generik)
-- [ ] Cara Guna ChatGPT untuk Tarik Pelajar Baharu ke Pusat Tuisyen/Latihan Anda
+- [x] Cara Guna ChatGPT untuk Tarik Pelajar Baharu ke Pusat Tuisyen/Latihan Anda (slug: cara-guna-chatgpt-untuk-tarik-pelajar-baharu-ke-pusat-tuisyen-latihan-anda)
 - [ ] 7 Prompt AI untuk Ejen Hartanah Tulis Iklan Rumah Lebih Menarik
 - [ ] Panduan AI untuk Bengkel Automotif — Peringatan Servis & Post Medsos
 - [ ] Cara Guna AI untuk Homestay/Resort Tulis Deskripsi Booking Lebih Menjual

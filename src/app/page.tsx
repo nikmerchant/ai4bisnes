@@ -543,6 +543,10 @@ export default async function Home() {
           usahawan Malaysia 🇲🇾
         </p>
         <p className="mt-1">
+          <Link href="/" className="underline hover:text-white">
+            Laman Utama
+          </Link>{" "}
+          ·{" "}
           <Link href="/masuk" className="underline hover:text-white">
             Log Masuk
           </Link>{" "}

@@ -10,7 +10,7 @@ bertanda `- [ ]` dari atas.
 - [x] Panduan Guna AI untuk Salon/Spa Tulis Post Promosi Tanpa Bunyi Generik (slug: panduan-guna-ai-salon-spa-tulis-post-promosi-tanpa-bunyi-generik)
 - [x] Cara Guna ChatGPT untuk Tarik Pelajar Baharu ke Pusat Tuisyen/Latihan Anda (slug: cara-guna-chatgpt-untuk-tarik-pelajar-baharu-ke-pusat-tuisyen-latihan-anda)
 - [x] 7 Prompt AI untuk Ejen Hartanah Tulis Iklan Rumah Lebih Menarik (slug: 7-prompt-ai-untuk-ejen-hartanah-tulis-iklan-rumah-lebih-menarik)
-- [ ] Panduan AI untuk Bengkel Automotif — Peringatan Servis & Post Medsos
+- [x] Panduan AI untuk Bengkel Automotif — Peringatan Servis & Post Medsos (slug: panduan-ai-untuk-bengkel-automotif-peringatan-servis-post-medsos)
 - [ ] Cara Guna AI untuk Homestay/Resort Tulis Deskripsi Booking Lebih Menjual
 - [ ] Prompt AI untuk Kontraktor Tulis Sebut Harga Nampak Profesional
 - [ ] Kenapa Jawapan ChatGPT "Tak Kena" Dengan Bisnes Anda — Dan Cara Betulkan

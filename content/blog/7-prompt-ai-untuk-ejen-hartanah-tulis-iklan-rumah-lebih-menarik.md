@@ -17,18 +17,18 @@ faq:
     a: "Semua prompt di sini berfungsi dengan mana-mana AI teks seperti Claude, Gemini, atau Copilot. Struktur asasnya sama."
 ---
 
-Cara paling efektif guna AI untuk tulis iklan rumah ialah **bagi setiap prompt satu peranan spesifik** — jangan minta satu prompt hasilkan semua jenis kandungan. Dedikasikan satu prompt untuk deskripsi listing, satu lagi untuk caption Instagram, satu lagi untuk jawab soalan pembeli. Dengan pendekatan ini, setiap output lebih tepat dan jimat masa edit.
+Cara paling efektif guna AI untuk tulis iklan rumah ialah **bagi setiap prompt satu peranan spesifik**. jangan minta satu prompt hasilkan semua jenis kandungan. Dedikasikan satu prompt untuk deskripsi listing, satu lagi untuk caption Instagram, satu lagi untuk jawab soalan pembeli. Dengan pendekatan ini, setiap output lebih tepat dan jimat masa edit.
 
 ## Kenapa Iklan Rumah Guna AI Selalunya Nampak "Template Semata-Mata"?
 
-Masalah utama iklan properti yang dihasilkan AI di Malaysia ialah **prompt terlalu umum**. Ejen minta "tulis iklan rumah menarik" tanpa bagi konteks — hasilnya ayat generik macam "rumah strategik, berdekatan kemudahan awam" yang boleh guna untuk mana-mana rumah dari Johor sampai Pulau Pinang.
+Masalah utama iklan properti yang dihasilkan AI di Malaysia ialah **prompt terlalu umum**. Ejen minta "tulis iklan rumah menarik" tanpa bagi konteks. hasilnya ayat generik macam "rumah strategik, berdekatan kemudahan awam" yang boleh guna untuk mana-mana rumah dari Johor sampai Pulau Pinang.
 
 Iklan yang meyakinkan pembeli perlukan **detail spesifik**:
 
-- **Nama kawasan dan kondominium/landed** — "condo di Setia Alam" bukan "rumah di Selangor"
-- **Angka tepat** — RM450,000, bukan "harga berpatutan"
-- **Ciri unik** — "tingkat 22, view pool, unit corner"
-- **Sebab nak jual** — "owner pindah oversea, serious seller"
+- **Nama kawasan dan kondominium/landed**. "condo di Setia Alam" bukan "rumah di Selangor"
+- **Angka tepat**. RM450,000, bukan "harga berpatutan"
+- **Ciri unik**. "tingkat 22, view pool, unit corner"
+- **Sebab nak jual**. "owner pindah oversea, serious seller"
 
 Semua elemen ni kena masuk dalam prompt. Barulah output AI nampak macam iklan properti betul, bukan copy-paste template.
 
@@ -36,7 +36,7 @@ Semua elemen ni kena masuk dalam prompt. Barulah output AI nampak macam iklan pr
 
 ### 1. Prompt Deskripsi Listing untuk Portal (PropertyGuru / iProperty)
 
-Prompt ni hasilkan deskripsi lengkap dalam 3 variasi — pendek (mobile view), sederhana (listing utama), dan panjang (SEO untuk portal):
+Prompt ni hasilkan deskripsi lengkap dalam 3 variasi. pendek (mobile view), sederhana (listing utama), dan panjang (SEO untuk portal):
 
 > "Saya nak jual [ jenis properti, contoh: kondominium 3 bilik 2 bilik air ] di [ kawasan, contoh: Setia Alam, Shah Alam ]. Spesifikasi: [keluasan 1,100 sqft, tingkat 22, fully furnished, view pool, 1 parkir ]. Harga: RM [ 450,000 ]. Kelebihan utama: [ 5 minit ke NKVE, ada kolam renang, gym, playground ]. Buat 3 variasi deskripsi: (1) 50 patah perkataan untuk mobile view, (2) 120 patah untuk listing utama, (3) 200 patah untuk SEO. Nada: profesional tapi mesra, sesuai pembeli muda Malaysia."
 
@@ -62,13 +62,13 @@ Gunakan untuk group-group properti Malaysia yang aktif:
 
 Berguna bila klien dokong antara dua pilihan:
 
-> "Saya ada dua properti: (A) [ detail ] dan (B) [ detail ]. Tulis perbandingan dalam format jadual untuk: harga, keluasan, lokasi, kemudahan, potential appreciation. Lepas tu bagi pendapat neutral yang mana lebih sesuai untuk (1) pembeli kali pertama, (2) investor. Jangan pilih berat sebelah — biar klien decide."
+> "Saya ada dua properti: (A) [ detail ] dan (B) [ detail ]. Tulis perbandingan dalam format jadual untuk: harga, keluasan, lokasi, kemudahan, potential appreciation. Lepas tu bagi pendapat neutral yang mana lebih sesuai untuk (1) pembeli kali pertama, (2) investor. Jangan pilih berat sebelah. biar klien decide."
 
 ### 6. Prompt Iklan "Urgent Sale" atau "Below Market"
 
 Untuk situasi nak cepat jual:
 
-> "Tulis iklan 'urgent sale' untuk [ properti ]. Sebab jual: [ owner pindah luar negara ]. Harga jual: RM [ 400,000 ] — [ 20% ] bawah market value. Panjang: 100 patah, rasa limited opportunity. Call-to-action kuat. Ada 3 slot: 'by appointment only'. Guna trigger words: 'serious seller', 'best deal in [ kawasan ]', 'jangan lepaskan'."
+> "Tulis iklan 'urgent sale' untuk [ properti ]. Sebab jual: [ owner pindah luar negara ]. Harga jual: RM [ 400,000 ]. [ 20% ] bawah market value. Panjang: 100 patah, rasa limited opportunity. Call-to-action kuat. Ada 3 slot: 'by appointment only'. Guna trigger words: 'serious seller', 'best deal in [ kawasan ]', 'jangan lepaskan'."
 
 ### 7. Prompt Testimonial Pelanggan (Untuk Social Proof)
 
@@ -78,24 +78,24 @@ Prompt ni hasilkan draf testimonial yang boleh dikongsi dengan klien untuk appro
 
 ## Macam Mana Nak Pastikan Output AI Tepat Dengan Spesifikasi Rumah?
 
-Kesilapan paling mahal bila guna AI untuk iklan hartanah ialah **AI boleh karang spec yang tak betul** — tingkat apartmen, keluasan, atau jarak ke kemudahan awam. Ini boleh jadi masalah jika tak disemak.
+Kesilapan paling mahal bila guna AI untuk iklan hartanah ialah **AI boleh karang spec yang tak betul**. tingkat apartmen, keluasan, atau jarak ke kemudahan awam. Ini boleh jadi masalah jika tak disemak.
 
 Langkah semak wajib sebelum post:
 
-1. **Email prompt pada diri sendiri** dengan semua angka tepat — harga, keluasan, bilik, parkir
+1. **Email prompt pada diri sendiri** dengan semua angka tepat. harga, keluasan, bilik, parkir
 2. **Guna template prompt** dan hanya ubah bahagian yang berbeza setiap listing
-3. **Baca semula output** — jangan copy-paste terus. Tanda ✓ bila semua angka betul
-4. **Minta rakan sekerja semak** — perspektif segar nampak kesilapan yang kita terlepas
+3. **Baca semula output**. jangan copy-paste terus. Tanda ✓ bila semua angka betul
+4. **Minta rakan sekerja semak**. perspektif segar nampak kesilapan yang kita terlepas
 
-Menurut garis panduan [Lembaga Penilai, Pentaksir, Ejen Harta Tanah dan Pengurus Harta (LPPEH)](https://lppeh.gov.my/), ejen hartanah bertanggungjawab atas ketepatan maklumat dalam iklan — termasuk kandungan yang dijana AI. Jadi walaupun AI yang tulis, anda yang jawab.
+Menurut garis panduan [Lembaga Penilai, Pentaksir, Ejen Harta Tanah dan Pengurus Harta (LPPEH)](https://lppeh.gov.my/), ejen hartanah bertanggungjawab atas ketepatan maklumat dalam iklan. termasuk kandungan yang dijana AI. Jadi walaupun AI yang tulis, anda yang jawab.
 
-## Bila AI Tak Cukup — Perlu Screening & Lawat Sendiri
+## Bila AI Tak Cukup. Perlu Screening & Lawat Sendiri
 
 AI tak boleh nampak keretak dinding, bau lembap, atau rasa "vibe" sesebuah rumah. **Guna AI untuk penulisan, bukan untuk gantikan lawatan tapak.** Tiga perkara yang mesti ejen buat sendiri:
 
-- **Lawatan tapak** — ambil gambar dan video sendiri
-- **Saringan pembeli** — qualify buyer dulu sebelum bagi alamat
-- **Semak dokumen** — geran, cukai, dan consent developer
+- **Lawatan tapak**. ambil gambar dan video sendiri
+- **Saringan pembeli**. qualify buyer dulu sebelum bagi alamat
+- **Semak dokumen**. geran, cukai, dan consent developer
 
 ## Satu Template Prompt Boleh Guna Berulang Kali
 
@@ -105,24 +105,24 @@ Daripada taip prompt penuh setiap listing baru, simpan template master dalam Not
 
 Dengan template ni, satu listing baru ambil masa 2 minit untuk prompt, 5 minit untuk edit output.
 
-Nak lebih banyak prompt siap pakai untuk pelbagai situasi perniagaan — dari iklan properti, deskripsi produk, sampai caption medsos — anda boleh dapatkan koleksi lengkap di [AI4Bisnes](/daftar) yang direka khas untuk konteks SME Malaysia.
+Nak lebih banyak prompt siap pakai untuk pelbagai situasi perniagaan. dari iklan properti, deskripsi produk, sampai caption medsos. anda boleh dapatkan 📥 <a href="https://caknaai.com/ebook/" target="_blank">Ebook Percuma: AI untuk Bisnes Kecil</a> — panduan 50 m/s + 19 template prompt siap guna. Sesuai untuk SME Malaysia. yang direka khas untuk konteks SME Malaysia.
 
 Kalau topik AI untuk bisnes kecil menarik minat anda, baca juga artikel berkaitan di [blog Cakna AI](https://caknaai.com/blog/) untuk lebih banyak strategi praktikal guna AI dalam perniagaan harian.
 
 ---
 
-*Ditulis oleh pasukan AI4Bisnes — koleksi prompt AI Bahasa Melayu untuk SME Malaysia. Kami bantu usahawan kecil guna AI tanpa perlu fikir prompt dari kosong. Kunjungi [ai4bisnes.com](https://ai4bisnes.com) untuk koleksi penuh.*
+*Ditulis oleh pasukan AI4Bisnes. koleksi prompt AI Bahasa Melayu untuk SME Malaysia. Kami bantu usahawan kecil guna AI tanpa perlu fikir prompt dari kosong. Kunjungi [ai4bisnes.com](https://ai4bisnes.com) untuk koleksi penuh.*
 
-## FAQ — Soalan Lazim Tentang Prompt AI untuk Iklan Hartanah
+## FAQ. Soalan Lazim Tentang Prompt AI untuk Iklan Hartanah
 
 **Q: Berapa prompt yang saya perlu ada untuk mula guna AI sebagai ejen?**
-A: Mulakan dengan 3 prompt asas — deskripsi listing, caption media sosial, dan jawapan soalan lazim. Tambah prompt lain bila dah selesa dengan workflow.
+A: Mulakan dengan 3 prompt asas. deskripsi listing, caption media sosial, dan jawapan soalan lazim. Tambah prompt lain bila dah selesa dengan workflow.
 
 **Q: Bolehkah saya guna ChatGPT versi percuma untuk tugas ni?**
 A: Ya. ChatGPT percuma (3.5/4o-mini) cukup memadai untuk tulis iklan dan caption. Versi berbayar diperlukan jika nak guna analisis imej atau dokumen.
 
 **Q: Macam mana nak pastikan iklan AI nampak lain dari ejen lain?**
-A: Masukkan personaliti anda dalam prompt — cara anda bercakap, frasa kegemaran, dan gaya komunikasi. AI akan tiru suara tersebut dan hasilnya unik pada anda.
+A: Masukkan personaliti anda dalam prompt. cara anda bercakap, frasa kegemaran, dan gaya komunikasi. AI akan tiru suara tersebut dan hasilnya unik pada anda.
 
 **Q: Ada risiko iklan yang sama dihasilkan untuk ramai ejen?**
 A: Risiko rendah selagi prompt anda spesifik dengan properti dan personaliti. Prompt umum tanpa konteks memang beri hasil generik.
@@ -143,7 +143,7 @@ A: AI teks boleh hasilkan skrip dan caption. Untuk video, anda perlukan RakAI at
 A: Tiada kewajipan undang-undang di Malaysia setakat ini, tapi integriti ejen digalakkan untuk semak dan sahkan sendiri kandungan sebelum terbit.
 
 **Q: Bagaimana nak guna AI untuk iklan properti komersial vs kediaman?**
-A: Bezakan dalam prompt — properti komersial perlukan detail ROI, kadar sewa RM/sqft, dan potensi bisnes. Kediaman fokus pada gaya hidup, komuniti, dan keselesaan.
+A: Bezakan dalam prompt. properti komersial perlukan detail ROI, kadar sewa RM/sqft, dan potensi bisnes. Kediaman fokus pada gaya hidup, komuniti, dan keselesaan.
 
 **Q: Macam mana nak buat AI faham istilah hartanah tempatan?**
 A: Masukkan glosari ringkas dalam prompt. Contoh: "bumi lot = lot bumi, Geran = Hakmilik, consent = kebenaran developer, strata = hak milik individu."
@@ -155,4 +155,4 @@ A: Boleh. Prompt: "Tulis emel follow-up untuk pembeli yang dah viewing [properti
 A: Setiap 3-6 bulan. Trend pemasaran properti berubah, dan prompt yang guna frasa lapuk akan hasilkan iklan yang kurang relevan.
 
 **Q: Adakah prompt ini berfungsi dengan AI tempatan seperti Mesh AI?**
-A: Ya. Struktur prompt arahan adalah universal. Cuma sesetengah AI tempatan mungkin kurang tepat untuk output panjang — test dulu.
+A: Ya. Struktur prompt arahan adalah universal. Cuma sesetengah AI tempatan mungkin kurang tepat untuk output panjang. test dulu.

@@ -6,6 +6,7 @@ import { createClient } from "@/lib/supabase/server";
 import { HARGA, type TierBayar, type Tempoh } from "@/lib/harga";
 import { ciptaBil, toyyibDikonfigurasi } from "@/lib/toyyibpay";
 import { hantarEmel, resendDikonfigurasi } from "@/lib/resend";
+import { dapatkanStripe, HARGA_STRIPE, dapatkanDomain } from "@/lib/stripe";
 import { cookies } from "next/headers";
 import { createClient as createAdminClient } from "@supabase/supabase-js";
 
@@ -135,7 +136,7 @@ export async function keluar() {
 export async function mulaBayar(formData: FormData) {
   const tier = formData.get("tier") as TierBayar;
   const period = formData.get("period") as Tempoh;
-  if (!(tier in HARGA) || !["bulanan", "tahunan"].includes(period))
+  if (!(tier in HARGA_STRIPE) || !["bulanan", "tahunan"].includes(period))
     redirect("/naik-taraf?ralat=Pilihan+tidak+sah");
 
   const supabase = await createClient();
@@ -144,39 +145,40 @@ export async function mulaBayar(formData: FormData) {
   } = await supabase.auth.getUser();
   if (!user) redirect("/masuk");
 
-  if (!toyyibDikonfigurasi())
-    redirect(
-      "/naik-taraf?ralat=Pembayaran+belum+dikonfigurasi.+Sila+hubungi+admin."
-    );
+  const priceId = HARGA_STRIPE[tier][period];
 
-  const harga = HARGA[tier][period];
-  const rujukan = `${user.id.slice(0, 8)}-${Date.now()}`;
-
-  let bil;
   try {
-    bil = await ciptaBil({
-      namaBil: `AI4Bisnes ${tier.toUpperCase()}`,
-      deskripsi: `Langganan ${tier} (${period}) — AI4Bisnes`,
-      amaunRM: harga,
-      emel: user.email ?? "",
-      rujukan,
+    const stripe = dapatkanStripe();
+    const session = await stripe.checkout.sessions.create({
+      mode: "subscription",
+      payment_method_types: ["card", "fpx"],
+      line_items: [{ price: priceId, quantity: 1 }],
+      customer_email: user.email ?? undefined,
+      metadata: {
+        user_id: user.id,
+        tier,
+        period,
+      },
+      subscription_data: {
+        metadata: {
+          user_id: user.id,
+          tier,
+          period,
+        },
+      },
+      success_url: `${dapatkanDomain()}/naik-taraf?status_id=1`,
+      cancel_url: `${dapatkanDomain()}/naik-taraf?status_id=0`,
     });
-  } catch {
-    redirect("/naik-taraf?ralat=Gagal+mencipta+bil.+Cuba+sebentar+lagi.");
+
+    if (!session.url) {
+      redirect("/naik-taraf?ralat=Gagal+mencipta+sesi+pembayaran");
+    }
+
+    redirect(session.url);
+  } catch (e) {
+    console.error("Stripe Checkout error:", e);
+    redirect("/naik-taraf?ralat=Gagal+mencipta+pembayaran.+Cuba+sebentar+lagi.");
   }
-
-  const { error } = await supabase.from("subscriptions").insert({
-    user_id: user.id,
-    tier,
-    period,
-    price_rm: harga,
-    status: "pending",
-    bill_code: bil.billCode,
-  });
-  if (error)
-    redirect(`/naik-taraf?ralat=${encodeURIComponent(error.message)}`);
-
-  redirect(bil.url);
 }
 
 export async function simpanVault(input: {

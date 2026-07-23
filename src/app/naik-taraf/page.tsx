@@ -148,9 +148,9 @@ export default async function NaikTaraf({
       </div>
 
       <p className="mt-6 text-xs text-neutral-500">
-        Pembayaran selamat melalui toyyibPay (FPX & kad). Langganan boleh
-        dibatalkan bila-bila masa — akses kekal sehingga tamat tempoh yang
-        dibayar.
+        Pembayaran selamat melalui Stripe (kad kredit & FPX). Langganan
+        boleh dibatalkan bila-bila masa — akses kekal sehingga tamat tempoh yang
+        dibayar. Caj akan dikenakan secara automatik setiap bulan/tahun.
       </p>
     </main>
   );

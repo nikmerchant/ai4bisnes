@@ -62,9 +62,19 @@ function KadTier({
         ))}
       </ul>
       {aktif && (
-        <p className="mt-4 rounded-lg bg-neutral-100 py-2 text-center text-sm font-medium dark:bg-neutral-900">
-          Pelan semasa anda
-        </p>
+        <div className="mt-4 flex flex-col gap-2">
+          <p className="rounded-lg bg-neutral-100 py-2 text-center text-sm font-medium dark:bg-neutral-900">
+            Pelan semasa anda
+          </p>
+          {tier !== "basic" && (
+            <a
+              href="/api/stripe/portal"
+              className="block w-full rounded-full border border-neutral-300 py-2.5 text-center text-sm font-medium text-neutral-700 transition-colors hover:bg-neutral-100 dark:border-neutral-700 dark:text-neutral-300 dark:hover:bg-neutral-800"
+            >
+              Urus Langganan (Portal Stripe)
+            </a>
+          )}
+        </div>
       )}
       {boleliBeli && (
         <div className="mt-4 flex flex-col gap-2">

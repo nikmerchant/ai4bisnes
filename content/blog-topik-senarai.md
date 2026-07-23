@@ -12,7 +12,7 @@ bertanda `- [ ]` dari atas.
 - [x] 7 Prompt AI untuk Ejen Hartanah Tulis Iklan Rumah Lebih Menarik (slug: 7-prompt-ai-untuk-ejen-hartanah-tulis-iklan-rumah-lebih-menarik)
 - [x] Panduan AI untuk Bengkel Automotif — Peringatan Servis & Post Medsos (slug: panduan-ai-untuk-bengkel-automotif-peringatan-servis-post-medsos)
 - [x] Cara Guna AI untuk Homestay/Resort Tulis Deskripsi Booking Lebih Menjual (slug: cara-guna-ai-untuk-homestay-resort-tulis-deskripsi-booking-lebih-menjual)
-- [ ] Prompt AI untuk Kontraktor Tulis Sebut Harga Nampak Profesional
+- [x] Prompt AI untuk Kontraktor Tulis Sebut Harga Nampak Profesional (slug: prompt-ai-untuk-kontraktor-tulis-sebut-harga-nampak-profesional)
 - [ ] Kenapa Jawapan ChatGPT "Tak Kena" Dengan Bisnes Anda — Dan Cara Betulkan
 - [ ] Cara Ajar AI Faham Bisnes Anda dalam 5 Minit (Panduan Master Instruction)
 - [ ] AI vs Copywriter — Bila Patut Guna AI, Bila Patut Upah Manusia

@@ -6,7 +6,7 @@ tags: ["ChatGPT", "prompt engineering"]
 heroImage: "/blog/kenapa-jawapan-chatgpt-tak-kena-dengan-bisnes-anda-dan-cara-betulkan.png"
 faq:
   - q: "Kenapa ChatGPT bagi jawapan yang sama macam orang lain?"
-    a: "Sebab ChatGPT tak ada konteks pasal bisnes anda. Macam orang jalan dalam gelap — dia jawab guna pattern umum dari data latihan, bukan specifik untuk kedai/ servis/ produk anda."
+    a: "Sebab ChatGPT tak ada konteks pasal bisnes anda. Macam orang jalan dalam gelap, dia jawab guna pattern umum dari data latihan, bukan spesifik untuk kedai/ servis/ produk anda."
   - q: "Apa benda Master Instruction dalam ChatGPT?"
     a: "Master Instruction (atau Custom Instructions) ialah arahan tetap yang ChatGPT ingat setiap kali anda mula sesi baru. Anda boleh set background bisnes, tone of voice, target market, alih-alih ulang setiap kali."
   - q: "Berapa lama nak setup Master Instruction untuk bisnes SME?"

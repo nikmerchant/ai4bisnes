@@ -559,7 +559,7 @@ export default async function Home() {
             Blog
           </Link>{" "}
           ·{" "}
-          <Link href="/hubungi" className="underline hover:text-white">
+          <Link href="/tentang" className="underline hover:text-white">Tentang Kami</Link> · <Link href="/hubungi" className="underline hover:text-white">
             Hubungi Kami
           </Link>{" "}
           ·{" "}

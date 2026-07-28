@@ -14,7 +14,7 @@ bertanda `- [ ]` dari atas.
 - [x] Cara Guna AI untuk Homestay/Resort Tulis Deskripsi Booking Lebih Menjual (slug: cara-guna-ai-untuk-homestay-resort-tulis-deskripsi-booking-lebih-menjual)
 - [x] Prompt AI untuk Kontraktor Tulis Sebut Harga Nampak Profesional (slug: prompt-ai-untuk-kontraktor-tulis-sebut-harga-nampak-profesional)
 - [x] Kenapa Jawapan ChatGPT "Tak Kena" Dengan Bisnes Anda — Dan Cara Betulkan (slug: kenapa-jawapan-chatgpt-tak-kena-dengan-bisnes-anda-dan-cara-betulkan)
-- [ ] Cara Ajar AI Faham Bisnes Anda dalam 5 Minit (Panduan Master Instruction)
+- [x] Cara Ajar AI Faham Bisnes Anda dalam 5 Minit (Panduan Master Instruction) (slug: cara-ajar-ai-faham-bisnes-anda-dalam-5-minit-panduan-master-instruction)
 - [ ] AI vs Copywriter — Bila Patut Guna AI, Bila Patut Upah Manusia
 - [ ] Cara Guna AI untuk SME Tulis Emel Susulan Pelanggan Yang Tak Jadi Beli
 - [ ] Prompt AI untuk Jawab Soalan Pelanggan di WhatsApp Business Lebih Pantas

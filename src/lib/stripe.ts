@@ -13,15 +13,15 @@ export function dapatkanStripe(): Stripe {
 
 export default dapatkanStripe;
 
-// Price IDs (test mode) — dicipta via setup script
+// Price IDs (live mode)
 export const HARGA_STRIPE = {
   pro: {
-    bulanan: "price_1TwHYsQh8fY1mDt49Av8MMuw",
-    tahunan: "price_1TwHYsQh8fY1mDt4Tt4wd9pk",
+    bulanan: "price_1Tyo5RHdTmMBu5cVwkSuZESp",
+    tahunan: "price_1Tyo5RHdTmMBu5cVPdqEHG7",
   },
   max: {
-    bulanan: "price_1TwHYtQh8fY1mDt4l49gGPXt",
-    tahunan: "price_1TwHYtQh8fY1mDt4dMgNoC5W",
+    bulanan: "price_1Tyo5vHdTmMBu5cVztUNecEE",
+    tahunan: "price_1Tyo6MHdTmMBu5cVUI5Zm8Op",
   },
 } as const;
 

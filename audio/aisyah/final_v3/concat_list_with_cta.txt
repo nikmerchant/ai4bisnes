@@ -1,0 +1,6 @@
+file '1_chatgpt_aisyah.mp4'
+file '2_profil_aisyah.mp4'
+file '3_harga_aisyah.mp4'
+file '4_caption_aisyah.mp4'
+file '5_takpayah_aisyah.mp4'
+file '6_cta.mp4'

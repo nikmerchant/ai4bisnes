@@ -15,7 +15,7 @@ bertanda `- [ ]` dari atas.
 - [x] Prompt AI untuk Kontraktor Tulis Sebut Harga Nampak Profesional (slug: prompt-ai-untuk-kontraktor-tulis-sebut-harga-nampak-profesional)
 - [x] Kenapa Jawapan ChatGPT "Tak Kena" Dengan Bisnes Anda — Dan Cara Betulkan (slug: kenapa-jawapan-chatgpt-tak-kena-dengan-bisnes-anda-dan-cara-betulkan)
 - [x] Cara Ajar AI Faham Bisnes Anda dalam 5 Minit (Panduan Master Instruction) (slug: cara-ajar-ai-faham-bisnes-anda-dalam-5-minit-panduan-master-instruction)
-- [ ] AI vs Copywriter — Bila Patut Guna AI, Bila Patut Upah Manusia
+- [x] AI vs Copywriter — Bila Patut Guna AI, Bila Patut Upah Manusia (slug: ai-vs-copywriter-bila-patut-guna-ai-bila-patut-upah-manusia)
 - [ ] Cara Guna AI untuk SME Tulis Emel Susulan Pelanggan Yang Tak Jadi Beli
 - [ ] Prompt AI untuk Jawab Soalan Pelanggan di WhatsApp Business Lebih Pantas
 - [ ] Panduan Guna AI untuk Rancang Kempen Medsos Bulan Perayaan (Raya/CNY/Merdeka)

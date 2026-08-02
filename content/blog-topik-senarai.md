@@ -16,9 +16,28 @@ bertanda `- [ ]` dari atas.
 - [x] Kenapa Jawapan ChatGPT "Tak Kena" Dengan Bisnes Anda — Dan Cara Betulkan (slug: kenapa-jawapan-chatgpt-tak-kena-dengan-bisnes-anda-dan-cara-betulkan)
 - [x] Cara Ajar AI Faham Bisnes Anda dalam 5 Minit (Panduan Master Instruction) (slug: cara-ajar-ai-faham-bisnes-anda-dalam-5-minit-panduan-master-instruction)
 - [x] AI vs Copywriter — Bila Patut Guna AI, Bila Patut Upah Manusia (slug: ai-vs-copywriter-bila-patut-guna-ai-bila-patut-upah-manusia)
-- [ ] Cara Guna AI untuk SME Tulis Emel Susulan Pelanggan Yang Tak Jadi Beli
+- [x] Cara Guna AI untuk SME Tulis Emel Susulan Pelanggan Yang Tak Jadi Beli (slug: cara-guna-ai-untuk-sme-tulis-emel-susulan-pelanggan-yang-tak-jadi-beli)
 - [ ] Prompt AI untuk Jawab Soalan Pelanggan di WhatsApp Business Lebih Pantas
 - [ ] Panduan Guna AI untuk Rancang Kempen Medsos Bulan Perayaan (Raya/CNY/Merdeka)
 - [ ] Cara Guna ChatGPT Percuma vs Berbayar — Beza Sebenar untuk Bisnes Kecil
 - [ ] 5 Kesilapan SME Malaysia Bila Guna AI untuk Pemasaran (dan Cara Elak)
 - [ ] Cara Guna AI untuk Tulis Deskripsi Produk Shopee/TikTok Shop Lebih Menjual
+- [ ] Cara Guna AI untuk Analisis Saingan SME — Tahu Apa Competitor Buat Tanpa Spy
+- [ ] Panduan Guna AI untuk Tulis Proposa/Quotation yang Nampak Mahal (tanpa upah designer)
+- [ ] AI untuk Urus Stok Inventori — Guna Spreadsheet + ChatGPT, Tak Perlu Software Mahal
+- [ ] Cara AI Bantu Tulis Google Business Profile Post siap Dengan Gambar (untuk ranking tempatan)
+- [ ] Prompt AI untuk Buat Content Plan Bulanan dalam 15 Minit (Template siap Guna)
+- [ ] Panduan Guna AI untuk Tulis Bio & Deskripsi Bisnes yang Menjual (Semua Platform)
+- [ ] Prompt AI untuk Balas Review Google Pelanggan — Sopan, Cepat, Selesaikan Masalah
+- [ ] Cara AI Bantu SME Buat Laporan Jualan Bulanan Automatik dari Data WhatsApp/Google Sheets
+- [ ] Panduan Guna AI untuk Urus Cashflow SME — Tahu Untung Rugi Setiap Minggu
+- [ ] Cara Guna AI untuk Rekrut & Onboard Staf Baru (Iklan Jawatan + SOP Ringkas)
+- [ ] Prompt AI untuk Tulis Caption Promo 11.11 / Black Friday / 12.12 (Persediaan Q4)
+- [ ] Cara AI Bantu SME Cari Idea Produk & Bundle Baru dari Data Jualan
+- [ ] Panduan Guna AI untuk Buat Video Iklan Pendek dari Gambar Produk (Tanpa Editor)
+- [ ] Cara Guna AI untuk Susun Jadual Staf & Ingatkan Shift Secara Automatik
+- [ ] Prompt AI untuk Tulis Balasan Emel Aduan / Customer Marah
+- [ ] Cara Guna AI untuk Update Harga & Katalog Serentak di Semua Platform
+- [ ] Panduan Guna AI untuk Bina Landing Page Tanpa Coding dalam Sehari
+- [ ] Cara Guna AI untuk Buat Kajian Pasaran Mini — Faham Customer Tanpa Survey Mahal
+- [ ] Cara Guna AI untuk Bina FAQ Automatik dari Soalan Pelanggan yang Sama Berulang

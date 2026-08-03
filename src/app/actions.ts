@@ -254,13 +254,6 @@ export async function simpanProfil(formData: FormData) {
   if (!business_name || !category_id)
     redirect("/onboarding?ralat=Sila+isi+nama+bisnes+dan+pilih+kategori");
 
-  // Baca tier sedia ada sebelum update — elak overwrite ke 'basic'
-  const { data: profilSediaAda } = await supabase
-    .from("profiles")
-    .select("tier")
-    .eq("id", user.id)
-    .single();
-
   const { error } = await supabase
     .from("profiles")
     .update({
@@ -270,7 +263,6 @@ export async function simpanProfil(formData: FormData) {
       target_customer: ((formData.get("target_customer") as string) ?? "").trim(),
       location: ((formData.get("location") as string) ?? "").trim(),
       onboarded: true,
-      tier: profilSediaAda?.tier ?? "basic",
     })
     .eq("id", user.id);
 

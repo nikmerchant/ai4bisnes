@@ -18,7 +18,7 @@ bertanda `- [ ]` dari atas.
 - [x] AI vs Copywriter — Bila Patut Guna AI, Bila Patut Upah Manusia (slug: ai-vs-copywriter-bila-patut-guna-ai-bila-patut-upah-manusia)
 - [x] Cara Guna AI untuk SME Tulis Emel Susulan Pelanggan Yang Tak Jadi Beli (slug: cara-guna-ai-untuk-sme-tulis-emel-susulan-pelanggan-yang-tak-jadi-beli)
 <!-- GEO SPRINT (3 Ogos 2026): CONTENT 1 — sumber asas artikel: /opt/ai4bisnes-video/GEO_Content_Sprint_5_Pieces.md ([CONTENT 1]). Frontmatter tags WAJIB: ["GEO", "AI Visibility"]. -->
-- [ ] 3 Cara Tahu Apa ChatGPT Kata Tentang Brand Anda (Tanpa Bayar Sebarang Tool)
+- [x] 3 Cara Tahu Apa ChatGPT Kata Tentang Brand Anda (Tanpa Bayar Sebarang Tool) (slug: 3-cara-tahu-apa-chatgpt-kata-tentang-brand-anda-tanpa-bayar-sebarang-tool)
 <!-- GEO SPRINT (3 Ogos 2026): CONTENT 4 — sumber asas artikel: /opt/ai4bisnes-video/GEO_Content_Sprint_5_Pieces.md ([CONTENT 4]). Frontmatter tags WAJIB: ["GEO", "AI Visibility"]. -->
 - [ ] Kenapa AI Masih Ingat Perniagaan Lama Anda? Panduan PKS Kemas Kini Jawapan AI
 - [ ] Prompt AI untuk Jawab Soalan Pelanggan di WhatsApp Business Lebih Pantas

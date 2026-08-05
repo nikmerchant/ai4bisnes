@@ -49,7 +49,9 @@ TUGAS: Tulis DAN PUBLISH **SATU** artikel blog SAHAJA. JANGAN tulis lebih dari s
 7. Tandakan topik "- [x] <tajuk> (slug: <slug>)" dalam content/blog-topik-senarai.md.
 8. Jalankan `npm run build` di /root/projects/ai4bisnes. KALAU gagal: betulkan, atau padam fail .md + kembalikan "- [ ]", laporkan BLOCKED.
 9. Commit + push: `git add content/blog/<slug>.md public/blog/<slug>.png content/blog-topik-senarai.md && git commit -m "Terbit: <tajuk>" && git push origin master`.
-10. Laporkan: tajuk, URL live (https://ai4bisnes.com/blog/<slug>), 2-3 ayat intro, dan status hero image.
+10. **TRIGGER DEPLOY (WAJIB)**: Selepas push, jalankan `bash /root/.hermes/scripts/coolify-deploy.sh` — script trigger Coolify API deploy (app AI4Bisnes). Pastikan output "Deploy queued OK". JANGAN skip step ini — Coolify webhook auto-deploy TIDAK berfungsi untuk repo ini.
+11. **VERIFY**: Tunggu deploy siap (~2-5 min), kemudian curl URL live dan pastikan HTTP 200: `curl -s -o /dev/null -w "%{http_code}" https://ai4bisnes.com/blog/<slug>`. Kalau bukan 200, tunggu 60s dan ulang sehingga 3 kali sebelum laporkan.
+12. Laporkan: tajuk, URL live (https://ai4bisnes.com/blog/<slug>), 2-3 ayat intro, dan status hero image.
 
 KES TEPI: Kalau SEMUA topik dah "- [x]", laporkan "senarai habis" — JANGAN cipta topik sendiri.
 

@@ -2,22 +2,28 @@ import { dapatkanProfil } from "./shared";
 import type { Profil } from "./shared";
 
 /* Profile Completion Score — gamifikasi ringan */
-const REQUIRED_FIELDS: { key: keyof Profil; label: string; points: number }[] = [
-  { key: "business_name", label: "Nama Bisnes", points: 15 },
+const FIELDS: { key: keyof Profil; label: string; points: number }[] = [
+  { key: "business_name", label: "Nama Bisnes", points: 10 },
   { key: "category_id", label: "Kategori", points: 10 },
-  { key: "products", label: "Produk/Servis", points: 20 },
-  { key: "target_customer", label: "Pelanggan Sasaran", points: 20 },
-  { key: "location", label: "Lokasi", points: 15 },
+  { key: "products", label: "Produk/Servis", points: 10 },
+  { key: "target_customer", label: "Pelanggan Sasaran", points: 10 },
+  { key: "location", label: "Lokasi", points: 5 },
+  { key: "usp", label: "USP", points: 15 },
+  { key: "tone_of_voice", label: "Gaya Suara", points: 10 },
+  { key: "main_competitors", label: "Pesaing", points: 10 },
+  { key: "price_range", label: "Julat Harga", points: 5 },
+  { key: "platforms", label: "Platform Jualan", points: 10 },
+  { key: "website", label: "Website", points: 5 },
 ];
 
 export function calcProfileScore(p: Profil): {
   pct: number;
   missing: string[];
 } {
-  let score = 20; // 20% auto untuk onboarding done
+  let score = 0;
   const missing: string[] = [];
 
-  for (const f of REQUIRED_FIELDS) {
+  for (const f of FIELDS) {
     const val = p[f.key];
     if (val && String(val).trim() && Number(val) !== 0) {
       score += f.points;

@@ -254,6 +254,9 @@ export async function simpanProfil(formData: FormData) {
   if (!business_name || !category_id)
     redirect("/onboarding?ralat=Sila+isi+nama+bisnes+dan+pilih+kategori");
 
+  // Platform: checkbox → comma-separated string
+  const platformList = formData.getAll("platforms").map((s) => String(s)).join(", ");
+
   const { error } = await supabase
     .from("profiles")
     .update({
@@ -262,6 +265,12 @@ export async function simpanProfil(formData: FormData) {
       products: ((formData.get("products") as string) ?? "").trim(),
       target_customer: ((formData.get("target_customer") as string) ?? "").trim(),
       location: ((formData.get("location") as string) ?? "").trim(),
+      usp: ((formData.get("usp") as string) ?? "").trim(),
+      tone_of_voice: ((formData.get("tone_of_voice") as string) ?? "").trim(),
+      main_competitors: ((formData.get("main_competitors") as string) ?? "").trim(),
+      price_range: ((formData.get("price_range") as string) ?? "").trim(),
+      platforms: platformList,
+      website: ((formData.get("website") as string) ?? "").trim(),
       onboarded: true,
     })
     .eq("id", user.id);

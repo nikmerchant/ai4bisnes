@@ -503,6 +503,40 @@ export default async function Home() {
         </Reveal>
       </section>
 
+      {/* TESTIMONI */}
+      <section className="mx-auto w-full max-w-4xl px-6 py-20 text-center">
+        <Reveal>
+          <p className="text-xs font-bold uppercase tracking-[0.25em] text-violet-600">
+            Testimoni
+          </p>
+          <h2 className="mt-3 text-2xl font-extrabold tracking-tight sm:text-3xl">
+            Apa Kata <span className="text-violet-600">Pengguna</span> Kami
+          </h2>
+          <p className="mx-auto mt-4 max-w-lg text-sm leading-relaxed text-zinc-500">
+            Dengar sendiri pengalaman usahawan yang dah guna AI4Bisnes untuk
+            bisnes harian mereka.
+          </p>
+        </Reveal>
+
+        <Reveal>
+          <div className="mx-auto mt-8 max-w-md overflow-hidden rounded-2xl border-2 border-violet-100 bg-violet-50/50 shadow-lg">
+            <video
+              controls
+              playsInline
+              preload="metadata"
+              className="w-full"
+              poster="/testimoni-poster.jpg"
+            >
+              <source src="/testimoni.mp4" type="video/mp4" />
+              Maaf, browser anda tidak menyokong mainan video.
+            </video>
+          </div>
+          <p className="mx-auto mt-4 max-w-md text-xs font-medium text-zinc-400">
+            🎥 Testimoni sebenar dari pengguna AI4Bisnes
+          </p>
+        </Reveal>
+      </section>
+
       {/* CTA AKHIR */}
       <section className="relative overflow-hidden bg-zinc-950 text-white">
         <div className="aurora-a" aria-hidden />

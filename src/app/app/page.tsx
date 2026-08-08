@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { BusinessProgress } from "./business-progress";
 import { keluar } from "@/app/actions";
 import { CtaSpinner } from "@/app/cta-spinner";
 import { SubmitButton } from "@/app/submit-button";
@@ -163,6 +164,9 @@ export default async function Dashboard() {
           </SubmitButton>
         </form>
       </header>
+
+      {/* PROGRES BISNES */}
+      <BusinessProgress />
 
       {/* VIDEO PANDUAN */}
       <details className="mb-6 rounded-2xl border-2 border-violet-600 p-4">

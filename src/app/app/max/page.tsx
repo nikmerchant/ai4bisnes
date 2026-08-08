@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { CtaSpinner } from "@/app/cta-spinner";
 import { Library, type PromptItem } from "../library";
 import { dapatkanProfil, isiPrompt, PANGKAT } from "../shared";
+import { BusinessProgress } from "../business-progress";
 
 export default async function LibraryMax() {
   const { supabase, user, profil } = await dapatkanProfil();
@@ -24,6 +25,7 @@ export default async function LibraryMax() {
 
   return (
     <main className="mx-auto w-full max-w-2xl px-6 py-10">
+      <BusinessProgress />
       <p className="mb-2 text-sm">
         <Link
           href="/app"

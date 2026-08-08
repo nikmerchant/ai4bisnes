@@ -1,5 +1,8 @@
 import Link from "next/link";
 import { BusinessProgress } from "./business-progress";
+import { QuickActions } from "./quick-actions";
+import { ProfileScore } from "./profile-score";
+import { RecentActivity } from "./recent-activity";
 import { keluar } from "@/app/actions";
 import { CtaSpinner } from "@/app/cta-spinner";
 import { SubmitButton } from "@/app/submit-button";
@@ -116,7 +119,7 @@ export default async function Dashboard() {
     <main className="mx-auto w-full max-w-2xl px-6 py-10">
       <header className="mb-6 flex items-start justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold">{profil.business_name}</h1>
+          <h1 className="text-2xl font-bold">Selamat datang, {profil.business_name} 👋</h1>
           <p className="text-sm text-neutral-500">
             {profil.categories?.name_ms} ·{" "}
             <span className="font-medium uppercase">{profil.tier}</span> ·{" "}
@@ -167,6 +170,15 @@ export default async function Dashboard() {
 
       {/* PROGRES BISNES */}
       <BusinessProgress />
+
+      {/* PROFILE COMPLETION SCORE */}
+      <ProfileScore />
+
+      {/* QUICK ACTIONS — task-oriented grid */}
+      <QuickActions />
+
+      {/* RECENT ACTIVITY */}
+      <RecentActivity />
 
       {/* VIDEO PANDUAN */}
       <details className="mb-6 rounded-2xl border-2 border-violet-600 p-4">

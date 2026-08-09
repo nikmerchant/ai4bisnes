@@ -21,7 +21,7 @@ bertanda `- [ ]` dari atas.
 - [x] 3 Cara Tahu Apa ChatGPT Kata Tentang Brand Anda (Tanpa Bayar Sebarang Tool) (slug: 3-cara-tahu-apa-chatgpt-kata-tentang-brand-anda-tanpa-bayar-sebarang-tool)
 <!-- GEO SPRINT (3 Ogos 2026): CONTENT 4 — sumber asas artikel: /opt/ai4bisnes-video/GEO_Content_Sprint_5_Pieces.md ([CONTENT 4]). Frontmatter tags WAJIB: ["GEO", "AI Visibility"]. -->
 - [x] Kenapa AI Masih Ingat Perniagaan Lama Anda? Panduan PKS Kemas Kini Jawapan AI (slug: kenapa-ai-masih-ingat-perniagaan-lama-anda-panduan-pks-kemas-kini-jawapan-ai)
-- [ ] Prompt AI untuk Jawab Soalan Pelanggan di WhatsApp Business Lebih Pantas
+- [x] Prompt AI untuk Jawab Soalan Pelanggan di WhatsApp Business Lebih Pantas (slug: prompt-ai-untuk-jawab-soalan-pelanggan-di-whatsapp-business-lebih-pantas)
 - [ ] Panduan Guna AI untuk Rancang Kempen Medsos Bulan Perayaan (Raya/CNY/Merdeka)
 - [ ] Cara Guna ChatGPT Percuma vs Berbayar — Beza Sebenar untuk Bisnes Kecil
 - [ ] 5 Kesilapan SME Malaysia Bila Guna AI untuk Pemasaran (dan Cara Elak)

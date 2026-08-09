@@ -139,6 +139,14 @@ export default async function Dashboard() {
               <CtaSpinner />
             </Link>{" "}
             ·{" "}
+            · {" "}
+            <Link
+              href="/app/history"
+              className="rounded px-0.5 underline active:opacity-70"
+            >
+              📋 Sejarah
+              <CtaSpinner />
+            </Link>
             <Link
               href="/app/affiliate"
               className="rounded px-0.5 underline active:opacity-70"

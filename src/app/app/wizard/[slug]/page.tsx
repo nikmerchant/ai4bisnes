@@ -2,8 +2,8 @@ import { redirect } from "next/navigation";
 import { dapatkanProfil, PANGKAT } from "@/app/app/shared";
 import { getTask } from "../tasks";
 import { TaskWizardClient } from "../task-wizard-client";
+import Link from "next/link";
 
-/* Dynamic task wizard page — /app/wizard/[slug] */
 export default async function TaskWizardPage({
   params,
 }: {
@@ -17,12 +17,10 @@ export default async function TaskWizardPage({
   const { profil } = await dapatkanProfil();
   const pangkat = PANGKAT[profil.tier];
 
-  // Check tier access
   if (PANGKAT[task.tier] > pangkat) {
     redirect("/naik-taraf");
   }
 
-  // Auto-fill default values from profile
   const fieldsWithDefaults = task.fields.map((f) => {
     if (f.name === "produk" || f.name === "produk_detail") {
       return { ...f, defaultValue: profil.products || "" };
@@ -35,12 +33,14 @@ export default async function TaskWizardPage({
 
   return (
     <main className="mx-auto w-full max-w-lg px-6 py-10">
-      <a
-        href="/app/wizard"
-        className="mb-4 inline-block text-sm text-neutral-500 underline"
-      >
-        ← Semua tugasan
-      </a>
+      <nav className="mb-4 flex items-center gap-4 text-sm">
+        <Link href="/app" className="text-neutral-500 underline">
+          ← Dashboard
+        </Link>
+        <Link href="/app/wizard" className="text-neutral-500 underline">
+          ← Semua tugasan
+        </Link>
+      </nav>
 
       <h1 className="text-2xl font-bold">
         {task.emoji} {task.title}

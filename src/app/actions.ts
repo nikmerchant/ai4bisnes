@@ -254,10 +254,19 @@ export async function simpanProfil(formData: FormData) {
   if (!business_name || !category_id)
     redirect("/onboarding?ralat=Sila+isi+nama+bisnes+dan+pilih+kategori");
 
-  // Platform: checkbox → comma-separated string
+  // Platform: checkbox -> comma-separated string
   const platformList = formData.getAll("platforms").map((s) => String(s)).join(", ");
 
-  const { error } = await supabase
+  // Guna service_role client untuk update (bypass RLS -- getUser dah verify)
+  const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  if (!serviceKey) {
+    redirect("/onboarding?ralat=Konfigurasi+pelayan+tidak+lengkap.+Sila+hubungi+sokongan.");
+  }
+
+  const { createClient: createAdminClient } = require("@supabase/supabase-js");
+  const admin = createAdminClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, serviceKey);
+
+  const { error } = await admin
     .from("profiles")
     .update({
       business_name,

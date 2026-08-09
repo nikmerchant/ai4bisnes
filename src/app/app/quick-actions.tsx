@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { CtaSpinner } from "@/app/cta-spinner";
 
 /* Tier badge — kecil, sebelah nama tugas */
 function TierBadge({ tier }: { tier: "basic" | "pro" | "max" }) {
@@ -18,7 +17,7 @@ function TierBadge({ tier }: { tier: "basic" | "pro" | "max" }) {
   );
 }
 
-/* Quick Actions — task-oriented grid */
+/* Quick Actions — task-oriented grid linking to wizard */
 const KATEGORI = [
   {
     emoji: "🎬",
@@ -26,9 +25,9 @@ const KATEGORI = [
     desc: "TikTok, Social Post, Reels",
     warna: "from-rose-500 to-pink-600",
     tugas: [
-      { nama: "TikTok Script", href: "/app/pro", tier: "pro" as const },
-      { nama: "Social Media Post", href: "/app/pro", tier: "pro" as const },
-      { nama: "Hook Generator", href: "/app/pro", tier: "pro" as const },
+      { nama: "TikTok Script", href: "/app/wizard/tiktok-script", tier: "pro" as const },
+      { nama: "Social Media Post", href: "/app/wizard/social-post", tier: "pro" as const },
+      { nama: "Hook Generator", href: "/app/wizard/social-post", tier: "pro" as const },
     ],
   },
   {
@@ -37,9 +36,9 @@ const KATEGORI = [
     desc: "WhatsApp, Follow-up, Closing",
     warna: "from-emerald-500 to-green-600",
     tugas: [
-      { nama: "WhatsApp Reply", href: "/app/pro", tier: "pro" as const },
-      { nama: "Follow-up Pro spek", href: "/app/pro", tier: "pro" as const },
-      { nama: "Closing Script", href: "/app/max", tier: "max" as const },
+      { nama: "WhatsApp Reply", href: "/app/wizard/whatsapp-reply", tier: "pro" as const },
+      { nama: "Follow-up Pro spek", href: "/app/wizard/follow-up", tier: "pro" as const },
+      { nama: "Closing Script", href: "/app/wizard/closing-script", tier: "max" as const },
     ],
   },
   {
@@ -59,9 +58,9 @@ const KATEGORI = [
     desc: "Product, Iklan, Headline",
     warna: "from-amber-500 to-orange-600",
     tugas: [
-      { nama: "Product Description", href: "/app/pro", tier: "pro" as const },
-      { nama: "Iklan FB/IG", href: "/app/pro", tier: "pro" as const },
-      { nama: "Headline", href: "/app/pro", tier: "pro" as const },
+      { nama: "Product Description", href: "/app/wizard/product-desc", tier: "pro" as const },
+      { nama: "Iklan FB/IG", href: "/app/wizard/ad-copy", tier: "pro" as const },
+      { nama: "Headline", href: "/app/wizard/product-desc", tier: "pro" as const },
     ],
   },
 ];
@@ -69,9 +68,17 @@ const KATEGORI = [
 export function QuickActions() {
   return (
     <div className="mb-8">
-      <h2 className="mb-4 text-lg font-bold">
-        Apa yang anda mahu siapkan hari ini?
-      </h2>
+      <div className="mb-4 flex items-center justify-between">
+        <h2 className="text-lg font-bold">
+          Apa yang anda mahu siapkan hari ini?
+        </h2>
+        <Link
+          href="/app/wizard"
+          className="text-xs font-medium text-violet-600 underline dark:text-violet-400"
+        >
+          Semua tugasan →
+        </Link>
+      </div>
       <div className="grid gap-3 sm:grid-cols-2">
         {KATEGORI.map((kat) => (
           <div
@@ -94,7 +101,6 @@ export function QuickActions() {
                 >
                   {t.nama}
                   <TierBadge tier={t.tier} />
-                  <CtaSpinner />
                 </Link>
               ))}
             </div>

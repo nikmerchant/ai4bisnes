@@ -22,7 +22,7 @@ bertanda `- [ ]` dari atas.
 <!-- GEO SPRINT (3 Ogos 2026): CONTENT 4 — sumber asas artikel: /opt/ai4bisnes-video/GEO_Content_Sprint_5_Pieces.md ([CONTENT 4]). Frontmatter tags WAJIB: ["GEO", "AI Visibility"]. -->
 - [x] Kenapa AI Masih Ingat Perniagaan Lama Anda? Panduan PKS Kemas Kini Jawapan AI (slug: kenapa-ai-masih-ingat-perniagaan-lama-anda-panduan-pks-kemas-kini-jawapan-ai)
 - [x] Prompt AI untuk Jawab Soalan Pelanggan di WhatsApp Business Lebih Pantas (slug: prompt-ai-untuk-jawab-soalan-pelanggan-di-whatsapp-business-lebih-pantas)
-- [ ] Panduan Guna AI untuk Rancang Kempen Medsos Bulan Perayaan (Raya/CNY/Merdeka)
+- [x] Panduan Guna AI untuk Rancang Kempen Medsos Bulan Perayaan (Raya/CNY/Merdeka) (slug: panduan-guna-ai-untuk-rancang-kempen-medsos-bulan-perayaan)
 - [ ] Cara Guna ChatGPT Percuma vs Berbayar — Beza Sebenar untuk Bisnes Kecil
 - [ ] 5 Kesilapan SME Malaysia Bila Guna AI untuk Pemasaran (dan Cara Elak)
 - [ ] Cara Guna AI untuk Tulis Deskripsi Produk Shopee/TikTok Shop Lebih Menjual

@@ -1,4 +1,4 @@
-import type { ContentCalendarInputs, PlanArtifact, PlanItem } from "./types";
+import type { ContentCalendarInputs, MarketingPlanInputs, PlanArtifact, PlanItem } from "./types";
 
 const ISO_DATE = /^\d{4}-\d{2}-\d{2}$/;
 const STATUSES = new Set(["planned", "drafted", "approved", "scheduled", "published", "skipped"]);
@@ -111,6 +111,25 @@ export function validateCalendarInputs(value: unknown): ContentCalendarInputs {
   };
 }
 
-export function validateArtifactForUpdate(value: unknown): PlanArtifact {
-  return parsePlanResponse(JSON.stringify(value), "content_calendar");
+export function validateMarketingPlanInputs(value: unknown): MarketingPlanInputs {
+  if (!isObject(value) || !validDate(value.startDate)) throw new Error("Tarikh mula diperlukan.");
+  const channels = Array.isArray(value.channels)
+    ? value.channels.filter((item): item is string => typeof item === "string").map((item) => item.slice(0, 40)).slice(0, 6)
+    : [];
+  if (!channels.length) throw new Error("Pilih sekurang-kurangnya satu saluran.");
+  const objective = text(value.objective, 120);
+  if (!objective) throw new Error("Matlamat pemasaran diperlukan.");
+  const allowedIntensity = ["Ringan", "Sederhana", "Agresif"] as const;
+  if (!allowedIntensity.includes(value.intensity as (typeof allowedIntensity)[number])) throw new Error("Tahap aktiviti tidak sah.");
+  return {
+    startDate: value.startDate,
+    objective,
+    channels,
+    promotion: text(value.promotion, 500),
+    intensity: value.intensity as MarketingPlanInputs["intensity"],
+  };
+}
+
+export function validateArtifactForUpdate(value: unknown, kind: PlanArtifact["plan_kind"] = "content_calendar"): PlanArtifact {
+  return parsePlanResponse(JSON.stringify(value), kind);
 }

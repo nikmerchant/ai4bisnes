@@ -46,3 +46,11 @@ export type ContentCalendarInputs = {
   objective: string;
   notes: string;
 };
+
+export type MarketingPlanInputs = {
+  startDate: string;
+  objective: string;
+  channels: string[];
+  promotion: string;
+  intensity: "Ringan" | "Sederhana" | "Agresif";
+};

@@ -49,7 +49,7 @@ const KATEGORI = [
     tugas: [
       { nama: "Offer Generator", href: "/app/wizard/offer-generator", tier: "pro" as const },
       { nama: "Customer Persona", href: "/app/wizard/customer-persona", tier: "pro" as const },
-      { nama: "Marketing Plan", href: "/app/pek", tier: "max" as const },
+      { nama: "Campaign Generator", href: "/app/wizard/campaign-generator", tier: "max" as const },
     ],
   },
   {

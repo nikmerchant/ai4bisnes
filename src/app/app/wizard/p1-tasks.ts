@@ -115,4 +115,52 @@ HASILKAN:
 
 Bezakan dengan jelas antara inferens munasabah dan fakta yang belum diketahui. Jangan cipta statistik.`,
   },
+  {
+    slug: "campaign-generator",
+    title: "Campaign Generator",
+    emoji: "🚀",
+    category: "marketing",
+    tier: "max",
+    desc: "Bina blueprint kempen lengkap merentas kandungan, jualan dan WhatsApp.",
+    fields: [
+      { name: "objektif", label: "Objektif kempen", type: "select", options: ["Lancarkan produk", "Dapatkan leads", "Naikkan jualan", "Aktifkan pelanggan lama", "Bina awareness"], required: true },
+      { name: "promosi", label: "Produk / promosi utama", type: "text", placeholder: "cth: Pakej Ramadan RM99 dengan penghantaran percuma", required: true },
+      { name: "tempoh", label: "Tempoh kempen", type: "select", options: ["7 hari", "14 hari", "21 hari", "30 hari"], required: true },
+      { name: "channel", label: "Saluran utama", type: "select", options: ["Facebook + WhatsApp", "Instagram + WhatsApp", "TikTok + WhatsApp", "Semua platform profil"], required: true },
+    ],
+    promptTemplate: `Anda adalah campaign strategist untuk PKS Malaysia.
+
+Tugas: Bina blueprint kempen yang praktikal, tersusun dan boleh dilaksanakan oleh pasukan kecil tanpa kod.
+
+MAKLUMAT BISNES:
+- Nama: {nama_bisnes}
+- Produk/Servis: {produk}
+- Pelanggan sasaran: {sasaran}
+- Lokasi: {lokasi}
+- USP: {usp}
+- Julat harga: {harga}
+- Tone of voice: {tone}
+- Platform semasa: {platform}
+- Pesaing utama: {pesaing}
+
+BRIEF KEMPEN:
+- Objektif: {objektif_input}
+- Produk / promosi: {promosi_input}
+- Tempoh: {tempoh_input}
+- Saluran utama: {channel_input}
+
+HASILKAN DALAM FORMAT BERSTRUKTUR:
+1. BIG IDEA — satu konsep utama dan sebab ia sesuai
+2. AUDIENS — segmen utama, masalah dan pencetus tindakan
+3. OFFER & MESSAGE — nilai, mesej utama, bukti yang diperlukan dan CTA
+4. FUNNEL — Awareness → Consideration → Conversion → Follow-up
+5. FASA KEMPEN — persediaan, pelancaran, momentum dan last call
+6. CONTENT PILLARS — 4 tema dengan 3 idea kandungan setiap tema
+7. CHANNEL PLAN — peranan setiap saluran yang dipilih
+8. WHATSAPP SALES FLOW — mesej pembukaan, follow-up dan closing
+9. KPI — metrik praktikal mengikut objektif, tanpa mencipta benchmark palsu
+10. RISIKO — andaian, kekangan dan perkara yang perlu disahkan sebelum launch
+
+Akhiri dengan checklist tindakan 7 langkah yang disusun mengikut keutamaan. Gunakan Bahasa Melayu natural dan jangan mereka-reka statistik, testimoni atau bukti.`,
+  },
 ];

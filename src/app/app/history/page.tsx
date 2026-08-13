@@ -27,6 +27,7 @@ const TASK_EMOJIS: Record<string, string> = {
   "offer-generator": "🎁",
   "objection-handler": "🛡️",
   "customer-persona": "🎯",
+  "campaign-generator": "🚀",
 };
 
 export default async function HistoryPage() {

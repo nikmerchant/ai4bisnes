@@ -24,6 +24,9 @@ const TASK_EMOJIS: Record<string, string> = {
   "product-desc": "✍️",
   "ad-copy": "📢",
   "closing-script": "💰",
+  "offer-generator": "🎁",
+  "objection-handler": "🛡️",
+  "customer-persona": "🎯",
 };
 
 export default async function HistoryPage() {

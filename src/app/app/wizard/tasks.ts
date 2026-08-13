@@ -1,5 +1,6 @@
 import type { Profil } from "../shared";
 import { isiPrompt } from "../shared";
+import { P1_TASKS } from "./p1-tasks";
 
 /* ─────────────────────────────────────────────────────────────
    TASK REGISTRY — setiap task wizard dikonfigurasi di sini
@@ -332,6 +333,8 @@ Tone: {tone}.
 
 Pastikan copy follow guideline platform (bukan clickbait).`,
   },
+
+  ...P1_TASKS,
 
   // ── MAX TIER ──
   {

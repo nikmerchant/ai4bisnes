@@ -37,19 +37,19 @@ const KATEGORI = [
     warna: "from-emerald-500 to-green-600",
     tugas: [
       { nama: "WhatsApp Reply", href: "/app/wizard/whatsapp-reply", tier: "pro" as const },
-      { nama: "Follow-up Pro spek", href: "/app/wizard/follow-up", tier: "pro" as const },
+      { nama: "Objection Handler", href: "/app/wizard/objection-handler", tier: "pro" as const },
       { nama: "Closing Script", href: "/app/wizard/closing-script", tier: "max" as const },
     ],
   },
   {
     emoji: "📈",
     nama: "Marketing",
-    desc: "Plan, Campaign, Persona",
+    desc: "Plan, Offer, Persona",
     warna: "from-blue-500 to-cyan-600",
     tugas: [
-      { nama: "Pek Kempen", href: "/app/pek", tier: "pro" as const },
+      { nama: "Offer Generator", href: "/app/wizard/offer-generator", tier: "pro" as const },
+      { nama: "Customer Persona", href: "/app/wizard/customer-persona", tier: "pro" as const },
       { nama: "Marketing Plan", href: "/app/pek", tier: "max" as const },
-      { nama: "Customer Persona", href: "/app/pro", tier: "pro" as const },
     ],
   },
   {

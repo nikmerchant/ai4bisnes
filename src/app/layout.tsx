@@ -22,11 +22,11 @@ const instrumentSerif = Instrument_Serif({
 export const metadata: Metadata = {
   metadataBase: new URL("https://ai4bisnes.com"),
   title: {
-    default: "AI4Bisnes — Prompt AI Bahasa Melayu untuk Bisnes Anda",
+    default: "AI4Bisnes — Alat Kerja AI Bahasa Melayu untuk Bisnes Anda",
     template: "%s · AI4Bisnes",
   },
   description:
-    "177+ prompt AI dalam Bahasa Melayu yang siap diisi maklumat bisnes anda. Salin, tampal ke ChatGPT atau Claude, dan AI terus faham bisnes anda. Percuma untuk SME Malaysia.",
+    "320+ prompt, alat tugasan dan pelan pemasaran Bahasa Melayu yang disesuaikan menggunakan profil bisnes anda. Untuk SME dan usahawan Malaysia.",
   keywords: [
     "prompt AI Bahasa Melayu",
     "prompt ChatGPT Melayu",
@@ -41,15 +41,15 @@ export const metadata: Metadata = {
     locale: "ms_MY",
     url: "https://ai4bisnes.com",
     siteName: "AI4Bisnes",
-    title: "AI4Bisnes — Prompt AI Bahasa Melayu untuk Bisnes Anda",
+    title: "AI4Bisnes — Alat Kerja AI untuk Bisnes Anda",
     description:
-      "177+ prompt AI Bahasa Melayu siap diisi maklumat bisnes anda. Untuk SME & usahawan Malaysia.",
+      "320+ prompt, alat tugasan dan pelan pemasaran Bahasa Melayu untuk SME dan usahawan Malaysia.",
   },
   twitter: {
     card: "summary_large_image",
-    title: "AI4Bisnes — Prompt AI Bahasa Melayu untuk Bisnes Anda",
+    title: "AI4Bisnes — Alat Kerja AI untuk Bisnes Anda",
     description:
-      "177+ prompt AI Bahasa Melayu siap diisi maklumat bisnes anda. Untuk SME & usahawan Malaysia.",
+      "320+ prompt, alat tugasan dan pelan pemasaran Bahasa Melayu untuk SME dan usahawan Malaysia.",
   },
   robots: { index: true, follow: true },
 };

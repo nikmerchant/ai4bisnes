@@ -15,12 +15,12 @@ export const metadata = {
 
 const SOALAN = [
   {
-    s: "Perlu ke saya ada langganan ChatGPT atau Claude berbayar?",
-    j: "Tidak. Prompt kami berfungsi dengan versi percuma ChatGPT dan Claude. Versi berbayar memberi jawapan lebih baik, tapi bukan syarat.",
+    s: "Perlu ke saya ada langganan ChatGPT, Claude atau Gemini berbayar?",
+    j: "Tidak. Arahan yang disediakan AI4Bisnes boleh digunakan dengan versi percuma ChatGPT, Claude atau Gemini. Pelan berbayar mungkin memberi hasil lebih baik, tetapi bukan syarat untuk bermula.",
   },
   {
     s: "Saya tak pandai IT — susah ke nak guna?",
-    j: "Kalau anda boleh salin dan tampal, anda boleh guna AI4Bisnes. Setiap prompt ada butang Salin & Buka — satu klik, terus jalan.",
+    j: "Kalau anda boleh salin dan tampal, anda boleh guna AI4Bisnes. Pilih tugasan, isi beberapa maklumat ringkas, kemudian salin arahan yang sudah disesuaikan untuk bisnes anda.",
   },
   {
     s: "Apa beza dengan senarai prompt percuma di internet?",
@@ -28,11 +28,11 @@ const SOALAN = [
   },
   {
     s: "Boleh batal langganan bila-bila masa?",
-    j: "Ya. Akses kekal sehingga tamat tempoh yang dibayar, dan simpanan Vault anda masih boleh dibaca selepas itu — kami tak sandera data anda.",
+    j: "Ya. Akses kekal sehingga tamat tempoh yang dibayar. Simpanan lama dalam Vault masih boleh dibaca selepas itu.",
   },
   {
     s: "Maklumat bisnes saya selamat?",
-    j: "Maklumat profil anda disimpan selamat dan hanya digunakan untuk menala prompt anda. Kami tidak berkongsi data anda dengan pihak ketiga.",
+    j: "Maklumat profil digunakan untuk menyesuaikan arahan dan alat kerja dalam akaun anda. Apabila anda memilih untuk menampal arahan ke ChatGPT, Claude atau Gemini, penggunaan di platform tersebut tertakluk pada polisi penyedia AI berkenaan.",
   },
 ];
 
@@ -46,7 +46,7 @@ const JSON_LD = {
       url: "https://ai4bisnes.com",
       logo: "https://ai4bisnes.com/opengraph-image",
       description:
-        "Platform prompt AI Bahasa Melayu untuk SME dan usahawan Malaysia.",
+        "Platform alat kerja dan prompt AI Bahasa Melayu untuk SME dan usahawan Malaysia.",
     },
     {
       "@type": "SoftwareApplication",
@@ -56,7 +56,7 @@ const JSON_LD = {
       operatingSystem: "Web",
       inLanguage: "ms",
       description:
-        "177+ prompt AI Bahasa Melayu siap diisi maklumat bisnes anda — salin, tampal ke ChatGPT atau Claude.",
+        "320+ prompt, alat tugasan dan pelan pemasaran Bahasa Melayu yang disesuaikan menggunakan maklumat bisnes anda.",
       offers: [
         {
           "@type": "Offer",
@@ -190,12 +190,13 @@ export default async function Home() {
             </span>
           </h1>
           <p className="fade-up fade-up-3 mx-auto mt-8 max-w-2xl text-lg text-zinc-400">
-            177+ prompt Bahasa Melayu yang{" "}
+            Alat kerja dan 320+ prompt Bahasa Melayu yang{" "}
             <strong className="text-white">
               siap diisi maklumat bisnes anda
             </strong>{" "}
-            — nama, produk, pelanggan sasaran, lokasi. Salin, tampal, dan AI
-            terus bekerja seperti staf yang dah lama kenal bisnes anda sejak bertahun-tahun lamanya.
+            berdasarkan nama, produk, pelanggan sasaran, lokasi dan gaya brand
+            anda. Pilih tugasan, isi maklumat ringkas, kemudian gunakannya di
+            ChatGPT, Claude atau Gemini.
           </p>
           <div className="fade-up fade-up-4 mt-10 flex flex-wrap justify-center gap-4">
             <Link href="/daftar" className={`${btnUtama} active:opacity-80`}>
@@ -278,22 +279,23 @@ export default async function Home() {
         <div className="mx-auto w-full max-w-5xl px-6 py-20">
           <Reveal>
             <h2 className="text-center text-3xl font-extrabold uppercase tracking-tight sm:text-4xl">
-              Dengan hanya 3 langkah, <span className="text-violet-400">anda dah boleh mulakan strategi untuk roketkan bisnes anda</span>
+              Siapkan kerja bisnes dalam{" "}
+              <span className="text-violet-400">3 langkah mudah</span>
             </h2>
           </Reveal>
           <div className="mt-12 grid gap-8 sm:grid-cols-3">
             {[
               {
                 t: "Ceritakan bisnes anda sekali",
-                d: "Nama bisnes, kategori, produk, pelanggan sasaran, lokasi — 2 minit semasa daftar.",
+                d: "Isi nama bisnes, produk, pelanggan sasaran, lokasi, USP, gaya brand dan platform yang anda gunakan.",
               },
               {
-                t: "Setiap prompt dah auto-isi maklumat",
-                d: "Semua 177+ prompt terus terisi maklumat bisnes anda. Ada tempat kosong? Isi dalam ruang disediakan, done siap!",
+                t: "Pilih kerja yang mahu disiapkan",
+                d: "Gunakan 320+ prompt atau pilih alat khusus untuk content, jualan, pemasaran dan copywriting.",
               },
               {
-                t: "Salin & buka ChatGPT/Claude",
-                d: "Satu klik — prompt tersalin automatik dan pada masa yang sama AI kegemaran anda terus terbuka. Jawapan yang tepat terus dituju kepada bisnes anda, buat pertama kalinya.",
+                t: "Guna dengan AI pilihan anda",
+                d: "Salin arahan yang sudah disesuaikan dan buka ChatGPT atau Claude. Arahan itu juga boleh ditampal ke Gemini.",
               },
             ].map((s, i) => (
               <Reveal key={s.t}>
@@ -333,9 +335,24 @@ export default async function Home() {
               b: "Percuma",
             },
             {
+              t: "🧭 11 alat tugasan berpandu",
+              d: "Siapkan skrip TikTok, post media sosial, balasan WhatsApp, offer, persona pelanggan, iklan dan tugasan jualan melalui borang ringkas.",
+              b: "Pro & Max",
+            },
+            {
               t: "🎁 Pek Kempen Bulanan",
-              d: "Setiap bulan, pek kempen siap-guna ikut kalendar Malaysia — Raya, Merdeka, 11.11, cuti sekolah. Strategi + post + iklan + emel.",
+              d: "Setiap bulan, dapat pek kempen ikut kalendar Malaysia seperti Raya, Merdeka, 11.11 dan cuti sekolah. Siap dengan strategi, post, iklan dan emel.",
               b: "Pro",
+            },
+            {
+              t: "🗓 Kalendar Kandungan",
+              d: "Bina jadual kandungan berstruktur, semak setiap idea, ubah status dan simpan pelan untuk dibuka semula.",
+              b: "Max",
+            },
+            {
+              t: "📈 Pelan Pemasaran 30 Hari",
+              d: "Susun 30 tindakan pemasaran harian berdasarkan matlamat, saluran dan promosi semasa bisnes anda.",
+              b: "Max",
             },
             {
               t: "🗄 Vault Bisnes Saya",
@@ -390,7 +407,7 @@ export default async function Home() {
                 <h3 className="text-lg font-extrabold uppercase">Basic</h3>
                 <p className="mt-1 text-4xl font-extrabold">Percuma</p>
                 <ul className="mt-5 space-y-2.5 text-sm text-zinc-600">
-                  <li>✓ 90+ prompt asas khusus untuk bisnes anda</li>
+                  <li>✓ 163+ prompt asas khusus untuk bisnes anda</li>
                   <li>✓ Prompt khas kategori anda</li>
                   <li>✓ Modul Ajar AI Anda</li>
                   <li>✓ Carian & kegemaran</li>
@@ -411,7 +428,8 @@ export default async function Home() {
                 </p>
                 <ul className="mt-5 space-y-2.5 text-sm text-zinc-600">
                   <li>✓ Semua dalam Basic</li>
-                  <li>✓ 66+ prompt iklan, copywriting, SEO, lead</li>
+                  <li>✓ 144+ prompt Pro untuk pemasaran & jualan</li>
+                  <li>✓ 9 alat tugasan berpandu</li>
                   <li>✓ Pek Kempen Bulanan</li>
                   <li>✓ Vault Bisnes Saya</li>
                 </ul>
@@ -438,6 +456,8 @@ export default async function Home() {
                 <ul className="mt-4 space-y-2.5 text-sm text-zinc-300">
                   <li>✓ Semua dalam Pro</li>
                   <li>✓ Coach Max — 12 sesi coaching + diagnostik</li>
+                  <li>✓ Kalendar Kandungan & Pelan Pemasaran 30 Hari</li>
+                  <li>✓ Campaign Generator & Closing Script</li>
                   <li>✓ Money model & Grand Slam Offer anda</li>
                   <li>✓ Audit bisnes setiap suku tahun</li>
                 </ul>
@@ -490,14 +510,15 @@ export default async function Home() {
             Visi Kami
           </p>
           <p className="mx-auto mt-6 max-w-2xl text-2xl font-medium leading-snug text-zinc-700 sm:text-3xl">
-            Hari ini, AI4Bisnes bantu ChatGPT faham bisnes anda.
+            Hari ini, AI4Bisnes bantu anda siapkan kerja dengan AI yang lebih
+            memahami konteks bisnes anda.
             <br />
             <span
               className="italic text-violet-600"
               style={{ fontFamily: "var(--font-serif-aksen), serif" }}
             >
-              Esok, AI4Bisnes sendiri akan jadi pembantu AI bisnes tempatan
-              anda.
+              Seterusnya, AI4Bisnes akan berkembang menjadi hab AI perniagaan
+              untuk PKS Malaysia.
             </span>
           </p>
         </Reveal>

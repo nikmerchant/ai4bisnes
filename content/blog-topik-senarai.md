@@ -24,7 +24,7 @@ bertanda `- [ ]` dari atas.
 - [x] Prompt AI untuk Jawab Soalan Pelanggan di WhatsApp Business Lebih Pantas (slug: prompt-ai-untuk-jawab-soalan-pelanggan-di-whatsapp-business-lebih-pantas)
 - [x] Panduan Guna AI untuk Rancang Kempen Medsos Bulan Perayaan (Raya/CNY/Merdeka) (slug: panduan-guna-ai-untuk-rancang-kempen-medsos-bulan-perayaan)
 - [x] Cara Guna ChatGPT Percuma vs Berbayar — Beza Sebenar untuk Bisnes Kecil (slug: cara-guna-chatgpt-percuma-vs-berbayar-beza-sebenar-untuk-bisnes-kecil)
-- [ ] 5 Kesilapan SME Malaysia Bila Guna AI untuk Pemasaran (dan Cara Elak)
+- [x] 5 Kesilapan SME Malaysia Bila Guna AI untuk Pemasaran (dan Cara Elak) (slug: 5-kesilapan-sme-malaysia-bila-guna-ai-untuk-pemasaran-dan-cara-elak)
 - [ ] Cara Guna AI untuk Tulis Deskripsi Produk Shopee/TikTok Shop Lebih Menjual
 - [ ] Cara Guna AI untuk Analisis Saingan SME — Tahu Apa Competitor Buat Tanpa Spy
 - [ ] Panduan Guna AI untuk Tulis Proposa/Quotation yang Nampak Mahal (tanpa upah designer)

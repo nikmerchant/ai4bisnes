@@ -25,7 +25,7 @@ bertanda `- [ ]` dari atas.
 - [x] Panduan Guna AI untuk Rancang Kempen Medsos Bulan Perayaan (Raya/CNY/Merdeka) (slug: panduan-guna-ai-untuk-rancang-kempen-medsos-bulan-perayaan)
 - [x] Cara Guna ChatGPT Percuma vs Berbayar — Beza Sebenar untuk Bisnes Kecil (slug: cara-guna-chatgpt-percuma-vs-berbayar-beza-sebenar-untuk-bisnes-kecil)
 - [x] 5 Kesilapan SME Malaysia Bila Guna AI untuk Pemasaran (dan Cara Elak) (slug: 5-kesilapan-sme-malaysia-bila-guna-ai-untuk-pemasaran-dan-cara-elak)
-- [ ] Cara Guna AI untuk Tulis Deskripsi Produk Shopee/TikTok Shop Lebih Menjual
+- [x] Cara Guna AI untuk Tulis Deskripsi Produk Shopee/TikTok Shop Lebih Menjual (slug: cara-guna-ai-untuk-tulis-deskripsi-produk-shopee-tiktok-shop-lebih-menjual)
 - [ ] Cara Guna AI untuk Analisis Saingan SME — Tahu Apa Competitor Buat Tanpa Spy
 - [ ] Panduan Guna AI untuk Tulis Proposa/Quotation yang Nampak Mahal (tanpa upah designer)
 - [ ] AI untuk Urus Stok Inventori — Guna Spreadsheet + ChatGPT, Tak Perlu Software Mahal

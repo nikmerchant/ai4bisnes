@@ -27,7 +27,7 @@ bertanda `- [ ]` dari atas.
 - [x] 5 Kesilapan SME Malaysia Bila Guna AI untuk Pemasaran (dan Cara Elak) (slug: 5-kesilapan-sme-malaysia-bila-guna-ai-untuk-pemasaran-dan-cara-elak)
 - [x] Cara Guna AI untuk Tulis Deskripsi Produk Shopee/TikTok Shop Lebih Menjual (slug: cara-guna-ai-untuk-tulis-deskripsi-produk-shopee-tiktok-shop-lebih-menjual)
 - [x] Cara Guna AI untuk Analisis Saingan SME — Tahu Apa Competitor Buat Tanpa Spy (slug: cara-guna-ai-untuk-analisis-saingan-sme-tahu-apa-competitor-buat-tanpa-spy)
-- [ ] Panduan Guna AI untuk Tulis Proposa/Quotation yang Nampak Mahal (tanpa upah designer)
+- [x] Panduan Guna AI untuk Tulis Proposa/Quotation yang Nampak Mahal (tanpa upah designer) (slug: panduan-guna-ai-untuk-tulis-proposal-quotation-yang-nampak-mahal-tanpa-upah-designer)
 - [ ] AI untuk Urus Stok Inventori — Guna Spreadsheet + ChatGPT, Tak Perlu Software Mahal
 - [ ] Cara AI Bantu Tulis Google Business Profile Post siap Dengan Gambar (untuk ranking tempatan)
 - [ ] Prompt AI untuk Buat Content Plan Bulanan dalam 15 Minit (Template siap Guna)

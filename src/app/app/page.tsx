@@ -194,7 +194,7 @@ export default async function Dashboard() {
           href="/app/native-social-post"
           className="mb-8 block rounded-2xl border-2 border-violet-600 bg-violet-50 p-5 transition-colors hover:bg-violet-100 dark:bg-violet-950/40 dark:hover:bg-violet-950"
         >
-          <span className="text-xs font-bold uppercase tracking-wide text-violet-600 dark:text-violet-300">AI4Bisnes 2.0 · Slice 1 Local</span>
+          <span className="text-xs font-bold uppercase tracking-wide text-violet-600 dark:text-violet-300">AI4Bisnes 2.0 · Canary Terhad</span>
           <span className="mt-1 block text-lg font-bold">Jana Social Post dalam platform →</span>
           <span className="mt-1 block text-sm text-neutral-600 dark:text-neutral-300">Business Context → structured artifact → edit → simpan → buka semula → luluskan. Legacy Smart Bridge kekal tersedia.</span>
         </Link>

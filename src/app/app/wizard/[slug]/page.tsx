@@ -51,7 +51,7 @@ export default async function TaskWizardPage({
 
       {nativeSliceAvailable && (
         <Link href="/app/native-social-post" className="mt-5 block rounded-xl border-2 border-violet-600 bg-violet-50 p-4 dark:bg-violet-950/40">
-          <span className="text-xs font-bold uppercase tracking-wide text-violet-600 dark:text-violet-300">Slice 1 Local/Staging</span>
+          <span className="text-xs font-bold uppercase tracking-wide text-violet-600 dark:text-violet-300">Slice 1 · Canary Terhad</span>
           <span className="mt-1 block font-bold">Cuba Native Social Post →</span>
           <span className="mt-1 block text-xs text-neutral-500">Jana, edit, simpan dan buka semula dalam AI4Bisnes. Smart Bridge di bawah kekal sebagai fallback.</span>
         </Link>

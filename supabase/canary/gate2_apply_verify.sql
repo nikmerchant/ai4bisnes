@@ -3,7 +3,7 @@
 -- Safe to re-run. STOP on any exception.
 
 create temporary table _legacy_generated_outputs_policies_before on commit preserve rows as
-select policyname, cmd, roles::text, coalesce(qual,''), coalesce(with_check,'')
+select policyname, cmd, roles::text, coalesce(qual,'') as qual, coalesce(with_check,'') as with_check
 from pg_policies
 where schemaname='public' and tablename='generated_outputs';
 
@@ -136,10 +136,10 @@ begin
   if exists (
     (select policyname,cmd,roles,qual,with_check from _legacy_generated_outputs_policies_before
      except
-     select policyname,cmd,roles::text,coalesce(qual,''),coalesce(with_check,'')
+     select policyname,cmd,roles::text,coalesce(qual,'') as qual,coalesce(with_check,'') as with_check
      from pg_policies where schemaname='public' and tablename='generated_outputs')
     union all
-    (select policyname,cmd,roles::text,coalesce(qual,''),coalesce(with_check,'')
+    (select policyname,cmd,roles::text,coalesce(qual,'') as qual,coalesce(with_check,'') as with_check
      from pg_policies where schemaname='public' and tablename='generated_outputs'
      except
      select policyname,cmd,roles,qual,with_check from _legacy_generated_outputs_policies_before)

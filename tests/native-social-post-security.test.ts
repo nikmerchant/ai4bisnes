@@ -8,12 +8,20 @@ const STORAGE = readFileSync(new URL("../src/lib/native-social-post/storage.serv
 const PROVIDER = readFileSync(new URL("../src/lib/native-social-post/provider.server.ts", import.meta.url), "utf8");
 const ACCESS = readFileSync(new URL("../src/lib/native-social-post/access.ts", import.meta.url), "utf8");
 const ACCESS_POLICY = readFileSync(new URL("../src/lib/native-social-post/access-policy.ts", import.meta.url), "utf8");
+const CONTEXT = readFileSync(new URL("../src/lib/native-social-post/context.server.ts", import.meta.url), "utf8");
 
 
 test("generation authenticates before privileged client and derives tier server-side", () => {
   assert.ok(GENERATE_ROUTE.indexOf("loadNativeSocialPostContext()") < GENERATE_ROUTE.indexOf("createAdminClient()"));
   assert.match(GENERATE_ROUTE, /canUseNativeSocialPostTier\(context\.tier\)/);
   assert.doesNotMatch(GENERATE_ROUTE, /body\.user_id|body\.tier/);
+});
+
+test("context reads entitlement through a post-auth owner-scoped admin query", () => {
+  assert.ok(CONTEXT.indexOf("auth.getUser()") < CONTEXT.indexOf("createAdminClient()"));
+  assert.match(CONTEXT, /admin\s*\.from\("subscriptions"\)/);
+  assert.match(CONTEXT, /\.eq\("user_id", user\.id\)/);
+  assert.doesNotMatch(CONTEXT, /supabase\s*\.from\("subscriptions"\)/);
 });
 
 test("generation has origin, JSON, body-size, idempotency and usage caps", () => {

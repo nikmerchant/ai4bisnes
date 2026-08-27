@@ -1,6 +1,7 @@
 import "server-only";
 
 import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 import {
   buildBusinessContextSnapshot,
   type NativeSocialPostBusinessProfile,
@@ -32,13 +33,14 @@ export async function loadNativeSocialPostContext() {
   if (!user) return { ok: false as const, reason: "unauthenticated" as const };
 
   await supabase.rpc("semak_langganan");
+  const admin = createAdminClient();
   const [{ data, error }, { data: subscriptionRows, error: subscriptionError }] = await Promise.all([
     supabase
       .from("profiles")
       .select("business_name, products, target_customer, location, tier, onboarded, usp, tone_of_voice, price_range, platforms, categories(name_ms)")
       .eq("id", user.id)
       .maybeSingle(),
-    supabase
+    admin
       .from("subscriptions")
       .select("tier,status,expires_at")
       .eq("user_id", user.id),

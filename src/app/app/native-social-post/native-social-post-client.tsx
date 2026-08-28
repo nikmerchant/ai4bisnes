@@ -185,6 +185,7 @@ export function NativeSocialPostClient({
           {artifact.assumptions.length > 0 && <div className="rounded-lg border border-amber-200 bg-amber-50 p-3 text-xs text-amber-800 dark:border-amber-900 dark:bg-amber-950 dark:text-amber-200"><strong>Andaian:</strong> {artifact.assumptions.join(" ")}</div>}
           <div className="flex flex-wrap justify-end gap-2">
             {artifactId && <Link href={`/app/native-social-post/${artifactId}`} className="min-h-11 rounded-lg border border-zinc-300 px-4 py-2.5 text-sm font-medium dark:border-zinc-700">Pautan buka semula</Link>}
+            {artifactId && artifact.status === "approved" && <Link href={`/app/native-offer?sourcePostId=${artifactId}`} className="min-h-11 rounded-lg border border-violet-300 bg-violet-50 px-4 py-2.5 text-sm font-bold text-violet-700 dark:border-violet-800 dark:bg-violet-950 dark:text-violet-200">Bina Tawaran →</Link>}
             <button disabled={busy} onClick={() => save("draft")} className="min-h-11 rounded-lg border border-zinc-300 px-4 py-2.5 text-sm font-bold dark:border-zinc-700">Simpan Draf</button>
             <button disabled={busy} onClick={() => save("approved", true)} className="min-h-11 rounded-lg bg-emerald-600 px-4 py-2.5 text-sm font-bold text-white hover:bg-emerald-700">Lulus & Salin</button>
           </div>

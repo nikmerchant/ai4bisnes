@@ -27,6 +27,28 @@ type GenerateResponse = {
 
 const inputClass = "min-h-11 rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm dark:border-zinc-700 dark:bg-zinc-900";
 
+async function copyTextSafely(value: string) {
+  try {
+    await navigator.clipboard.writeText(value);
+    return true;
+  } catch {
+    try {
+      const textarea = document.createElement("textarea");
+      textarea.value = value;
+      textarea.setAttribute("readonly", "");
+      textarea.style.position = "fixed";
+      textarea.style.opacity = "0";
+      document.body.appendChild(textarea);
+      textarea.select();
+      const copied = document.execCommand("copy");
+      textarea.remove();
+      return copied;
+    } catch {
+      return false;
+    }
+  }
+}
+
 export function NativeSocialPostClient({
   business,
   initial,
@@ -104,8 +126,12 @@ export function NativeSocialPostClient({
       if (!response.ok || !data.artifact) throw new Error(data.error || "Artifact tidak dapat disimpan.");
       setArtifact(data.artifact);
       setTelemetry(data.telemetry || telemetry);
-      if (copyAfter) await navigator.clipboard.writeText(renderSocialPostText(data.artifact));
-      setMessage(copyAfter ? "Artifact diluluskan dan disalin." : "Perubahan disimpan.");
+      const copied = copyAfter ? await copyTextSafely(renderSocialPostText(data.artifact)) : false;
+      setMessage(copyAfter
+        ? copied
+          ? "Artifact diluluskan dan disalin."
+          : "Artifact diluluskan. Salinan automatik disekat pelayar — gunakan butang Salin."
+        : "Perubahan disimpan.");
     } catch (error) {
       setMessage(error instanceof Error ? error.message : "Ralat tidak dijangka.");
     } finally {
@@ -115,6 +141,12 @@ export function NativeSocialPostClient({
 
   function updateArtifact<K extends keyof SocialPostArtifact>(key: K, value: SocialPostArtifact[K]) {
     setArtifact((current) => current ? { ...current, [key]: value } : current);
+  }
+
+  async function copyCurrentArtifact() {
+    if (!artifact) return;
+    const copied = await copyTextSafely(renderSocialPostText(artifact));
+    setMessage(copied ? "Artifact disalin." : "Salinan disekat pelayar. Pilih dan salin teks secara manual.");
   }
 
   return (
@@ -186,8 +218,9 @@ export function NativeSocialPostClient({
           <div className="flex flex-wrap justify-end gap-2">
             {artifactId && <Link href={`/app/native-social-post/${artifactId}`} className="min-h-11 rounded-lg border border-zinc-300 px-4 py-2.5 text-sm font-medium dark:border-zinc-700">Pautan buka semula</Link>}
             {artifactId && artifact.status === "approved" && <Link href={`/app/native-offer?sourcePostId=${artifactId}`} className="min-h-11 rounded-lg border border-violet-300 bg-violet-50 px-4 py-2.5 text-sm font-bold text-violet-700 dark:border-violet-800 dark:bg-violet-950 dark:text-violet-200">Bina Tawaran →</Link>}
-            <button disabled={busy} onClick={() => save("draft")} className="min-h-11 rounded-lg border border-zinc-300 px-4 py-2.5 text-sm font-bold dark:border-zinc-700">Simpan Draf</button>
-            <button disabled={busy} onClick={() => save("approved", true)} className="min-h-11 rounded-lg bg-emerald-600 px-4 py-2.5 text-sm font-bold text-white hover:bg-emerald-700">Lulus & Salin</button>
+            <button type="button" disabled={busy} onClick={copyCurrentArtifact} className="min-h-11 rounded-lg border border-zinc-300 px-4 py-2.5 text-sm font-bold dark:border-zinc-700">Salin</button>
+            <button type="button" disabled={busy} onClick={() => save("draft")} className="min-h-11 rounded-lg border border-zinc-300 px-4 py-2.5 text-sm font-bold dark:border-zinc-700">Simpan Draf</button>
+            <button type="button" disabled={busy} onClick={() => save("approved", true)} className="min-h-11 rounded-lg bg-emerald-600 px-4 py-2.5 text-sm font-bold text-white hover:bg-emerald-700">Lulus & Salin</button>
           </div>
         </section>}
       </div>

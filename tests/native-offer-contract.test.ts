@@ -152,6 +152,7 @@ test("provider cannot override approved source, goal, price, terms, urgency or r
 });
 
 const ROUTE = readFileSync(new URL("../src/app/app/native-offer/api/route.ts", import.meta.url), "utf8");
+const OFFER_CLIENT = readFileSync(new URL("../src/app/app/native-offer/native-offer-client.tsx", import.meta.url), "utf8");
 const SOCIAL_CLIENT = readFileSync(new URL("../src/app/app/native-social-post/native-social-post-client.tsx", import.meta.url), "utf8");
 
 test("generation route loads an owner-scoped approved Social Post before generating", () => {
@@ -160,6 +161,14 @@ test("generation route loads an owner-scoped approved Social Post before generat
   assert.match(ROUTE, /userId:\s*context\.user\.id/);
   assert.match(ROUTE, /\.artifact\.status\s*!==\s*"approved"/);
   assert.match(ROUTE, /Artifact sumber tidak ditemui/);
+});
+
+test("approval stays successful when browser blocks automatic clipboard", () => {
+  assert.match(OFFER_CLIENT, /async function copyTextSafely/);
+  assert.match(OFFER_CLIENT, /const copied = await copyTextSafely/);
+  assert.match(OFFER_CLIENT, /Artifact diluluskan\. Salinan automatik disekat pelayar/);
+  assert.match(OFFER_CLIENT, /type="button"/);
+  assert.match(SOCIAL_CLIENT, /async function copyTextSafely/);
 });
 
 test("approved Social Post exposes an offer-chaining action", () => {

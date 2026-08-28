@@ -27,6 +27,28 @@ type GenerateResponse = {
 
 const inputClass = "min-h-11 rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm dark:border-zinc-700 dark:bg-zinc-900";
 
+async function copyTextSafely(value: string) {
+  try {
+    await navigator.clipboard.writeText(value);
+    return true;
+  } catch {
+    try {
+      const textarea = document.createElement("textarea");
+      textarea.value = value;
+      textarea.setAttribute("readonly", "");
+      textarea.style.position = "fixed";
+      textarea.style.opacity = "0";
+      document.body.appendChild(textarea);
+      textarea.select();
+      const copied = document.execCommand("copy");
+      textarea.remove();
+      return copied;
+    } catch {
+      return false;
+    }
+  }
+}
+
 const OFFER_TYPE_LABELS: Record<NativeOfferRequest["offerType"], string> = {
   promotion: "Promosi",
   bundle: "Bundle",
@@ -130,8 +152,12 @@ export function NativeOfferClient({
       if (!response.ok || !data.artifact) throw new Error(data.error || "Artifact tidak dapat disimpan.");
       setArtifact(data.artifact);
       setTelemetry(data.telemetry || telemetry);
-      if (copyAfter) await navigator.clipboard.writeText(renderOfferText(data.artifact));
-      setMessage(copyAfter ? "Artifact diluluskan dan disalin." : "Perubahan disimpan.");
+      const copied = copyAfter ? await copyTextSafely(renderOfferText(data.artifact)) : false;
+      setMessage(copyAfter
+        ? copied
+          ? "Artifact diluluskan dan disalin."
+          : "Artifact diluluskan. Salinan automatik disekat pelayar — gunakan butang Salin."
+        : "Perubahan disimpan.");
     } catch (error) {
       setMessage(error instanceof Error ? error.message : "Ralat tidak dijangka.");
     } finally {
@@ -147,6 +173,12 @@ export function NativeOfferClient({
     const max = key === "valueStack" ? 5 : 8;
     const list = value.split("\n").map((line) => line.trim()).filter(Boolean).slice(0, max);
     updateArtifact(key, list);
+  }
+
+  async function copyCurrentArtifact() {
+    if (!artifact) return;
+    const copied = await copyTextSafely(renderOfferText(artifact));
+    setMessage(copied ? "Artifact disalin." : "Salinan disekat pelayar. Pilih dan salin teks secara manual.");
   }
 
   return (
@@ -235,8 +267,9 @@ export function NativeOfferClient({
           {artifact.assumptions.length > 0 && <div className="rounded-lg border border-amber-200 bg-amber-50 p-3 text-xs text-amber-800 dark:border-amber-900 dark:bg-amber-950 dark:text-amber-200"><strong>Andaian:</strong> {artifact.assumptions.join(" ")}</div>}
           <div className="flex flex-wrap justify-end gap-2">
             {artifactId && <Link href={`/app/native-offer/${artifactId}`} className="min-h-11 rounded-lg border border-zinc-300 px-4 py-2.5 text-sm font-medium dark:border-zinc-700">Pautan buka semula</Link>}
-            <button disabled={busy} onClick={() => save("draft")} className="min-h-11 rounded-lg border border-zinc-300 px-4 py-2.5 text-sm font-bold dark:border-zinc-700">Simpan Draf</button>
-            <button disabled={busy} onClick={() => save("approved", true)} className="min-h-11 rounded-lg bg-emerald-600 px-4 py-2.5 text-sm font-bold text-white hover:bg-emerald-700">Lulus & Salin</button>
+            <button type="button" disabled={busy} onClick={copyCurrentArtifact} className="min-h-11 rounded-lg border border-zinc-300 px-4 py-2.5 text-sm font-bold dark:border-zinc-700">Salin</button>
+            <button type="button" disabled={busy} onClick={() => save("draft")} className="min-h-11 rounded-lg border border-zinc-300 px-4 py-2.5 text-sm font-bold dark:border-zinc-700">Simpan Draf</button>
+            <button type="button" disabled={busy} onClick={() => save("approved", true)} className="min-h-11 rounded-lg bg-emerald-600 px-4 py-2.5 text-sm font-bold text-white hover:bg-emerald-700">Lulus & Salin</button>
           </div>
         </section>}
       </div>

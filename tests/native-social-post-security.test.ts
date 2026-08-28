@@ -4,6 +4,8 @@ import test from "node:test";
 
 const GENERATE_ROUTE = readFileSync(new URL("../src/app/app/native-social-post/api/route.ts", import.meta.url), "utf8");
 const UPDATE_ROUTE = readFileSync(new URL("../src/app/app/native-social-post/api/[id]/route.ts", import.meta.url), "utf8");
+const CALENDAR_ROUTE = readFileSync(new URL("../src/app/app/content-calendar/api/route.ts", import.meta.url), "utf8");
+const MARKETING_ROUTE = readFileSync(new URL("../src/app/app/marketing-plan/api/route.ts", import.meta.url), "utf8");
 const STORAGE = readFileSync(new URL("../src/lib/native-social-post/storage.server.ts", import.meta.url), "utf8");
 const PROVIDER = readFileSync(new URL("../src/lib/native-social-post/provider.server.ts", import.meta.url), "utf8");
 const ACCESS = readFileSync(new URL("../src/lib/native-social-post/access.ts", import.meta.url), "utf8");
@@ -25,7 +27,10 @@ test("context reads entitlement through a post-auth owner-scoped admin query", (
 });
 
 test("generation has origin, JSON, body-size, idempotency and usage caps", () => {
-  assert.match(GENERATE_ROUTE, /validOrigin/);
+  assert.match(GENERATE_ROUTE, /isSameOriginRequest/);
+  assert.match(UPDATE_ROUTE, /isSameOriginRequest/);
+  assert.match(CALENDAR_ROUTE, /isSameOriginRequest/);
+  assert.match(MARKETING_ROUTE, /isSameOriginRequest/);
   assert.match(GENERATE_ROUTE, /MAX_BODY_BYTES/);
   assert.match(GENERATE_ROUTE, /REQUEST_ID_RE/);
   assert.match(GENERATE_ROUTE, /findNativeSocialPostByRequestId/);

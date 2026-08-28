@@ -1,6 +1,7 @@
 import "server-only";
 
 import { NextRequest, NextResponse } from "next/server";
+import { isSameOriginRequest } from "@/lib/http/same-origin.server";
 import { createClient as createAdminClient } from "@supabase/supabase-js";
 import { createClient } from "@/lib/supabase/server";
 import { buildMarketingPlanPrompt } from "../../plan-engine/prompt";
@@ -9,11 +10,6 @@ import type { Profil } from "../../shared";
 
 function error(message: string, status: number) {
   return NextResponse.json({ error: message }, { status });
-}
-
-function checkOrigin(req: NextRequest): boolean {
-  const origin = req.headers.get("origin");
-  return !origin || origin === req.nextUrl.origin;
 }
 
 function adminClient() {
@@ -38,7 +34,7 @@ async function context() {
 }
 
 export async function POST(req: NextRequest) {
-  if (!checkOrigin(req)) return error("Permintaan tidak sah.", 403);
+  if (!isSameOriginRequest(req)) return error("Permintaan tidak sah.", 403);
   if (!req.headers.get("content-type")?.includes("application/json")) return error("Format permintaan tidak sah.", 415);
   const ctx = await context();
   if (!ctx) return error("Sila log masuk semula.", 401);

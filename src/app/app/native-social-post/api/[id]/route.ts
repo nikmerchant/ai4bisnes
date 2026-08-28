@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { isSameOriginRequest } from "@/lib/http/same-origin.server";
 import { currentSlice1Access } from "@/lib/native-social-post/access";
 import { applySocialPostEdits, canUseNativeSocialPostTier } from "@/lib/native-social-post/domain";
 import { loadNativeSocialPostContext } from "@/lib/native-social-post/context.server";
@@ -14,16 +15,11 @@ function json(body: Record<string, unknown>, status = 200) {
   return NextResponse.json(body, { status, headers: { "Cache-Control": "no-store" } });
 }
 
-function validOrigin(req: NextRequest) {
-  const origin = req.headers.get("origin");
-  return !origin || origin === req.nextUrl.origin;
-}
-
 export async function PATCH(
   req: NextRequest,
   ctx: { params: Promise<{ id: string }> }
 ) {
-  if (!validOrigin(req)) return json({ error: "Permintaan tidak sah." }, 403);
+  if (!isSameOriginRequest(req)) return json({ error: "Permintaan tidak sah." }, 403);
   if (!req.headers.get("content-type")?.includes("application/json")) return json({ error: "Format tidak sah." }, 415);
 
   const context = await loadNativeSocialPostContext();

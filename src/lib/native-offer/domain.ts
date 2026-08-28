@@ -188,41 +188,49 @@ function offerName(input: {
   return names[request.offerType];
 }
 
+function clip(value: string, max: number) {
+  const trimmed = value.trim();
+  return trimmed.length <= max ? trimmed : `${trimmed.slice(0, max - 1).trimEnd()}…`;
+}
+
 function deterministicComponents(input: {
   business: OfferBusinessContextSnapshot;
   request: NativeOfferRequest;
 }) {
   const { business, request } = input;
-  const audience = request.audience || business.targetCustomer;
+  const audience = clip(request.audience || business.targetCustomer, 200);
+  const product = clip(request.product, 120);
+  const businessName = clip(business.businessName, 80);
+  const usp = business.usp ? clip(business.usp, 220) : "";
   const core: Record<OfferType, string[]> = {
     promotion: [
-      `Tawaran promosi ${request.product} untuk ${audience}.`,
-      business.usp ? `Kelebihan utama: ${business.usp}.` : `Disediakan oleh ${business.businessName}.`,
-      `Cara tempahan yang jelas melalui ${business.businessName}.`,
+      `Tawaran promosi ${product} untuk ${audience}.`,
+      usp ? `Kelebihan utama: ${usp}.` : `Disediakan oleh ${businessName}.`,
+      `Cara tempahan yang jelas melalui ${businessName}.`,
     ],
     bundle: [
-      `Item utama: ${request.product}.`,
+      `Item utama: ${product}.`,
       `Cadangan item sokongan yang melengkapkan penggunaan (sahkan ketersediaan).`,
       `Cadangan panduan ringkas penggunaan untuk ${audience}.`,
     ],
     guarantee: [
-      `Cadangan struktur jaminan kualiti untuk ${request.product} (perlu disahkan pemilik).`,
+      `Cadangan struktur jaminan kualiti untuk ${product} (perlu disahkan pemilik).`,
       `Cadangan proses bantuan selepas pembelian untuk ${audience}.`,
-      `Item utama: ${request.product}.`,
+      `Item utama: ${product}.`,
     ],
     value_stack: [
-      `Item utama: ${request.product}.`,
-      `Cadangan nilai tambah servis atau personalisasi daripada ${business.businessName}.`,
-      `Cadangan tip penggunaan khas untuk ${request.audience}.`,
+      `Item utama: ${product}.`,
+      `Cadangan nilai tambah servis atau personalisasi daripada ${businessName}.`,
+      `Cadangan tip penggunaan khas untuk ${audience}.`,
       `Cadangan saluran pertanyaan selepas pembelian.`,
     ],
     seasonal: [
-      `${request.product} bertemakan musim/perayaan semasa.`,
+      `${product} bertemakan musim/perayaan semasa.`,
       `Cadangan pembungkusan atau penyajian istimewa (sahkan ketersediaan).`,
       `Cadangan mesej bermusim untuk ${audience}.`,
     ],
   };
-  return core[request.offerType].slice(0, LIMITS.valueStackCount);
+  return core[request.offerType].map((item) => clip(item, LIMITS.componentLength)).slice(0, LIMITS.valueStackCount);
 }
 
 function deterministicCta(request: NativeOfferRequest, business: OfferBusinessContextSnapshot) {
@@ -270,8 +278,8 @@ export function buildDeterministicOffer(input: {
     product: request.product,
     goal: request.goal,
     audience,
-    headline: offerName(input),
-    promise: `Untuk ${audience} yang mencari ${request.product.toLowerCase()}, ${business.businessName} menawarkan pilihan yang jelas dan mudah difahami.`,
+    headline: clip(offerName(input), 300),
+    promise: clip(`Untuk ${audience} yang mencari ${request.product.toLowerCase()}, ${business.businessName} menawarkan pilihan yang jelas dan mudah difahami.`, LIMITS.artifactText),
     valueStack: deterministicComponents(input),
     priceNote,
     terms,

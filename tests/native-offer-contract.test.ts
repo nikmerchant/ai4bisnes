@@ -3,10 +3,12 @@ import { readFileSync } from "node:fs";
 import test from "node:test";
 
 import {
+  OFFER_TYPES,
   buildDeterministicOffer,
   buildOfferBusinessContextSnapshot,
   parseNativeOfferRequest,
   renderOfferText,
+  validateOfferArtifact,
   type NativeOfferBusinessProfile,
 } from "../src/lib/native-offer/domain.ts";
 import { parseProviderOfferArtifact } from "../src/lib/native-offer/provider-output.ts";
@@ -93,6 +95,31 @@ test("deterministic artifact follows approved schema and urgency only from valid
   const guarantee = buildDeterministicOffer({ business, request: parseNativeOfferRequest(approvedRequest({ offer_type: "guarantee" })), now: new Date() });
   assert.match(guarantee.headline, /^Cadangan Jaminan/);
   assert.equal(guarantee.riskReversal, "");
+});
+
+const LONG_PROFILE: NativeOfferBusinessProfile = {
+  businessName: "NiagaIQ Technologies",
+  category: "Teknologi",
+  products: "AI4Bisnes",
+  targetCustomer: "pemilik perniagaan berstatus PKS yang tiada masa untuk membuat pengurusan Perniagaan dan Pemasaran",
+  location: "Malaysia",
+  usp: "1".repeat(339),
+  toneOfVoice: "mesra",
+  priceRange: "RM0 - RM2990",
+  platforms: "WhatsApp",
+};
+const longBusiness = buildOfferBusinessContextSnapshot(LONG_PROFILE);
+
+test("deterministic offer survives long real-world Business Context fields", () => {
+  for (const offer_type of OFFER_TYPES as readonly string[]) {
+    const request = parseNativeOfferRequest(approvedRequest({ offer_type }));
+    const artifact = buildDeterministicOffer({ business: longBusiness, request, now: new Date("2026-08-28T00:00:00Z") });
+    const validation = validateOfferArtifact(artifact);
+    assert.equal(validation.ok, true, `${offer_type}: ${validation.ok ? "" : validation.errors.join(" ")}`);
+    for (const item of artifact.valueStack) assert.ok(item.length <= 300, `${offer_type} item ${item.length}`);
+    assert.ok(artifact.headline.length <= 300);
+    assert.ok(artifact.promise.length <= 2000);
+  }
 });
 
 test("provider cannot override approved source, goal, price, terms, urgency or risk reversal", () => {

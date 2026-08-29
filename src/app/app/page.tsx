@@ -12,6 +12,8 @@ import { currentSlice1Access } from "@/lib/native-social-post/access";
 import { canUseNativeSocialPostTier } from "@/lib/native-social-post/domain";
 import { currentSlice2Access } from "@/lib/native-offer/access";
 import { canUseNativeOfferTier } from "@/lib/native-offer/domain";
+import { currentSlice3Access } from "@/lib/native-whatsapp/access";
+import { canUseNativeWhatsAppTier } from "@/lib/native-whatsapp/domain";
 
 function KadAkses({
   emoji,
@@ -89,6 +91,7 @@ export default async function Dashboard() {
   const pangkat = PANGKAT[profil.tier];
   const slice1Enabled = currentSlice1Access(user).allowed && canUseNativeSocialPostTier(profil.tier);
   const slice2Enabled = currentSlice2Access(user).allowed && canUseNativeOfferTier(profil.tier);
+  const slice3Enabled = currentSlice3Access(user).allowed && canUseNativeWhatsAppTier(profil.tier);
 
   const base = supabase
     .from("prompts")
@@ -211,6 +214,17 @@ export default async function Dashboard() {
           <span className="text-xs font-bold uppercase tracking-wide text-violet-600 dark:text-violet-300">AI4Bisnes 2.0 · Slice 2 Canary Terhad</span>
           <span className="mt-1 block text-lg font-bold">Bina Tawaran dalam platform →</span>
           <span className="mt-1 block text-sm text-neutral-600 dark:text-neutral-300">Business Context → structured offer → edit → simpan → buka semula → luluskan. Offer wizard lama kekal tersedia.</span>
+        </Link>
+      )}
+
+      {slice3Enabled && (
+        <Link
+          href="/app/native-whatsapp"
+          className="mb-8 block rounded-2xl border-2 border-emerald-600 bg-emerald-50 p-5 transition-colors hover:bg-emerald-100 dark:bg-emerald-950/40 dark:hover:bg-emerald-950"
+        >
+          <span className="text-xs font-bold uppercase tracking-wide text-emerald-600 dark:text-emerald-300">AI4Bisnes 2.0 · Slice 3 Canary Terhad</span>
+          <span className="mt-1 block text-lg font-bold">Balas WhatsApp dalam platform →</span>
+          <span className="mt-1 block text-sm text-neutral-600 dark:text-neutral-300">Tampal mesej pelanggan → jana draf → edit → luluskan → salin manual. Tiada penghantaran automatik.</span>
         </Link>
       )}
 

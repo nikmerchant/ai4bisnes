@@ -4,6 +4,7 @@ import test from "node:test";
 
 const MIGRATION = readFileSync(new URL("../supabase/migrations/202608290001_native_whatsapp_rls.sql", import.meta.url), "utf8");
 const VERIFY = readFileSync(new URL("../supabase/tests/verify_native_whatsapp_rls.sql", import.meta.url), "utf8");
+const GATE_C = readFileSync(new URL("../supabase/tests/slice3_gate_c_atomic.sql", import.meta.url), "utf8");
 
 function executable(sql: string) {
   return sql.split("\n").filter((line) => !line.trimStart().startsWith("--")).join("\n");
@@ -59,4 +60,15 @@ test("whatsapp verify SQL checks FORCE RLS, policy, mutation grants, index and u
   assert.match(VERIFY, /native_whatsapp_user_request_unique/);
   assert.match(VERIFY, /native_whatsapp_user_created_idx/);
   assert.match(VERIFY, /SLICE3_RLS_PASS/);
+});
+
+test("Gate C pack is atomic and asserts baseline/post-DDL invariants", () => {
+  assert.match(GATE_C, /begin;/i);
+  assert.match(GATE_C, /commit;/i);
+  assert.match(GATE_C, /generated_outputs baseline drift/);
+  assert.match(GATE_C, /native_social_post_artifacts baseline drift/);
+  assert.match(GATE_C, /native_offer_artifacts baseline drift/);
+  assert.match(GATE_C, /post-DDL count invariant failed/);
+  assert.match(GATE_C, /SLICE3_GATE_C_PASS/);
+  assert.doesNotMatch(GATE_C, /(apikey|api_key|secret|password|token)\s*[:=]/i);
 });

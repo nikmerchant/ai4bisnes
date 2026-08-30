@@ -30,7 +30,7 @@ bertanda `- [ ]` dari atas.
 - [x] Panduan Guna AI untuk Tulis Proposa/Quotation yang Nampak Mahal (tanpa upah designer) (slug: panduan-guna-ai-untuk-tulis-proposal-quotation-yang-nampak-mahal-tanpa-upah-designer)
 - [x] AI untuk Urus Stok Inventori — Guna Spreadsheet + ChatGPT, Tak Perlu Software Mahal (slug: ai-urus-stok-inventori-spreadsheet-chatgpt-tanpa-software-mahal)
 - [x] Cara AI Bantu Tulis Google Business Profile Post siap Dengan Gambar (untuk ranking tempatan) (slug: cara-ai-bantu-tulis-google-business-profile-post-siap-dengan-gambar-untuk-ranking-tempatan)
-- [ ] Prompt AI untuk Buat Content Plan Bulanan dalam 15 Minit (Template siap Guna)
+- [x] Prompt AI untuk Buat Content Plan Bulanan dalam 15 Minit (Template siap Guna) (slug: prompt-ai-untuk-buat-content-plan-bulanan-dalam-15-minit-template-siap-guna)
 - [ ] Panduan Guna AI untuk Tulis Bio & Deskripsi Bisnes yang Menjual (Semua Platform)
 - [ ] Prompt AI untuk Balas Review Google Pelanggan — Sopan, Cepat, Selesaikan Masalah
 - [ ] Cara AI Bantu SME Buat Laporan Jualan Bulanan Automatik dari Data WhatsApp/Google Sheets

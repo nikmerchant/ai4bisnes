@@ -86,6 +86,10 @@ function text(value: unknown, max: number) {
   return value.trim().replace(/\s+/g, " ").slice(0, max + 1);
 }
 
+function clippedText(value: unknown, max: number) {
+  return text(value, max).slice(0, max);
+}
+
 function requiredText(value: unknown, label: string, max: number) {
   const output = text(value, max);
   if (!output) throw new Error(`${label} diperlukan.`);
@@ -129,15 +133,15 @@ export function buildBusinessContextSnapshot(
   profile: NativeSocialPostBusinessProfile
 ): BusinessContextSnapshot {
   return Object.freeze({
-    businessName: text(profile.businessName, 160) || "Bisnes saya",
-    category: text(profile.category, 120),
-    products: text(profile.products, 500) || "Produk atau servis",
-    targetCustomer: text(profile.targetCustomer, 300) || "Pelanggan sasaran",
-    location: text(profile.location, 160) || "Malaysia",
-    usp: text(profile.usp, 300),
-    toneOfVoice: text(profile.toneOfVoice, 120) || "mesra dan profesional",
-    priceRange: text(profile.priceRange, 120),
-    platforms: text(profile.platforms, 200),
+    businessName: clippedText(profile.businessName, 160) || "Bisnes saya",
+    category: clippedText(profile.category, 120),
+    products: clippedText(profile.products, 500) || "Produk atau servis",
+    targetCustomer: clippedText(profile.targetCustomer, 300) || "Pelanggan sasaran",
+    location: clippedText(profile.location, 160) || "Malaysia",
+    usp: clippedText(profile.usp, 300),
+    toneOfVoice: clippedText(profile.toneOfVoice, 120) || "mesra dan profesional",
+    priceRange: clippedText(profile.priceRange, 120),
+    platforms: clippedText(profile.platforms, 200),
   });
 }
 

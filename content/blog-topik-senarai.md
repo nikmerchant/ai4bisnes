@@ -31,7 +31,7 @@ bertanda `- [ ]` dari atas.
 - [x] AI untuk Urus Stok Inventori — Guna Spreadsheet + ChatGPT, Tak Perlu Software Mahal (slug: ai-urus-stok-inventori-spreadsheet-chatgpt-tanpa-software-mahal)
 - [x] Cara AI Bantu Tulis Google Business Profile Post siap Dengan Gambar (untuk ranking tempatan) (slug: cara-ai-bantu-tulis-google-business-profile-post-siap-dengan-gambar-untuk-ranking-tempatan)
 - [x] Prompt AI untuk Buat Content Plan Bulanan dalam 15 Minit (Template siap Guna) (slug: prompt-ai-untuk-buat-content-plan-bulanan-dalam-15-minit-template-siap-guna)
-- [ ] Prompt AI untuk Balas Review Google Pelanggan — Sopan, Cepat, Selesaikan Masalah
+- [x] Prompt AI untuk Balas Review Google Pelanggan — Sopan, Cepat, Selesaikan Masalah (slug: prompt-ai-untuk-balas-review-google-pelanggan-sopan-cepat-selesaikan-masalah)
 - [ ] Cara AI Bantu SME Buat Laporan Jualan Bulanan Automatik dari Data WhatsApp/Google Sheets
 - [ ] Panduan Guna AI untuk Urus Cashflow SME — Tahu Untung Rugi Setiap Minggu
 - [ ] Cara Guna AI untuk Rekrut & Onboard Staf Baru (Iklan Jawatan + SOP Ringkas)

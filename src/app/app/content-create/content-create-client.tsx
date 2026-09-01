@@ -257,6 +257,7 @@ export function ContentCreateClient({
           </div>
           <div className="flex flex-wrap justify-end gap-2">
             {artifactId && <Link href={`/app/content-create/${artifactId}`} className="min-h-11 rounded-lg border border-zinc-300 px-4 py-2.5 text-sm font-medium dark:border-zinc-700">Pautan buka semula</Link>}
+            {artifactId && artifact.status === "approved" && artifact.platform === "tiktok" && <Link href={`/app/visual-plan?sourceContentCreateId=${artifactId}`} className="inline-flex min-h-11 items-center rounded-lg border border-violet-300 bg-violet-50 px-4 py-2.5 text-sm font-bold text-violet-700 dark:border-violet-800 dark:bg-violet-950 dark:text-violet-200">Bina Visual Plan →</Link>}
             <button type="button" disabled={busy} onClick={copyCurrentDraft} className="min-h-11 rounded-lg border border-zinc-300 px-4 py-2.5 text-sm font-bold dark:border-zinc-700">Salin</button>
             {artifact.status === "approved" ? <button type="button" disabled={busy} onClick={() => mutate("reopen")} className="min-h-11 rounded-lg border border-amber-400 px-4 py-2.5 text-sm font-bold text-amber-700 dark:text-amber-300">Buka semula sebagai Draf</button> : <>
               <button type="button" disabled={busy} onClick={() => mutate("save")} className="min-h-11 rounded-lg border border-zinc-300 px-4 py-2.5 text-sm font-bold dark:border-zinc-700">Simpan Draf</button>

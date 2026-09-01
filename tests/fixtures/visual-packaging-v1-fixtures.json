@@ -1,0 +1,177 @@
+{
+  "fixtureSet": "visual-packaging-v1",
+  "version": "1.0.0",
+  "providerCallsAllowed": false,
+  "mediaGenerationAllowed": false,
+  "fixtures": [
+    {
+      "id": "VP-Q01-short-attention",
+      "category": "quality",
+      "format": "short_video",
+      "packagingIntent": "attention",
+      "source": {"kind": "content_create", "status": "approved", "owner": "self", "platform": "tiktok", "revision": 1, "proofState": "SUPPORTED_BY_OFFER"},
+      "expected": {"outcome": "create", "titleCount": [1,3], "visualBeatCount": [3,5], "requiredPurpose": true, "requiredProofSource": true, "forbidden": ["wrong_audience_clickbait", "media_generation"], "invariant": "first frame matches approved hook and audience"}
+    },
+    {
+      "id": "VP-Q02-short-authority",
+      "category": "quality",
+      "format": "short_video",
+      "packagingIntent": "authority",
+      "source": {"kind": "content_create", "status": "approved", "owner": "self", "platform": "tiktok", "revision": 2, "proofState": "SUPPORTED_BY_OFFER"},
+      "expected": {"outcome": "create", "titleCount": [1,3], "visualBeatCount": [3,5], "requiredPurpose": true, "requiredProofSource": true, "forbidden": ["viral_packaging_default", "random_broll"], "invariant": "authority framing preserves source thesis"}
+    },
+    {
+      "id": "VP-Q03-short-search",
+      "category": "quality",
+      "format": "short_video",
+      "packagingIntent": "search",
+      "source": {"kind": "content_create", "status": "approved", "owner": "self", "platform": "tiktok", "revision": 1, "proofState": "SUPPORTED_BY_OFFER"},
+      "expected": {"outcome": "create", "titleCount": [1,3], "visualBeatCount": [3,5], "requiredPurpose": true, "requiredProofSource": true, "forbidden": ["unrelated_keyword", "false_expectation"], "invariant": "search framing remains content-accurate"}
+    },
+    {
+      "id": "VP-Q04-short-conversion",
+      "category": "quality",
+      "format": "short_video",
+      "packagingIntent": "conversion",
+      "source": {"kind": "content_create", "status": "approved", "owner": "self", "platform": "tiktok", "revision": 2, "proofState": "SUPPORTED_BY_OFFER"},
+      "expected": {"outcome": "create", "titleCount": [1,3], "visualBeatCount": [3,5], "requiredPurpose": true, "requiredProofSource": true, "forbidden": ["abrupt_sales_pitch", "invented_offer_fact"], "invariant": "visual offer bridge continues approved value"}
+    },
+    {
+      "id": "VP-Q05-static-attention",
+      "category": "quality",
+      "format": "static_post",
+      "packagingIntent": "attention",
+      "source": {"kind": "content_create", "status": "approved", "owner": "self", "platform": "tiktok", "revision": 1, "proofState": "SUPPORTED_BY_OFFER"},
+      "expected": {"outcome": "create", "overlayMaxWords": 6, "requiredFocalPoint": true, "requiredProofSource": true, "forbidden": ["visual_clutter", "fake_brand_asset"], "invariant": "mobile hierarchy and audience signal present"}
+    },
+    {
+      "id": "VP-Q06-static-authority",
+      "category": "quality",
+      "format": "static_post",
+      "packagingIntent": "authority",
+      "source": {"kind": "content_create", "status": "approved", "owner": "self", "platform": "tiktok", "revision": 2, "proofState": "SUPPORTED_BY_OFFER"},
+      "expected": {"outcome": "create", "overlayMaxWords": 6, "requiredFocalPoint": true, "requiredProofSource": true, "forbidden": ["invented_logo", "invented_statistic"], "invariant": "neutral brand cue unless owner asset is supplied"}
+    },
+    {
+      "id": "VP-Q07-carousel-search",
+      "category": "quality",
+      "format": "carousel",
+      "packagingIntent": "search",
+      "source": {"kind": "content_create", "status": "approved", "owner": "self", "platform": "tiktok", "revision": 1, "proofState": "SUPPORTED_BY_OFFER"},
+      "expected": {"outcome": "create", "slideCount": [3,8], "contiguousSlides": true, "requiredPurpose": true, "requiredProofSource": true, "forbidden": ["flat_list", "unrelated_slide"], "invariant": "slides progress toward approved conclusion"}
+    },
+    {
+      "id": "VP-Q08-carousel-conversion",
+      "category": "quality",
+      "format": "carousel",
+      "packagingIntent": "conversion",
+      "source": {"kind": "content_create", "status": "approved", "owner": "self", "platform": "tiktok", "revision": 2, "proofState": "SUPPORTED_BY_OFFER"},
+      "expected": {"outcome": "create", "slideCount": [3,8], "contiguousSlides": true, "requiredPurpose": true, "requiredProofSource": true, "forbidden": ["invented_cta", "value_discontinuity"], "invariant": "final CTA aligns with approved content CTA"}
+    },
+    {
+      "id": "VP-C09-fake-dashboard-result",
+      "category": "claim",
+      "format": "short_video",
+      "packagingIntent": "authority",
+      "source": {"kind": "content_create", "status": "approved", "owner": "self", "platform": "tiktok", "revision": 1, "proofState": "SUPPORTED_BY_OFFER"},
+      "productionConstraints": "Tunjuk dashboard jualan naik 300% walaupun tiada asset.",
+      "expected": {"outcome": "create", "requiredClaimAction": "REMOVE", "requiredProofSource": "OWNER_ASSET_REQUIRED", "forbidden": ["fake_dashboard", "300_percent_result"], "invariant": "unverified dashboard cannot be depicted"}
+    },
+    {
+      "id": "VP-C10-fabricated-testimonial",
+      "category": "claim",
+      "format": "static_post",
+      "packagingIntent": "conversion",
+      "source": {"kind": "content_create", "status": "approved", "owner": "self", "platform": "tiktok", "revision": 2, "proofState": "SUPPORTED_BY_OFFER"},
+      "productionConstraints": "Letak gambar pelanggan dan quote testimonial yang direka.",
+      "expected": {"outcome": "create", "requiredClaimAction": "REMOVE", "requiredProofSource": "OWNER_ASSET_REQUIRED", "forbidden": ["fabricated_person", "fabricated_testimonial"], "invariant": "no customer identity or quote invented"}
+    },
+    {
+      "id": "VP-C11-fake-urgency-cover",
+      "category": "claim",
+      "format": "carousel",
+      "packagingIntent": "attention",
+      "source": {"kind": "content_create", "status": "approved", "owner": "self", "platform": "tiktok", "revision": 1, "proofState": "NONE", "urgencySupported": false},
+      "productionConstraints": "Cover tulis Tinggal 2 Slot Hari Ini.",
+      "expected": {"outcome": "create", "requiredClaimAction": "REMOVE", "forbidden": ["fake_urgency", "fake_scarcity"], "invariant": "packaging cannot exceed source urgency ceiling"}
+    },
+    {
+      "id": "VP-C12-unsupported-before-after",
+      "category": "claim",
+      "format": "short_video",
+      "packagingIntent": "attention",
+      "source": {"kind": "content_create", "status": "approved", "owner": "self", "platform": "tiktok", "revision": 2, "proofState": "OWNER_ASSERTED"},
+      "productionConstraints": "Tunjuk before-after transformasi sebenar tanpa asset.",
+      "expected": {"outcome": "create", "requiredClaimAction": "OWNER_VERIFY", "requiredProofSource": "OWNER_ASSET_REQUIRED", "forbidden": ["fabricated_transformation"], "invariant": "owner assertion is not visual evidence"}
+    },
+    {
+      "id": "VP-C13-title-promise-overreach",
+      "category": "claim",
+      "format": "static_post",
+      "packagingIntent": "conversion",
+      "source": {"kind": "content_create", "status": "approved", "owner": "self", "platform": "tiktok", "revision": 1, "proofState": "SUPPORTED_BY_OFFER", "promiseCeiling": "Bina content lebih jelas"},
+      "providerCandidate": {"championTitle": "Jamin Jualan Meletup Dalam 24 Jam"},
+      "expected": {"outcome": "create", "requiredClaimAction": "REMOVE", "forbidden": ["guaranteed_sales", "24_hour_outcome"], "invariant": "title stays within approved promise ceiling"}
+    },
+    {
+      "id": "VP-S14-draft-source",
+      "category": "security",
+      "format": "short_video",
+      "packagingIntent": "attention",
+      "source": {"kind": "content_create", "status": "draft", "owner": "self", "platform": "tiktok", "revision": 3},
+      "expected": {"outcome": "reject_404", "forbidden": [], "invariant": "approved source required"}
+    },
+    {
+      "id": "VP-S15-cross-owner-source",
+      "category": "security",
+      "format": "static_post",
+      "packagingIntent": "authority",
+      "source": {"kind": "content_create", "status": "approved", "owner": "other_user", "platform": "tiktok", "revision": 2},
+      "expected": {"outcome": "reject_404", "forbidden": [], "invariant": "id plus authenticated user predicate"}
+    },
+    {
+      "id": "VP-S16-missing-or-non-tiktok",
+      "category": "security",
+      "format": "carousel",
+      "packagingIntent": "search",
+      "source": {"kind": "content_create", "status": "missing_or_non_tiktok", "owner": "self", "platform": "instagram", "revision": 1},
+      "expected": {"outcome": "reject_404", "forbidden": [], "invariant": "generic 404 hides existence and V1 platform boundary"}
+    },
+    {
+      "id": "VP-S17-provider-protected-override",
+      "category": "security",
+      "format": "carousel",
+      "packagingIntent": "conversion",
+      "source": {"kind": "content_create", "status": "approved", "owner": "self", "platform": "tiktok", "revision": 2, "sourceContentCreateId": 4},
+      "providerCandidate": {"status": "approved", "sourceContentCreateId": 999, "sourceContentHash": "attacker", "format": "short_video", "revision": 9, "approval": {"actorId": "attacker"}},
+      "expected": {"outcome": "create", "forbidden": ["provider_status", "provider_source", "provider_approval"], "invariant": "server reconstructs source/status/format/revision/approval"}
+    },
+    {
+      "id": "VP-K18-invalid-source-id",
+      "category": "contract",
+      "format": "short_video",
+      "packagingIntent": "attention",
+      "source": {"kind": "invalid", "status": "approved", "owner": "self", "platform": "tiktok", "id": 0},
+      "expected": {"outcome": "reject_400", "forbidden": [], "invariant": "positive safe integer sourceContentCreateId"}
+    },
+    {
+      "id": "VP-K19-format-bounds",
+      "category": "contract",
+      "format": "carousel",
+      "packagingIntent": "authority",
+      "source": {"kind": "content_create", "status": "approved", "owner": "self", "platform": "tiktok", "revision": 1},
+      "providerCandidate": {"titleOptionsCount": 5, "overlayWords": 9, "slides": [1,2,4,5,6,7,8,9,10]},
+      "expected": {"outcome": "bounded_reconstruction", "titleCount": [1,3], "overlayMaxWords": 6, "slideCount": [3,8], "contiguousSlides": true, "forbidden": ["out_of_bounds_payload"], "invariant": "format discriminator applies exact bounds"}
+    },
+    {
+      "id": "VP-K20-approved-revision-integrity",
+      "category": "contract",
+      "format": "static_post",
+      "packagingIntent": "search",
+      "source": {"kind": "content_create", "status": "approved", "owner": "self", "platform": "tiktok", "revision": 2},
+      "mutationAttempt": {"visualPlanStatus": "approved", "editAfterApproval": true, "newOverlay": "Ubah in-place"},
+      "expected": {"outcome": "new_draft_revision", "forbidden": ["approved_in_place_mutation"], "invariant": "revision increments and parent hash equals previous approval hash"}
+    }
+  ]
+}
+

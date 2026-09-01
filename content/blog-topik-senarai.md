@@ -45,3 +45,13 @@ bertanda `- [ ]` dari atas.
 - [ ] Panduan Guna AI untuk Bina Landing Page Tanpa Coding dalam Sehari
 - [ ] Cara Guna AI untuk Buat Kajian Pasaran Mini — Faham Customer Tanpa Survey Mahal
 - [ ] Cara Guna AI untuk Bina FAQ Automatik dari Soalan Pelanggan yang Sama Berulang
+- [ ] Panduan Guna AI untuk Sedia Promo Deepavali — Idea, Caption & Banner dalam Sehari
+- [ ] Cara AI Bantu SME Tulis Ucapan Perayaan yang Tak Bunyi Template
+- [ ] Prompt AI untuk Buat Reminder Hutang & Invois Tertunggak — Lembut ke Tegas
+- [ ] Cara Guna AI untuk Analisis Data Jualan — Siapa Beli, Apa Laku, Bila Ramai
+- [ ] Panduan Guna AI untuk Bina Program Loyalty Pelanggan Ringkas (Tanpa App Mahal)
+- [ ] Cara Guna AI untuk Buat Laporan Tahunan / Ringkasan Prestasi Bisnes 2026
+- [ ] Prompt AI untuk Tulis Proposal Tawaran 2027 — Menang Projek Awal Tahun
+- [ ] Cara AI Bantu SME Susun Bajet & Rancang Perbelanjaan 2027
+- [ ] Panduan Guna AI untuk Buat Video Testimoni Pelanggan (Dari WhatsApp ke TikTok)
+- [ ] Cara Guna AI untuk Bina Sistem Auto-Follow-up Pelanggan Sebelum Musim Perayaan

@@ -3,7 +3,7 @@ import "server-only";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { sanitizeGenerationTelemetry } from "../native-social-post/domain";
 import { sha256Hex } from "../content-review/hash";
-import { parseVisualPackagingRequest, renderVisualPackagingPlan, validateVisualPackagingArtifact, type GenerationTelemetry, type VisualPackagingArtifactV1, type VisualPackagingRequestV1 } from "./domain";
+import { parseVisualPackagingRequest, renderLegacyVisualPackagingPlan, renderVisualPackagingPlan, validateVisualPackagingArtifact, type GenerationTelemetry, type VisualPackagingArtifactV1, type VisualPackagingRequestV1 } from "./domain";
 
 export const VISUAL_PACKAGING_TABLE = "native_content_engine_artifacts";
 export type StoredVisualPackaging = { id: number; artifact: VisualPackagingArtifactV1; request: VisualPackagingRequestV1; telemetry: GenerationTelemetry; sourceText: string; createdAt: string };
@@ -21,7 +21,9 @@ function parseStoredRow(value: unknown): StoredVisualPackaging | null {
   if (request.sourceContentCreateId !== validation.artifact.sourceContentCreateId || request.format !== validation.artifact.formatPlan.format || request.packagingIntent !== validation.artifact.packaging.packagingIntent) return null;
   if (!row.generation || typeof row.generation !== "object" || Array.isArray(row.generation) || typeof row.before_text !== "string" || !row.before_text.trim()) return null;
   if (sha256Hex(row.before_text) !== validation.artifact.sourceSnapshot.sourceContentHash) return null;
-  if (typeof row.improved_text === "string" && row.improved_text !== renderVisualPackagingPlan(validation.artifact)) return null;
+  if (typeof row.improved_text !== "string") return null;
+  const canonicalPlan = renderVisualPackagingPlan(validation.artifact);
+  if (row.improved_text !== canonicalPlan && row.improved_text !== renderLegacyVisualPackagingPlan(validation.artifact)) return null;
   return { id: Number(row.id), artifact: validation.artifact, request, telemetry: sanitizeGenerationTelemetry(row.generation as Record<string, unknown>), sourceText: row.before_text, createdAt: typeof row.created_at === "string" ? row.created_at : validation.artifact.createdAt };
 }
 

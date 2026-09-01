@@ -511,7 +511,27 @@ export function applyVisualPackagingEdits(existing: VisualPackagingArtifactV1, v
   return edited;
 }
 
-export function renderVisualPackagingPlan(artifact: VisualPackagingArtifactV1) {
+type VisualDirectionObjectKind = "cover" | "canvas";
+type VisualDirectionSerializer = (kind: VisualDirectionObjectKind, value: Record<string, unknown>) => string;
+
+function stableJsonValue(value: unknown): unknown {
+  if (Array.isArray(value)) return value.map(stableJsonValue);
+  if (!value || typeof value !== "object") return value;
+  return Object.fromEntries(Object.entries(value as Record<string, unknown>)
+    .sort(([left], [right]) => left.localeCompare(right))
+    .map(([key, nested]) => [key, stableJsonValue(nested)]));
+}
+
+const stableVisualDirection: VisualDirectionSerializer = (_kind, value) => JSON.stringify(stableJsonValue(value));
+
+const legacyVisualDirection: VisualDirectionSerializer = (kind, value) => {
+  const keys = kind === "cover"
+    ? ["focalPoint", "textOverlay", "hierarchy", "emotion", "background", "brandCue", "mobileReadabilityCheck"]
+    : ["focalPoint", "textOverlay", "hierarchy", "emotion", "background", "brandCue", "proofSource"];
+  return JSON.stringify(Object.fromEntries(keys.map((key) => [key, value[key]])));
+};
+
+function renderVisualPackagingPlanWith(artifact: VisualPackagingArtifactV1, serializeDirection: VisualDirectionSerializer) {
   const lines = [
     `BINA VISUAL PLAN · ${artifact.formatPlan.format} · ${artifact.packaging.packagingIntent}`,
     `Champion: ${artifact.packaging.championTitle}`,
@@ -522,14 +542,22 @@ export function renderVisualPackagingPlan(artifact: VisualPackagingArtifactV1) {
     `Promise ceiling: ${artifact.packaging.promiseCeiling}`,
   ];
   if (artifact.formatPlan.format === "short_video") {
-    lines.push(`Cover: ${JSON.stringify(artifact.formatPlan.coverDirection)}`, ...artifact.formatPlan.visualBeats.map((item) => `Beat ${item.beatNumber} · ${item.purpose} · ${item.proofSource} · ${item.claimAction}\n${item.visualDirection}\n${item.onScreenText}`), `A-roll: ${artifact.formatPlan.aRollDirection}`, `B-roll: ${artifact.formatPlan.bRollRule}`, `Proof: ${artifact.formatPlan.visualProofPlan}`, `Safe area: ${artifact.formatPlan.captionAndSafeAreaNotes.join(" | ")}`);
+    lines.push(`Cover: ${serializeDirection("cover", artifact.formatPlan.coverDirection as unknown as Record<string, unknown>)}`, ...artifact.formatPlan.visualBeats.map((item) => `Beat ${item.beatNumber} · ${item.purpose} · ${item.proofSource} · ${item.claimAction}\n${item.visualDirection}\n${item.onScreenText}`), `A-roll: ${artifact.formatPlan.aRollDirection}`, `B-roll: ${artifact.formatPlan.bRollRule}`, `Proof: ${artifact.formatPlan.visualProofPlan}`, `Safe area: ${artifact.formatPlan.captionAndSafeAreaNotes.join(" | ")}`);
   } else if (artifact.formatPlan.format === "static_post") {
-    lines.push(`Canvas: ${JSON.stringify(artifact.formatPlan.canvasDirection)}`, `Caption: ${artifact.formatPlan.captionAlignment}`, `Mobile: ${artifact.formatPlan.mobileReadabilityCheck}`, `Alt text: ${artifact.formatPlan.accessibilityAltTextDirection}`);
+    lines.push(`Canvas: ${serializeDirection("canvas", artifact.formatPlan.canvasDirection as unknown as Record<string, unknown>)}`, `Caption: ${artifact.formatPlan.captionAlignment}`, `Mobile: ${artifact.formatPlan.mobileReadabilityCheck}`, `Alt text: ${artifact.formatPlan.accessibilityAltTextDirection}`);
   } else {
-    lines.push(`Cover: ${JSON.stringify(artifact.formatPlan.coverDirection)}`, ...artifact.formatPlan.slides.map((item) => `Slide ${item.slideNumber} · ${item.purpose} · ${item.proofSource} · ${item.claimAction}\n${item.heading}\n${item.bodyDirection}\n${item.visualDirection}`), `Progression: ${artifact.formatPlan.progression}`, `CTA: ${artifact.formatPlan.finalCtaAlignment}`, `Mobile: ${artifact.formatPlan.mobileReadabilityCheck}`);
+    lines.push(`Cover: ${serializeDirection("cover", artifact.formatPlan.coverDirection as unknown as Record<string, unknown>)}`, ...artifact.formatPlan.slides.map((item) => `Slide ${item.slideNumber} · ${item.purpose} · ${item.proofSource} · ${item.claimAction}\n${item.heading}\n${item.bodyDirection}\n${item.visualDirection}`), `Progression: ${artifact.formatPlan.progression}`, `CTA: ${artifact.formatPlan.finalCtaAlignment}`, `Mobile: ${artifact.formatPlan.mobileReadabilityCheck}`);
   }
   lines.push(`Keselamatan visual:\n${artifact.safety.unsupportedVisualClaims.length ? artifact.safety.unsupportedVisualClaims.map((item) => `• ${item.action}: ${item.claim} — ${item.reason}`).join("\n") : "• Tiada claim visual tambahan."}`, `AI clichés dielak: ${artifact.safety.aiClichesAvoided.join(", ")}`, `Accessibility: ${artifact.safety.accessibilityNotes.join(" | ")}`);
   return lines.join("\n\n");
+}
+
+export function renderVisualPackagingPlan(artifact: VisualPackagingArtifactV1) {
+  return renderVisualPackagingPlanWith(artifact, stableVisualDirection);
+}
+
+export function renderLegacyVisualPackagingPlan(artifact: VisualPackagingArtifactV1) {
+  return renderVisualPackagingPlanWith(artifact, legacyVisualDirection);
 }
 
 export function approveVisualPackagingArtifact(existing: VisualPackagingArtifactV1, actorId: string, now: Date) {

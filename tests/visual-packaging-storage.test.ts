@@ -29,6 +29,14 @@ function fakeAdmin(rows: Row[]) {
   } };
 }
 
+function jsonbRoundTrip(value: unknown): unknown {
+  if (Array.isArray(value)) return value.map(jsonbRoundTrip);
+  if (!value || typeof value !== "object") return value;
+  return Object.fromEntries(Object.entries(value as Record<string, unknown>)
+    .sort(([left], [right]) => left.localeCompare(right))
+    .map(([key, nested]) => [key, jsonbRoundTrip(nested)]));
+}
+
 test("save reuses native content-engine table independently with protected source before_text and plan improved_text", async () => {
   const rows: Row[] = [];
   const stored = await saveVisualPackagingArtifact({ admin: fakeAdmin(rows) as never, userId: "u1", requestId: "11111111-1111-4111-8111-111111111111", request, artifact, telemetry, sourceText });
@@ -51,6 +59,40 @@ test("load/idempotency are owner-scoped; corrupted CE1/CE4 rows fail closed for 
   assert.equal(await findVisualPackagingByRequestId({ admin: admin as never, userId: "u2", requestId: "22222222-2222-4222-8222-222222222222" }), null);
   rows.push({ id: 99, user_id: "u1", request_id: "99999999-9999-4999-8999-999999999999", request, artifact: content, generation: telemetry, before_text: "source", created_at: "2026-09-01T00:00:00Z" });
   assert.equal(await loadVisualPackagingArtifact({ admin: admin as never, userId: "u1", artifactId: 99 }), null);
+});
+
+test("legacy visual plan survives Postgres jsonb key reordering and remains idempotently recoverable", async () => {
+  const shortRequest = parseVisualPackagingRequest({ entry: "from_content_create", sourceContentCreateId: 4, format: "short_video", packagingIntent: "attention", productionConstraints: "" });
+  const original = buildDeterministicVisualPackaging({ request: shortRequest, sourceSnapshot, now: new Date("2026-09-01T00:00:00Z") });
+  const legacyImprovedText = renderVisualPackagingPlan(original);
+  const jsonbArtifact = jsonbRoundTrip(original) as typeof original;
+  assert.notDeepEqual(
+    Object.keys(jsonbArtifact.formatPlan.format === "short_video" ? jsonbArtifact.formatPlan.coverDirection : {}),
+    Object.keys(original.formatPlan.format === "short_video" ? original.formatPlan.coverDirection : {}),
+  );
+  const rows: Row[] = [{
+    id: 6,
+    user_id: "u1",
+    request_id: "66666666-6666-4666-8666-666666666666",
+    request: jsonbRoundTrip(shortRequest),
+    artifact: jsonbArtifact,
+    generation: jsonbRoundTrip(telemetry),
+    before_text: sourceText,
+    improved_text: legacyImprovedText,
+    created_at: "2026-09-01T00:00:00Z",
+  }];
+  const admin = fakeAdmin(rows);
+  const loaded = await loadVisualPackagingArtifact({ admin: admin as never, userId: "u1", artifactId: 6 });
+  assert.ok(loaded);
+  assert.equal((await findVisualPackagingByRequestId({ admin: admin as never, userId: "u1", requestId: "66666666-6666-4666-8666-666666666666" }))?.id, 6);
+});
+
+test("canonical visual plan rendering is invariant across jsonb round-trips for every format", () => {
+  for (const format of ["short_video", "static_post", "carousel"] as const) {
+    const formatRequest = parseVisualPackagingRequest({ entry: "from_content_create", sourceContentCreateId: 4, format, packagingIntent: "authority", productionConstraints: "" });
+    const generated = buildDeterministicVisualPackaging({ request: formatRequest, sourceSnapshot, now: new Date("2026-09-01T00:00:00Z") });
+    assert.equal(renderVisualPackagingPlan(jsonbRoundTrip(generated) as typeof generated), renderVisualPackagingPlan(generated), format);
+  }
 });
 
 test("draft updates owner-scope every privileged operation and approved rows are immutable", async () => {

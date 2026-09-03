@@ -14,6 +14,10 @@ import { currentSlice2Access } from "@/lib/native-offer/access";
 import { canUseNativeOfferTier } from "@/lib/native-offer/domain";
 import { currentSlice3Access } from "@/lib/native-whatsapp/access";
 import { canUseNativeWhatsAppTier } from "@/lib/native-whatsapp/domain";
+import { currentWorkspaceAccess } from "@/lib/workspace/access";
+import { loadWorkspaceBoard } from "@/lib/workspace/board.server";
+import { createAdminClient } from "@/lib/supabase/admin";
+import { WorkspaceView } from "./workspace/workspace-view";
 
 function KadAkses({
   emoji,
@@ -89,6 +93,15 @@ function KadAkses({
 export default async function Dashboard() {
   const { supabase, user, profil } = await dapatkanProfil();
   const pangkat = PANGKAT[profil.tier];
+  // Workspace Fokus replaces this dashboard only for flag-on users (fail-closed).
+  if (currentWorkspaceAccess(user).allowed) {
+    const board = await loadWorkspaceBoard(createAdminClient(), user.id);
+    return (
+      <main className="mx-auto w-full max-w-2xl px-6 py-10">
+        <WorkspaceView businessName={profil.business_name} tier={profil.tier} board={board} />
+      </main>
+    );
+  }
   const slice1Enabled = currentSlice1Access(user).allowed && canUseNativeSocialPostTier(profil.tier);
   const slice2Enabled = currentSlice2Access(user).allowed && canUseNativeOfferTier(profil.tier);
   const slice3Enabled = currentSlice3Access(user).allowed && canUseNativeWhatsAppTier(profil.tier);

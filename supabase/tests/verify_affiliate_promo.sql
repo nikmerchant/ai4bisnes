@@ -20,7 +20,8 @@ WITH checks AS (
       WHERE schemaname = 'public' AND tablename = 'affiliate_promo_artifacts'
         AND policyname = 'affiliate_promo_select_owner'
         AND cmd = 'SELECT'
-        AND qual LIKE '%auth.uid() = user_id%') AS owner_select_policies,
+        AND roles @> ARRAY['authenticated']::name[]
+        AND qual ILIKE '%auth.uid()%user_id%') AS owner_select_policies,
     (SELECT count(*) FROM pg_policies
       WHERE schemaname = 'public' AND tablename = 'affiliate_promo_artifacts'
         AND cmd IN ('INSERT','UPDATE','DELETE')) AS mutation_policies,
@@ -28,6 +29,18 @@ WITH checks AS (
       WHERE table_schema = 'public' AND table_name = 'affiliate_promo_artifacts'
         AND grantee IN ('anon','authenticated')
         AND privilege_type IN ('INSERT','UPDATE','DELETE','ALL')) = 0 AS no_mutation_grants,
+    EXISTS (
+      SELECT 1 FROM information_schema.table_privileges
+      WHERE table_schema = 'public' AND table_name = 'affiliate_promo_artifacts'
+        AND grantee = 'authenticated' AND privilege_type = 'SELECT'
+    ) AS authenticated_select_grant,
+    EXISTS (
+      SELECT 1 FROM pg_attribute a
+      JOIN pg_class c ON c.oid = a.attrelid
+      JOIN pg_namespace n ON n.oid = c.relnamespace
+      WHERE n.nspname = 'public' AND c.relname = 'affiliate_promo_artifacts'
+        AND a.attname = 'request_id' AND a.atttypid = 'uuid'::regtype
+    ) AS request_id_uuid,
     EXISTS (
       SELECT 1 FROM pg_indexes
       WHERE schemaname = 'public' AND tablename = 'affiliate_promo_artifacts'
@@ -41,7 +54,8 @@ WITH checks AS (
 SELECT
   CASE WHEN table_exists AND rls_enabled AND force_rls
         AND owner_select_policies = 1 AND mutation_policies = 0
-        AND no_mutation_grants AND owner_index AND idempotency_unique
+        AND no_mutation_grants AND authenticated_select_grant AND request_id_uuid
+        AND owner_index AND idempotency_unique
   THEN 'AFFILIATE_PROMO_DDL_VALID'
   ELSE 'AFFILIATE_PROMO_DDL_INVALID: ' ||
        'table=' || table_exists ||
@@ -50,6 +64,8 @@ SELECT
        ' owner_select=' || owner_select_policies ||
        ' mutation_policies=' || mutation_policies ||
        ' no_grants=' || no_mutation_grants ||
+       ' select_grant=' || authenticated_select_grant ||
+       ' request_uuid=' || request_id_uuid ||
        ' idx=' || owner_index ||
        ' uniq=' || idempotency_unique
   END AS verification

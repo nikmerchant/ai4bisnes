@@ -5,8 +5,9 @@ BEGIN;
 CREATE TABLE IF NOT EXISTS public.affiliate_promo_artifacts (
   id bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
   user_id uuid NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
-  request_id text NOT NULL,
+  request_id uuid NOT NULL,
   artifact jsonb NOT NULL
+    CHECK (jsonb_typeof(artifact) = 'object')
     CHECK (octet_length(artifact::text) <= 32768)
     CHECK (artifact->>'kind' = 'affiliate_promo'),
   rendered_text text NOT NULL
@@ -22,8 +23,15 @@ CREATE INDEX IF NOT EXISTS affiliate_promo_owner_time_idx
 ALTER TABLE public.affiliate_promo_artifacts ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.affiliate_promo_artifacts FORCE ROW LEVEL SECURITY;
 
+DROP POLICY IF EXISTS affiliate_promo_select_owner ON public.affiliate_promo_artifacts;
+
+REVOKE ALL ON TABLE public.affiliate_promo_artifacts FROM anon;
+REVOKE ALL ON TABLE public.affiliate_promo_artifacts FROM authenticated;
+GRANT SELECT ON TABLE public.affiliate_promo_artifacts TO authenticated;
+
 CREATE POLICY affiliate_promo_select_owner ON public.affiliate_promo_artifacts
   FOR SELECT
-  USING (auth.uid() = user_id);
+  TO authenticated
+  USING ((select auth.uid()) = user_id);
 
 COMMIT;

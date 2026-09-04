@@ -9,12 +9,15 @@ const LAUNCHERS = [
   { emoji: "🚀", nama: "Rancang Kempen", desc: "Pelan kempen berperingkat untuk bulan anda", href: "/app/marketing-plan" },
 ];
 
+const AFFILIATE_PROMO_LAUNCHER = { emoji: "✨", nama: "Studio Promosi Affiliate", desc: "Dua varian promosi BM dengan referral dan disclosure", href: "/app/affiliate-promo" };
+
 function Masa({ iso }: { iso: string }) {
   const masa = new Date(iso);
   return <span className="tabular-nums">{Number.isNaN(masa.getTime()) ? "" : masa.toLocaleDateString("ms-MY", { day: "numeric", month: "short" })}</span>;
 }
 
-export function WorkspaceView({ businessName, tier, board }: { businessName: string; tier: string; board: WorkspaceBoardItem[] }) {
+export function WorkspaceView({ businessName, tier, board, affiliatePromoEnabled = false }: { businessName: string; tier: string; board: WorkspaceBoardItem[]; affiliatePromoEnabled?: boolean }) {
+  const launchers = affiliatePromoEnabled ? [...LAUNCHERS, AFFILIATE_PROMO_LAUNCHER] : LAUNCHERS;
   return (
     <div className="space-y-8">
       <header className="flex flex-wrap items-end justify-between gap-3">
@@ -29,7 +32,7 @@ export function WorkspaceView({ businessName, tier, board }: { businessName: str
       </header>
 
       <section aria-label="Goal Launcher" className="grid gap-4 sm:grid-cols-2">
-        {LAUNCHERS.map((launcher) => (
+        {launchers.map((launcher) => (
           <Link
             key={launcher.nama}
             href={launcher.href}

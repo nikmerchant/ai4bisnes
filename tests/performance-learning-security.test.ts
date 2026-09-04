@@ -100,7 +100,7 @@ test("UI entry is CTA on approved CE-4 detail only, with lifecycle states, tabul
 
 test("no CE6 migration/schema/policy/bucket or provider/media/connector side effects were added", () => {
   const migrations = readdirSync(new URL("supabase/migrations/", ROOT)).filter((name) => name.endsWith(".sql"));
-  assert.deepEqual(migrations, ["202608260001_native_social_post_rls.sql", "202608280001_native_offer_rls.sql", "202608290001_native_whatsapp_rls.sql", "202608300001_native_content_engine_artifacts.sql"]);
+  assert.deepEqual(migrations, ["202608260001_native_social_post_rls.sql", "202608280001_native_offer_rls.sql", "202608290001_native_whatsapp_rls.sql", "202608300001_native_content_engine_artifacts.sql", "202609040001_affiliate_promo_artifacts.sql"]);
   const surfaces = [ROUTE, PATCH, PAGE, DETAIL, CLIENT, STORAGE, PROVIDER, OUTPUT].join("\n").toLowerCase();
   assert.doesNotMatch(surfaces, /metricool|bundle\.social|publishpost|schedulepost|sendmessage|api\.whatsapp|wa\.me\/send|generateimage|generatevideo|image prompt/);
   assert.match(CLIENT, /tiada panggilan provider|provider.*off|deterministic/i);

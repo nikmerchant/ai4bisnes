@@ -4,6 +4,7 @@ import { readFileSync } from "node:fs";
 
 const MIGRATION = readFileSync("supabase/migrations/202609040001_affiliate_promo_artifacts.sql", "utf8");
 const VERIFY = readFileSync("supabase/tests/verify_affiliate_promo.sql", "utf8");
+const GATE_B = readFileSync("supabase/tests/affiliate_promo_gate_b_atomic.sql", "utf8");
 
 test("migration is additive, isolated and never mutates existing tables", () => {
   assert.ok(MIGRATION.includes("CREATE TABLE IF NOT EXISTS public.affiliate_promo_artifacts"));
@@ -52,7 +53,21 @@ test("verify SQL checks FORCE RLS, owner policy, no mutation grants, unique and 
 });
 
 test("SQL files contain no credentials", () => {
-  for (const source of [MIGRATION, VERIFY]) {
+  for (const source of [MIGRATION, VERIFY, GATE_B]) {
     assert.ok(!/(sk-|supabase_co|eyJhbGciOi)/i.test(source));
   }
+});
+
+test("Gate B pack is atomic, verifies exact baseline and rejects legacy policy/count drift", () => {
+  assert.match(GATE_B, /begin;[\s\S]*commit;[\s\S]*APS_GATE_B_PASS/i);
+  for (const [table, count] of [["generated_outputs", 7], ["native_social_post_artifacts", 2], ["native_offer_artifacts", 3], ["native_whatsapp_draft_artifacts", 3], ["native_content_engine_artifacts", 15]] as const) {
+    assert.match(GATE_B, new RegExp(`public\\.${table}\\) <> ${count}`));
+    assert.ok(!new RegExp(`(INSERT|UPDATE|DELETE|ALTER)\\s+[^;]*public\\.${table}`, "i").test(GATE_B), `${table} mesti read-only`);
+  }
+  assert.match(GATE_B, /CREATE TEMP TABLE aps_legacy_policies_before/i);
+  assert.match(GATE_B, /EXCEPT[\s\S]*aps_legacy_policies_before|aps_legacy_policies_before[\s\S]*EXCEPT/i);
+  assert.match(GATE_B, /relforcerowsecurity/);
+  assert.match(GATE_B, /request_id[^;]*'uuid'/i);
+  assert.match(GATE_B, /mutation grants detected/i);
+  assert.doesNotMatch(GATE_B, /^\s*\d+\|/m);
 });

@@ -18,6 +18,8 @@ import { currentWorkspaceAccess } from "@/lib/workspace/access";
 import { loadWorkspaceBoard } from "@/lib/workspace/board.server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { WorkspaceView } from "./workspace/workspace-view";
+import { currentAffiliatePromoAccess } from "@/lib/affiliate-promo/access";
+import { validateAffiliateReferralCode } from "@/lib/affiliate-promo/referral-policy";
 
 function KadAkses({
   emoji,
@@ -95,10 +97,14 @@ export default async function Dashboard() {
   const pangkat = PANGKAT[profil.tier];
   // Workspace Fokus replaces this dashboard only for flag-on users (fail-closed).
   if (currentWorkspaceAccess(user).allowed) {
-    const board = await loadWorkspaceBoard(createAdminClient(), user.id);
+    const [board, { data: affiliateProfile }] = await Promise.all([
+      loadWorkspaceBoard(createAdminClient(), user.id),
+      supabase.from("profiles").select("referral_code").eq("id", user.id).maybeSingle(),
+    ]);
+    const affiliatePromoEnabled = currentAffiliatePromoAccess(user).allowed && Boolean(validateAffiliateReferralCode(affiliateProfile?.referral_code));
     return (
       <main className="mx-auto w-full max-w-2xl px-6 py-10">
-        <WorkspaceView businessName={profil.business_name} tier={profil.tier} board={board} />
+        <WorkspaceView businessName={profil.business_name} tier={profil.tier} board={board} affiliatePromoEnabled={affiliatePromoEnabled} />
       </main>
     );
   }

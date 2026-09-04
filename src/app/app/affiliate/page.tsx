@@ -2,6 +2,8 @@ import { createClient } from "@/lib/supabase/server";
 import { CtaSpinner } from "@/app/cta-spinner";
 import Link from "next/link";
 import { SalinBar } from "../library";
+import { currentAffiliatePromoAccess } from "@/lib/affiliate-promo/access";
+import { validateAffiliateReferralCode } from "@/lib/affiliate-promo/referral-policy";
 
 export default async function Affiliate() {
   const supabase = await createClient();
@@ -29,7 +31,9 @@ export default async function Affiliate() {
   const jumlahPaid = rows
     .filter((r) => r.status === "paid")
     .reduce((s, r) => s + Number(r.amount_rm), 0);
-  const pautan = `https://ai4bisnes.com/?ref=${profil?.referral_code ?? ""}`;
+  const referralCode = validateAffiliateReferralCode(profil?.referral_code);
+  const pautan = referralCode ? `https://ai4bisnes.com/?ref=${referralCode}` : "Kod affiliate belum aktif";
+  const promoEnabled = Boolean(referralCode && currentAffiliatePromoAccess(user!).allowed);
 
   return (
     <main className="mx-auto w-full max-w-2xl px-6 py-10">
@@ -44,7 +48,7 @@ export default async function Affiliate() {
       </p>
       <h1 className="text-2xl font-bold">🤝 Program Affiliate</h1>
       <p className="mt-2 text-sm text-neutral-600 dark:text-neutral-300">
-        Kongsi pautan anda — dapat 20% komisen berulang setiap bulan orang
+        Kongsi pautan anda — dapat 10% komisen berulang setiap bulan orang
         yang anda rujuk terus melanggan Pro atau Max.
       </p>
 
@@ -57,6 +61,14 @@ export default async function Affiliate() {
           <SalinBar teks={pautan} />
         </div>
       </div>
+
+      {promoEnabled && (
+        <Link href="/app/affiliate-promo" className="mt-5 block rounded-xl bg-gradient-to-br from-violet-600 to-violet-800 p-5 text-white transition-transform hover:scale-[1.01]">
+          <p className="text-xs font-bold uppercase tracking-wide text-white/70">Provider OFF · 2 varian</p>
+          <h2 className="mt-1 text-lg font-extrabold">✨ Studio Promosi Affiliate</h2>
+          <p className="mt-1 text-sm text-white/80">Bina promosi BM lengkap dengan pautan referral dan disclosure.</p>
+        </Link>
+      )}
 
       <div className="mt-6 grid grid-cols-2 gap-4">
         <div className="rounded-xl bg-violet-50 p-4 dark:bg-violet-950">

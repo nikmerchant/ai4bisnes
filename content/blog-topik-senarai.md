@@ -33,7 +33,7 @@ bertanda `- [ ]` dari atas.
 - [x] Prompt AI untuk Buat Content Plan Bulanan dalam 15 Minit (Template siap Guna) (slug: prompt-ai-untuk-buat-content-plan-bulanan-dalam-15-minit-template-siap-guna)
 - [x] Prompt AI untuk Balas Review Google Pelanggan — Sopan, Cepat, Selesaikan Masalah (slug: prompt-ai-untuk-balas-review-google-pelanggan-sopan-cepat-selesaikan-masalah)
 - [x] Cara AI Bantu SME Buat Laporan Jualan Bulanan Automatik dari Data WhatsApp/Google Sheets (slug: ai-bantu-sme-laporan-jualan-bulanan-whatsapp-google-sheets)
-- [ ] Panduan Guna AI untuk Urus Cashflow SME — Tahu Untung Rugi Setiap Minggu
+- [x] Panduan Guna AI untuk Urus Cashflow SME — Tahu Untung Rugi Setiap Minggu (slug: panduan-guna-ai-untuk-urus-cashflow-sme-tahu-untung-rugi-setiap-minggu)
 - [ ] Cara Guna AI untuk Rekrut & Onboard Staf Baru (Iklan Jawatan + SOP Ringkas)
 - [ ] Prompt AI untuk Tulis Caption Promo 11.11 / Black Friday / 12.12 (Persediaan Q4)
 - [ ] Cara AI Bantu SME Cari Idea Produk & Bundle Baru dari Data Jualan

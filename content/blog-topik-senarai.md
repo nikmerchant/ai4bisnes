@@ -34,7 +34,7 @@ bertanda `- [ ]` dari atas.
 - [x] Prompt AI untuk Balas Review Google Pelanggan — Sopan, Cepat, Selesaikan Masalah (slug: prompt-ai-untuk-balas-review-google-pelanggan-sopan-cepat-selesaikan-masalah)
 - [x] Cara AI Bantu SME Buat Laporan Jualan Bulanan Automatik dari Data WhatsApp/Google Sheets (slug: ai-bantu-sme-laporan-jualan-bulanan-whatsapp-google-sheets)
 - [x] Panduan Guna AI untuk Urus Cashflow SME — Tahu Untung Rugi Setiap Minggu (slug: panduan-guna-ai-untuk-urus-cashflow-sme-tahu-untung-rugi-setiap-minggu)
-- [ ] Cara Guna AI untuk Rekrut & Onboard Staf Baru (Iklan Jawatan + SOP Ringkas)
+- [x] Cara Guna AI untuk Rekrut & Onboard Staf Baru (Iklan Jawatan + SOP Ringkas) (slug: cara-guna-ai-untuk-rekrut-onboard-staf-baru-iklan-jawatan-sop-ringkas)
 - [ ] Prompt AI untuk Tulis Caption Promo 11.11 / Black Friday / 12.12 (Persediaan Q4)
 - [ ] Cara AI Bantu SME Cari Idea Produk & Bundle Baru dari Data Jualan
 - [ ] Panduan Guna AI untuk Buat Video Iklan Pendek dari Gambar Produk (Tanpa Editor)

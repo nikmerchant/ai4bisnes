@@ -35,7 +35,7 @@ bertanda `- [ ]` dari atas.
 - [x] Cara AI Bantu SME Buat Laporan Jualan Bulanan Automatik dari Data WhatsApp/Google Sheets (slug: ai-bantu-sme-laporan-jualan-bulanan-whatsapp-google-sheets)
 - [x] Panduan Guna AI untuk Urus Cashflow SME — Tahu Untung Rugi Setiap Minggu (slug: panduan-guna-ai-untuk-urus-cashflow-sme-tahu-untung-rugi-setiap-minggu)
 - [x] Cara Guna AI untuk Rekrut & Onboard Staf Baru (Iklan Jawatan + SOP Ringkas) (slug: cara-guna-ai-untuk-rekrut-onboard-staf-baru-iklan-jawatan-sop-ringkas)
-- [ ] Prompt AI untuk Tulis Caption Promo 11.11 / Black Friday / 12.12 (Persediaan Q4)
+- [x] Prompt AI untuk Tulis Caption Promo 11.11 / Black Friday / 12.12 (Persediaan Q4) (slug: prompt-ai-untuk-tulis-caption-promo-11-11-black-friday-12-12-persediaan-q4)
 - [ ] Cara AI Bantu SME Cari Idea Produk & Bundle Baru dari Data Jualan
 - [ ] Panduan Guna AI untuk Buat Video Iklan Pendek dari Gambar Produk (Tanpa Editor)
 - [ ] Cara Guna AI untuk Susun Jadual Staf & Ingatkan Shift Secara Automatik

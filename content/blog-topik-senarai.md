@@ -36,7 +36,7 @@ bertanda `- [ ]` dari atas.
 - [x] Panduan Guna AI untuk Urus Cashflow SME — Tahu Untung Rugi Setiap Minggu (slug: panduan-guna-ai-untuk-urus-cashflow-sme-tahu-untung-rugi-setiap-minggu)
 - [x] Cara Guna AI untuk Rekrut & Onboard Staf Baru (Iklan Jawatan + SOP Ringkas) (slug: cara-guna-ai-untuk-rekrut-onboard-staf-baru-iklan-jawatan-sop-ringkas)
 - [x] Prompt AI untuk Tulis Caption Promo 11.11 / Black Friday / 12.12 (Persediaan Q4) (slug: prompt-ai-untuk-tulis-caption-promo-11-11-black-friday-12-12-persediaan-q4)
-- [ ] Cara AI Bantu SME Cari Idea Produk & Bundle Baru dari Data Jualan
+- [x] Cara AI Bantu SME Cari Idea Produk & Bundle Baru dari Data Jualan (slug: cara-ai-bantu-sme-cari-idea-produk-bundle-baru-dari-data-jualan)
 - [ ] Panduan Guna AI untuk Buat Video Iklan Pendek dari Gambar Produk (Tanpa Editor)
 - [ ] Cara Guna AI untuk Susun Jadual Staf & Ingatkan Shift Secara Automatik
 - [ ] Prompt AI untuk Tulis Balasan Emel Aduan / Customer Marah

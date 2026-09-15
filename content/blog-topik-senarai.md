@@ -37,6 +37,8 @@ bertanda `- [ ]` dari atas.
 - [x] Cara Guna AI untuk Rekrut & Onboard Staf Baru (Iklan Jawatan + SOP Ringkas) (slug: cara-guna-ai-untuk-rekrut-onboard-staf-baru-iklan-jawatan-sop-ringkas)
 - [x] Prompt AI untuk Tulis Caption Promo 11.11 / Black Friday / 12.12 (Persediaan Q4) (slug: prompt-ai-untuk-tulis-caption-promo-11-11-black-friday-12-12-persediaan-q4)
 - [x] Cara AI Bantu SME Cari Idea Produk & Bundle Baru dari Data Jualan (slug: cara-ai-bantu-sme-cari-idea-produk-bundle-baru-dari-data-jualan)
+<!-- GEO SPRINT 2 (14 Sep 2026): kejar topik GEO/AEO untuk SME — keputusan Nik. Frontmatter tags WAJIB: ["GEO", "AI Visibility"]. Sudut: tanpa kod, bajet rendah, BM. -->
+- [x] Apa Itu GEO (Generative Engine Optimization) dan Kenapa Kedai Anda Kena Ambil Tahu Sekarang (slug: apa-itu-geo-generative-engine-optimization-kenapa-kedai-anda-kena-ambil-tahu-sekarang)
 - [ ] Panduan Guna AI untuk Buat Video Iklan Pendek dari Gambar Produk (Tanpa Editor)
 - [ ] Cara Guna AI untuk Susun Jadual Staf & Ingatkan Shift Secara Automatik
 - [ ] Prompt AI untuk Tulis Balasan Emel Aduan / Customer Marah

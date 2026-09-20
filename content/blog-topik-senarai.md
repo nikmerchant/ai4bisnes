@@ -40,6 +40,7 @@ bertanda `- [ ]` dari atas.
 <!-- GEO SPRINT 2 (14 Sep 2026): kejar topik GEO/AEO untuk SME — keputusan Nik. Frontmatter tags WAJIB: ["GEO", "AI Visibility"]. Sudut: tanpa kod, bajet rendah, BM. -->
 - [x] Apa Itu GEO (Generative Engine Optimization) dan Kenapa Kedai Anda Kena Ambil Tahu Sekarang (slug: apa-itu-geo-generative-engine-optimization-kenapa-kedai-anda-kena-ambil-tahu-sekarang)
 - [x] AEO untuk PKS: Cara Buat Kandungan yang ChatGPT & Perplexity Petik Sebagai Jawapan (slug: aeo-untuk-pks-cara-buat-kandungan-yang-chatgpt-perplexity-petik-sebagai-jawapan)
+- [x] Cara Cari Soalan Pelanggan yang Ditanya pada ChatGPT Tentang Bisnes Anda (Tanpa Tool Bayar) (slug: cara-cari-soalan-pelanggan-ditanya-pada-chatgpt-tentang-bisnes-anda-tanpa-tool-bayar)
 - [ ] Panduan Guna AI untuk Buat Video Iklan Pendek dari Gambar Produk (Tanpa Editor)
 - [ ] Cara Guna AI untuk Susun Jadual Staf & Ingatkan Shift Secara Automatik
 - [ ] Prompt AI untuk Tulis Balasan Emel Aduan / Customer Marah

@@ -42,6 +42,7 @@ bertanda `- [ ]` dari atas.
 - [x] AEO untuk PKS: Cara Buat Kandungan yang ChatGPT & Perplexity Petik Sebagai Jawapan (slug: aeo-untuk-pks-cara-buat-kandungan-yang-chatgpt-perplexity-petik-sebagai-jawapan)
 - [x] Cara Cari Soalan Pelanggan yang Ditanya pada ChatGPT Tentang Bisnes Anda (Tanpa Tool Bayar) (slug: cara-cari-soalan-pelanggan-ditanya-pada-chatgpt-tentang-bisnes-anda-tanpa-tool-bayar)
 - [x] Panduan Kemas Kini Google Business Profile Supaya AI Syorkan Kedai Anda Lebih Kerap (slug: panduan-kemas-kini-google-business-profile-supaya-ai-syorkan-kedai-anda-lebih-kerap)
+- [x] GEO vs Iklan: Cara Muncul Bila Pelanggan Tanya AI (Tanpa Bayar Ads) (slug: geo-vs-iklan-cara-muncul-bila-pelanggan-tanya-ai-tanpa-bayar-ads)
 - [ ] Panduan Guna AI untuk Buat Video Iklan Pendek dari Gambar Produk (Tanpa Editor)
 - [ ] Cara Guna AI untuk Susun Jadual Staf & Ingatkan Shift Secara Automatik
 - [ ] Prompt AI untuk Tulis Balasan Emel Aduan / Customer Marah

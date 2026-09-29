@@ -44,7 +44,7 @@ bertanda `- [ ]` dari atas.
 - [x] Panduan Kemas Kini Google Business Profile Supaya AI Syorkan Kedai Anda Lebih Kerap (slug: panduan-kemas-kini-google-business-profile-supaya-ai-syorkan-kedai-anda-lebih-kerap)
 - [x] GEO vs Iklan: Cara Muncul Bila Pelanggan Tanya AI (Tanpa Bayar Ads) (slug: geo-vs-iklan-cara-muncul-bila-pelanggan-tanya-ai-tanpa-bayar-ads)
 - [x] Panduan Guna AI untuk Buat Video Iklan Pendek dari Gambar Produk (Tanpa Editor) (slug: panduan-guna-ai-buat-video-iklan-pendek-dari-gambar-produk-tanpa-editor)
-- [ ] Cara Guna AI untuk Susun Jadual Staf & Ingatkan Shift Secara Automatik
+- [x] Cara Guna AI untuk Susun Jadual Staf & Ingatkan Shift Secara Automatik (slug: cara-guna-ai-untuk-susun-jadual-staf-ingatkan-shift-secara-automatik)
 - [ ] Prompt AI untuk Tulis Balasan Emel Aduan / Customer Marah
 - [ ] Cara Guna AI untuk Update Harga & Katalog Serentak di Semua Platform
 - [ ] Panduan Guna AI untuk Bina Landing Page Tanpa Coding dalam Sehari

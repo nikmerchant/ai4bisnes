@@ -45,7 +45,7 @@ bertanda `- [ ]` dari atas.
 - [x] GEO vs Iklan: Cara Muncul Bila Pelanggan Tanya AI (Tanpa Bayar Ads) (slug: geo-vs-iklan-cara-muncul-bila-pelanggan-tanya-ai-tanpa-bayar-ads)
 - [x] Panduan Guna AI untuk Buat Video Iklan Pendek dari Gambar Produk (Tanpa Editor) (slug: panduan-guna-ai-buat-video-iklan-pendek-dari-gambar-produk-tanpa-editor)
 - [x] Cara Guna AI untuk Susun Jadual Staf & Ingatkan Shift Secara Automatik (slug: cara-guna-ai-untuk-susun-jadual-staf-ingatkan-shift-secara-automatik)
-- [ ] Prompt AI untuk Tulis Balasan Emel Aduan / Customer Marah
+- [x] Prompt AI untuk Tulis Balasan Emel Aduan / Customer Marah (slug: prompt-ai-untuk-tulis-balasan-emel-aduan-customer-marah)
 - [ ] Cara Guna AI untuk Update Harga & Katalog Serentak di Semua Platform
 - [ ] Panduan Guna AI untuk Bina Landing Page Tanpa Coding dalam Sehari
 - [ ] Cara Guna AI untuk Buat Kajian Pasaran Mini — Faham Customer Tanpa Survey Mahal

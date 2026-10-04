@@ -46,7 +46,7 @@ bertanda `- [ ]` dari atas.
 - [x] Panduan Guna AI untuk Buat Video Iklan Pendek dari Gambar Produk (Tanpa Editor) (slug: panduan-guna-ai-buat-video-iklan-pendek-dari-gambar-produk-tanpa-editor)
 - [x] Cara Guna AI untuk Susun Jadual Staf & Ingatkan Shift Secara Automatik (slug: cara-guna-ai-untuk-susun-jadual-staf-ingatkan-shift-secara-automatik)
 - [x] Prompt AI untuk Tulis Balasan Emel Aduan / Customer Marah (slug: prompt-ai-untuk-tulis-balasan-emel-aduan-customer-marah)
-- [ ] Cara Guna AI untuk Update Harga & Katalog Serentak di Semua Platform
+- [x] Cara Guna AI untuk Update Harga & Katalog Serentak di Semua Platform (slug: cara-guna-ai-untuk-update-harga-katalog-serentak-di-semua-platform)
 - [ ] Panduan Guna AI untuk Bina Landing Page Tanpa Coding dalam Sehari
 - [ ] Cara Guna AI untuk Buat Kajian Pasaran Mini — Faham Customer Tanpa Survey Mahal
 - [ ] Panduan Guna AI untuk Tulis Bio & Deskripsi Bisnes yang Menjual (Semua Platform)

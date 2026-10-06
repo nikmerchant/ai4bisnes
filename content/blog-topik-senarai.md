@@ -47,7 +47,7 @@ bertanda `- [ ]` dari atas.
 - [x] Cara Guna AI untuk Susun Jadual Staf & Ingatkan Shift Secara Automatik (slug: cara-guna-ai-untuk-susun-jadual-staf-ingatkan-shift-secara-automatik)
 - [x] Prompt AI untuk Tulis Balasan Emel Aduan / Customer Marah (slug: prompt-ai-untuk-tulis-balasan-emel-aduan-customer-marah)
 - [x] Cara Guna AI untuk Update Harga & Katalog Serentak di Semua Platform (slug: cara-guna-ai-untuk-update-harga-katalog-serentak-di-semua-platform)
-- [ ] Panduan Guna AI untuk Bina Landing Page Tanpa Coding dalam Sehari
+- [x] Panduan Guna AI untuk Bina Landing Page Tanpa Coding dalam Sehari (slug: panduan-guna-ai-untuk-bina-landing-page-tanpa-coding-dalam-sehari)
 - [ ] Cara Guna AI untuk Buat Kajian Pasaran Mini — Faham Customer Tanpa Survey Mahal
 - [ ] Panduan Guna AI untuk Tulis Bio & Deskripsi Bisnes yang Menjual (Semua Platform)
 - [ ] Cara Guna AI untuk Bina FAQ Automatik dari Soalan Pelanggan yang Sama Berulang

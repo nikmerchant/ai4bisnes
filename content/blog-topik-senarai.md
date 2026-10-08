@@ -48,7 +48,7 @@ bertanda `- [ ]` dari atas.
 - [x] Prompt AI untuk Tulis Balasan Emel Aduan / Customer Marah (slug: prompt-ai-untuk-tulis-balasan-emel-aduan-customer-marah)
 - [x] Cara Guna AI untuk Update Harga & Katalog Serentak di Semua Platform (slug: cara-guna-ai-untuk-update-harga-katalog-serentak-di-semua-platform)
 - [x] Panduan Guna AI untuk Bina Landing Page Tanpa Coding dalam Sehari (slug: panduan-guna-ai-untuk-bina-landing-page-tanpa-coding-dalam-sehari)
-- [ ] Cara Guna AI untuk Buat Kajian Pasaran Mini — Faham Customer Tanpa Survey Mahal
+- [x] Cara Guna AI untuk Buat Kajian Pasaran Mini — Faham Customer Tanpa Survey Mahal (slug: cara-guna-ai-buat-kajian-pasaran-mini-tanpa-survey-mahal)
 - [ ] Panduan Guna AI untuk Tulis Bio & Deskripsi Bisnes yang Menjual (Semua Platform)
 - [ ] Cara Guna AI untuk Bina FAQ Automatik dari Soalan Pelanggan yang Sama Berulang
 - [ ] Panduan Guna AI untuk Sedia Promo Deepavali — Idea, Caption & Banner dalam Sehari

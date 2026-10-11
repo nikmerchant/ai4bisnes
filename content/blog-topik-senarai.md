@@ -49,6 +49,8 @@ bertanda `- [ ]` dari atas.
 - [x] Cara Guna AI untuk Update Harga & Katalog Serentak di Semua Platform (slug: cara-guna-ai-untuk-update-harga-katalog-serentak-di-semua-platform)
 - [x] Panduan Guna AI untuk Bina Landing Page Tanpa Coding dalam Sehari (slug: panduan-guna-ai-untuk-bina-landing-page-tanpa-coding-dalam-sehari)
 - [x] Cara Guna AI untuk Buat Kajian Pasaran Mini — Faham Customer Tanpa Survey Mahal (slug: cara-guna-ai-buat-kajian-pasaran-mini-tanpa-survey-mahal)
+<!-- TEMA OKTOBER (14 Sep 2026): "Halaman harga boleh dipetik AI + URL bersih" — keputusan Nik. Frontmatter tags WAJIB: ["GEO", "AI Visibility"]. -->
+- [x] Cara Buat Halaman Harga yang AI Boleh Petik — Supaya ChatGPT Sebut Harga Anda dengan Betul (slug: cara-buat-halaman-harga-yang-ai-boleh-petik-supaya-chatgpt-sebut-harga-anda-dengan-betul)
 - [ ] Panduan Guna AI untuk Tulis Bio & Deskripsi Bisnes yang Menjual (Semua Platform)
 - [ ] Cara Guna AI untuk Bina FAQ Automatik dari Soalan Pelanggan yang Sama Berulang
 - [ ] Panduan Guna AI untuk Sedia Promo Deepavali — Idea, Caption & Banner dalam Sehari

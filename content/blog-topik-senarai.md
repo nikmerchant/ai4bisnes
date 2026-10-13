@@ -51,6 +51,7 @@ bertanda `- [ ]` dari atas.
 - [x] Cara Guna AI untuk Buat Kajian Pasaran Mini — Faham Customer Tanpa Survey Mahal (slug: cara-guna-ai-buat-kajian-pasaran-mini-tanpa-survey-mahal)
 <!-- TEMA OKTOBER (14 Sep 2026): "Halaman harga boleh dipetik AI + URL bersih" — keputusan Nik. Frontmatter tags WAJIB: ["GEO", "AI Visibility"]. -->
 - [x] Cara Buat Halaman Harga yang AI Boleh Petik — Supaya ChatGPT Sebut Harga Anda dengan Betul (slug: cara-buat-halaman-harga-yang-ai-boleh-petik-supaya-chatgpt-sebut-harga-anda-dengan-betul)
+- [x] URL Bersih untuk PKS: Kenapa Pautan Laman Mempengaruhi Jawapan AI (dan Cara Betulkan) (slug: url-bersih-untuk-pks-kenapa-pautan-laman-mempengaruhi-jawapan-ai-dan-cara-betulkan)
 - [ ] Panduan Guna AI untuk Tulis Bio & Deskripsi Bisnes yang Menjual (Semua Platform)
 - [ ] Cara Guna AI untuk Bina FAQ Automatik dari Soalan Pelanggan yang Sama Berulang
 - [ ] Panduan Guna AI untuk Sedia Promo Deepavali — Idea, Caption & Banner dalam Sehari

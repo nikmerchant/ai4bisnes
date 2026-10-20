@@ -54,7 +54,7 @@ bertanda `- [ ]` dari atas.
 - [x] URL Bersih untuk PKS: Kenapa Pautan Laman Mempengaruhi Jawapan AI (dan Cara Betulkan) (slug: url-bersih-untuk-pks-kenapa-pautan-laman-mempengaruhi-jawapan-ai-dan-cara-betulkan)
 - [x] Struktur Laman Web yang AI Mudah Baca — Panduan PKS Tanpa Jargon Teknikal (slug: struktur-laman-web-yang-ai-mudah-baca-panduan-pks-tanpa-jargon-teknikal)
 - [x] Halaman Harga yang AI & Pelanggan Sama-Sama Faham (Tanpa Designer, Tanpa Kod) (slug: halaman-harga-yang-ai-pelanggan-sama-sama-faham-tanpa-designer-tanpa-kod)
-- [ ] Panduan Guna AI untuk Tulis Bio & Deskripsi Bisnes yang Menjual (Semua Platform)
+- [x] Panduan Guna AI untuk Tulis Bio & Deskripsi Bisnes yang Menjual (Semua Platform) (slug: panduan-guna-ai-untuk-tulis-bio-deskripsi-bisnes-yang-menjual-semua-platform)
 - [ ] Cara Guna AI untuk Bina FAQ Automatik dari Soalan Pelanggan yang Sama Berulang
 - [ ] Panduan Guna AI untuk Sedia Promo Deepavali — Idea, Caption & Banner dalam Sehari
 - [ ] Cara AI Bantu SME Tulis Ucapan Perayaan yang Tak Bunyi Template

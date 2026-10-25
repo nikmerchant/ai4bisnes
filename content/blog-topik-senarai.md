@@ -56,7 +56,7 @@ bertanda `- [ ]` dari atas.
 - [x] Halaman Harga yang AI & Pelanggan Sama-Sama Faham (Tanpa Designer, Tanpa Kod) (slug: halaman-harga-yang-ai-pelanggan-sama-sama-faham-tanpa-designer-tanpa-kod)
 - [x] Panduan Guna AI untuk Tulis Bio & Deskripsi Bisnes yang Menjual (Semua Platform) (slug: panduan-guna-ai-untuk-tulis-bio-deskripsi-bisnes-yang-menjual-semua-platform)
 - [x] Cara Guna AI untuk Bina FAQ Automatik dari Soalan Pelanggan yang Sama Berulang (slug: cara-guna-ai-untuk-bina-faq-automatik-dari-soalan-pelanggan-yang-sama-berulang)
-- [ ] Panduan Guna AI untuk Sedia Promo Deepavali — Idea, Caption & Banner dalam Sehari
+- [x] Panduan Guna AI untuk Sedia Promo Deepavali: Idea, Caption & Banner dalam Sehari (slug: panduan-guna-ai-untuk-sedia-promo-deepavali-idea-caption-banner-dalam-sehari)
 - [ ] Cara AI Bantu SME Tulis Ucapan Perayaan yang Tak Bunyi Template
 - [ ] Prompt AI untuk Buat Reminder Hutang & Invois Tertunggak — Lembut ke Tegas
 - [ ] Cara Guna AI untuk Analisis Data Jualan — Siapa Beli, Apa Laku, Bila Ramai

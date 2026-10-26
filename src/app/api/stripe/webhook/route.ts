@@ -118,6 +118,20 @@ export async function POST(req: NextRequest) {
         break;
       }
 
+      case "customer.subscription.created": {
+        // Expiry only: events can arrive before or after checkout, so status
+        // stays owned by checkout.session.completed and subscription.updated.
+        const sub: LegacySubscription = event.data.object;
+        const periodEnd = resolvePeriodEnd(sub);
+        if (periodEnd !== undefined) {
+          await admin
+            .from("subscriptions")
+            .update({ expires_at: new Date(periodEnd * 1000).toISOString() })
+            .eq("stripe_subscription_id", sub.id);
+        }
+        break;
+      }
+
       case "customer.subscription.updated":
       case "customer.subscription.deleted": {
         const sub: LegacySubscription = event.data.object;
@@ -129,7 +143,7 @@ export async function POST(req: NextRequest) {
         // Update status dan expiry
         const updates: Record<string, string | null> = {
           status:
-            status === "active"
+            status === "active" || status === "trialing"
               ? "active"
               : status === "past_due"
                 ? "past_due"

@@ -253,7 +253,8 @@ test("subscription.updated retains legacy expiry for an empty item list", async 
 
 for (const [status, stored, downgrade] of [
   ["past_due", "past_due", false], ["canceled", "cancelled", true],
-  ["unpaid", "unpaid", true], ["trialing", "incomplete", false],
+  ["unpaid", "unpaid", true], ["trialing", "active", false],
+  ["incomplete", "incomplete", false],
 ] as const) {
   test(`subscription.updated preserves ${status} mapping and profile side effects`, async () => {
     const { writes } = await deliver(subscriptionEvent("customer.subscription.updated", { status, items: { data: [] } }));
@@ -264,6 +265,40 @@ for (const [status, stored, downgrade] of [
     });
   });
 }
+
+test("subscription.created writes only the Dahlia item expiry, never status", async () => {
+  const { writes, response } = await deliver(subscriptionEvent("customer.subscription.created", { status: "incomplete" }));
+  assert.deepEqual(writes, [{
+    table: "subscriptions", kind: "update",
+    value: { expires_at: "2030-03-17T17:46:40.000Z" },
+    filters: [["stripe_subscription_id", "sub_fixture"]],
+  }]);
+  assert.equal(await response.text(), "ok");
+});
+
+test("subscription.created during a trial stores the trial-end expiry only", async () => {
+  const { writes } = await deliver(subscriptionEvent("customer.subscription.created", {
+    status: "trialing", current_period_end: undefined, items: { data: [{ id: "si_trial", current_period_end: 1800000000 }] },
+  }));
+  assert.deepEqual(writes, [{
+    table: "subscriptions", kind: "update",
+    value: { expires_at: "2027-01-15T08:00:00.000Z" },
+    filters: [["stripe_subscription_id", "sub_fixture"]],
+  }]);
+});
+
+test("subscription.created without a valid period writes nothing", async () => {
+  const { writes, response } = await deliver(subscriptionEvent("customer.subscription.created", {
+    current_period_end: undefined, items: { data: [] },
+  }));
+  assert.deepEqual(writes, []);
+  assert.equal(await response.text(), "ok");
+});
+
+test("subscription.created never downgrades the profile tier", async () => {
+  const { writes } = await deliver(subscriptionEvent("customer.subscription.created", { status: "unpaid" }));
+  assert.equal(writes.some((w) => w.table === "profiles"), false);
+});
 
 test("subscription.deleted uses the first matching case and its supplied legacy expiry", async () => {
   const { writes } = await deliver(subscriptionEvent("customer.subscription.deleted", { status: "canceled", items: { data: [] } }));

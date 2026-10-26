@@ -20,7 +20,7 @@ export default function Terma() {
           Terma Perkhidmatan
         </h1>
         <p className="mt-2 text-xs text-zinc-400">
-          Kemas kini terakhir: 11 Julai 2026
+          Kemas kini terakhir: 26 Oktober 2026
         </p>
 
         <p className={p}>
@@ -109,6 +109,34 @@ export default function Terma() {
             Cubaan menggodam, mengganggu, atau memanipulasi sistem
             (termasuk sistem affiliate dan tier langganan).
           </li>
+          <li className={li}>
+            Melakukan kejuruteraan balikan (reverse engineering), dekompil,
+            menyahhimpun, atau cuba memperoleh kod sumber, prompt, struktur
+            templat, logik aliran kerja, model data atau reka bentuk sistem
+            platform ini, kecuali setakat yang dibenarkan secara nyata oleh
+            undang-undang.
+          </li>
+          <li className={li}>
+            Menggunakan bot, scraper, crawler atau alat automatik lain untuk
+            mengakses, memuat turun atau mengumpul kandungan platform
+            (termasuk pustaka prompt dan Task Wizard) secara pukal, atau pada
+            kadar melebihi penggunaan biasa seorang manusia. Enjin carian dan
+            pembantu AI awam boleh mengakses halaman awam yang tidak
+            memerlukan log masuk untuk tujuan pengindeksan sahaja.
+          </li>
+          <li className={li}>
+            Memintas, merekod atau menyahsulit komunikasi antara peranti anda
+            dan pelayan kami untuk menganalisis atau meniru sistem kami.
+          </li>
+          <li className={li}>
+            Memintas, melumpuhkan atau mengelak kawalan akses, had
+            penggunaan, tier langganan atau langkah keselamatan platform.
+          </li>
+          <li className={li}>
+            Menggunakan platform atau kandungan kami untuk membina, melatih
+            atau menanda aras produk atau perkhidmatan yang bersaing dengan
+            AI4Bisnes, tanpa kebenaran bertulis daripada kami.
+          </li>
         </ul>
 
         <h2 className={h2}>6. Harta Intelek</h2>
@@ -118,6 +146,12 @@ export default function Terma() {
           penggunaan peribadi untuk perniagaan anda sendiri — bukan hak
           milikan atau pengedaran semula. Output AI yang anda hasilkan
           menggunakan prompt kami adalah milik anda.
+        </p>
+        <p className={p}>
+          Pemilihan, susunan dan struktur pustaka prompt, templat, aliran kerja
+          Task Wizard serta reka bentuk platform ini dilindungi di bawah Akta
+          Hak Cipta 1987 dan undang-undang berkaitan. Anda tidak boleh
+          mengubah suai, mengadaptasi atau mencipta karya terbitan daripadanya.
         </p>
 
         <h2 className={h2}>7. Penafian</h2>
@@ -143,7 +177,9 @@ export default function Terma() {
         <p className={p}>
           Anda boleh berhenti menggunakan perkhidmatan pada bila-bila masa.
           Kami berhak menggantung atau menamatkan akaun yang melanggar terma
-          ini. Selepas langganan berbayar tamat, simpanan Vault anda kekal
+          ini. Pelanggaran Seksyen 5 boleh menyebabkan penggantungan
+          serta-merta dan kami berhak mengambil tindakan undang-undang yang
+          sewajarnya. Selepas langganan berbayar tamat, simpanan Vault anda kekal
           boleh dibaca — kami tidak menyandera data anda.
         </p>
 

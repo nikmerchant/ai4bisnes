@@ -171,7 +171,7 @@ test("checkout.session.completed preserves billing, profile and affiliate writes
   assert.deepEqual(writes[2], {
     table: "affiliate_commissions", kind: "upsert", value: {
       referrer_id: "referrer-fixture", referred_user_id: "user-fixture",
-      subscription_id: "user-fixture", amount_rm: 9.8,
+      subscription_id: "user-fixture", amount_rm: 4.9,
     }, options: { onConflict: "subscription_id", ignoreDuplicates: true }, filters: [],
   });
 });
@@ -186,6 +186,18 @@ for (const [tier, period, price] of [
     } } });
     assert.equal((writes[0].value as Record<string, unknown>).price_rm, price);
     assert.equal(writes.length, 2);
+  });
+}
+
+for (const [tier, period, commission] of [
+  ["pro", "tahunan", 49], ["max", "bulanan", 6.9], ["max", "tahunan", 69],
+] as const) {
+  test(`checkout records a 10% affiliate commission for ${tier}/${period}`, async () => {
+    const { writes } = await deliver({ type: "checkout.session.completed", data: { object: {
+      id: "cs_fixture", subscription: "sub_fixture", customer: "cus_fixture",
+      metadata: { user_id: "user-fixture", tier, period },
+    } } }, { referrer: "referrer-fixture" });
+    assert.equal((writes[2].value as Record<string, unknown>).amount_rm, commission);
   });
 }
 

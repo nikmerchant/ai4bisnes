@@ -232,7 +232,7 @@ async function janaKomisenAffiliate(
       referrer_id: pembayar.referred_by,
       referred_user_id: user_id,
       subscription_id: user_id, // guna user_id sebagai ref sementara
-      amount_rm: price_rm * 0.2,
+      amount_rm: Math.round(price_rm * 10) / 100, // 10% flat, 2 d.p.
     },
     { onConflict: "subscription_id", ignoreDuplicates: true }
   );

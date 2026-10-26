@@ -6,7 +6,7 @@ export function dapatkanStripe(): Stripe {
   if (!_stripe) {
     const key = process.env.STRIPE_SECRET_KEY;
     if (!key) throw new Error("STRIPE_SECRET_KEY tidak diset");
-    _stripe = new (Stripe as any)(key, { typescript: true }) as Stripe;
+    _stripe = new Stripe(key, { typescript: true });
   }
   return _stripe;
 }

@@ -1,3 +1,6 @@
+import type { SupabaseClient } from "@supabase/supabase-js";
+
+type ActivityRow = { created_at: string };
 
 export type ProgressData = {
   toolsUsedThisMonth: number;
@@ -10,16 +13,6 @@ export type ProgressData = {
   activeCampaign: { title: string; progress: number } | null;
   nextAction: string;
 };
-
-// Aktiviti yang dikira sebagai "tool digunakan"
-const TOOL_ACTIVITIES = [
-    "view_prompt",
-    "copy_prompt",
-    "save_vault",
-    "ajar_ai",
-    "pek_open",
-    "coaching_open",
-] as const;
 
 // Tindakan disyorkan berdasarkan aktiviti
 function getNextAction(stats: {
@@ -50,7 +43,7 @@ function getNextAction(stats: {
 }
 
 export async function getProgressData(
-  supabase: any,
+  supabase: SupabaseClient,
   userId: string,
   tier: string
 ): Promise<ProgressData> {
@@ -85,11 +78,11 @@ export async function getProgressData(
   // Calculate metrics
   const vaultAll = vaultItems.data ?? [];
   const vaultThisMonth = vaultAll.filter(
-    (v: any) => v.created_at >= startOfMonth
+    (v: ActivityRow) => v.created_at >= startOfMonth
   );
   const favAll = favorites.data ?? [];
   const favThisMonth = favAll.filter(
-    (f: any) => f.created_at >= startOfMonth
+    (f: ActivityRow) => f.created_at >= startOfMonth
   );
 
   // Tools used = unique activities this month
@@ -101,8 +94,8 @@ export async function getProgressData(
 
   // Days since last active (from most recent activity)
   const allDates = [
-    ...vaultAll.map((v: any) => v.created_at),
-    ...favAll.map((f: any) => f.created_at),
+    ...vaultAll.map((v: ActivityRow) => v.created_at),
+    ...favAll.map((f: ActivityRow) => f.created_at),
   ].filter(Boolean);
 
   const lastActive = allDates.length

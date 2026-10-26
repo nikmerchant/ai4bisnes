@@ -1,6 +1,12 @@
+import type Stripe from "stripe";
 import { NextRequest } from "next/server";
 import { dapatkanStripe } from "@/lib/stripe";
-import { createClient as createAdminClient } from "@supabase/supabase-js";
+import { createClient as createAdminClient, type SupabaseClient } from "@supabase/supabase-js";
+
+// Preserve legacy top-level fields; migrating to subscription items/nested invoice
+// parents is a separate billing behavior change, outside A4B-024 L3a.
+type LegacySubscription = Stripe.Subscription & { current_period_end?: number };
+type LegacyInvoice = Stripe.Invoice & { subscription?: Stripe.Invoice.Parent.SubscriptionDetails["subscription"] };
 
 export const dynamic = "force-dynamic";
 
@@ -17,7 +23,7 @@ export async function POST(req: NextRequest) {
     return new Response("not configured", { status: 500 });
   }
 
-  let event;
+  let event: Stripe.Event;
   try {
     const body = await req.text();
     event = stripe.webhooks.constructEvent(body, sig, webhookSecret);
@@ -40,7 +46,7 @@ export async function POST(req: NextRequest) {
   try {
     switch (event.type) {
       case "checkout.session.completed": {
-        const session = event.data.object as any;
+        const session: Stripe.Checkout.Session = event.data.object;
         const subId = session.subscription as string;
         const customerId = session.customer as string;
         const { user_id, tier, period } = session.metadata ?? {};
@@ -95,7 +101,7 @@ export async function POST(req: NextRequest) {
 
       case "customer.subscription.updated":
       case "customer.subscription.deleted": {
-        const sub = event.data.object as any;
+        const sub: LegacySubscription = event.data.object;
         const status = sub.status; // active, past_due, canceled, unpaid
         const { user_id } = sub.metadata ?? {};
 
@@ -115,15 +121,15 @@ export async function POST(req: NextRequest) {
                     : "incomplete",
         };
 
-        if ((sub as any).current_period_end) {
+        if (sub.current_period_end) {
           updates.expires_at = new Date(
-            (sub as any).current_period_end * 1000
+            sub.current_period_end * 1000
           ).toISOString();
         }
 
         await admin
           .from("subscriptions")
-          .update(updates as any)
+          .update(updates)
           .eq("stripe_subscription_id", sub.id);
 
         // Kalau cancelled, turunkan tier ke basic
@@ -141,7 +147,7 @@ export async function POST(req: NextRequest) {
       }
 
       case "customer.subscription.deleted": {
-        const sub = event.data.object as any;
+        const sub: LegacySubscription = event.data.object;
         const { user_id } = sub.metadata ?? {};
 
         if (!user_id) return new Response("ok");
@@ -161,7 +167,7 @@ export async function POST(req: NextRequest) {
       }
 
       case "invoice.paid": {
-        const invoice = event.data.object as any;
+        const invoice: LegacyInvoice = event.data.object;
         const subId = invoice.subscription as string;
 
         if (subId) {
@@ -174,7 +180,7 @@ export async function POST(req: NextRequest) {
       }
 
       case "invoice.payment_failed": {
-        const invoice = event.data.object as any;
+        const invoice: LegacyInvoice = event.data.object;
         const subId = invoice.subscription as string;
 
         if (subId) {
@@ -196,7 +202,7 @@ export async function POST(req: NextRequest) {
 
 // Fungsi komisen affiliate (porting dari callback toyyibPay)
 async function janaKomisenAffiliate(
-  admin: any,
+  admin: SupabaseClient,
   {
     user_id,
     price_rm,

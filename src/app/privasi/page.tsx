@@ -190,7 +190,7 @@ export default function Privasi() {
         <p className={p}>
           Kami mungkin mengemas kini dasar ini dari semasa ke semasa.
           Perubahan penting akan dimaklumkan melalui emel atau notis dalam
-          platform. Tarikh "kemas kini terakhir" di atas menunjukkan versi
+          platform. Tarikh &quot;kemas kini terakhir&quot; di atas menunjukkan versi
           semasa.
         </p>
 

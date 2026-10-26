@@ -2,6 +2,12 @@ import Link from "next/link";
 import { dapatkanProfil } from "./shared";
 import { CtaSpinner } from "@/app/cta-spinner";
 
+type FavoriteActivityRow = {
+  prompt_id: number;
+  created_at: string;
+  prompts: unknown;
+};
+
 /* Recent Activity — dari vault_items + favorites */
 type Aktiviti = {
   id: string;
@@ -58,18 +64,19 @@ export async function RecentActivity() {
   }
 
   // Merge favorites
-  for (const f of favs.data ?? []) {
+  const favoriteRows: FavoriteActivityRow[] = favs.data ?? [];
+  for (const f of favoriteRows) {
     aktiviti.push({
       id: `f-${f.prompt_id}`,
       jenis: "⭐ Favorit",
-      tajuk: (f.prompts as any)?.title_ms || "Prompt ditanda",
+      tajuk: (f.prompts as { title_ms: string } | null)?.title_ms || "Prompt ditanda",
       masa: timeAgo(f.created_at),
       href: "/app",
     });
   }
 
   // Sort by most recent (already sorted from query, but merge)
-  aktiviti.sort((a, b) => {
+  aktiviti.sort(() => {
     // Simple sort — vault and favs both already sorted, just interleave
     return 0;
   });

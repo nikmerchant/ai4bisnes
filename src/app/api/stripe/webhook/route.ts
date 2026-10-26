@@ -79,7 +79,7 @@ export async function POST(req: NextRequest) {
         const priceRm =
           tier === "max" ? (period === "tahunan" ? 690 : 69) : period === "tahunan" ? 490 : 49;
 
-        await admin.from("subscriptions").upsert(
+        const { data: subscription, error: subscriptionError } = await admin.from("subscriptions").upsert(
           {
             user_id,
             tier,
@@ -91,30 +91,32 @@ export async function POST(req: NextRequest) {
             starts_at: new Date().toISOString(),
             // expires_at diisi webhook customer.subscription.updated
           },
-          { onConflict: "user_id,tier", ignoreDuplicates: false }
-        );
+          { onConflict: "stripe_subscription_id", ignoreDuplicates: false }
+        ).select("id").single();
+        if (subscriptionError) throw subscriptionError;
+        if (!subscription || (typeof subscription.id !== "number" && typeof subscription.id !== "string")) {
+          throw new Error("Subscription upsert did not return an id");
+        }
 
         // Naik taraf profile user
-        await admin
+        const { error: profileError } = await admin
           .from("profiles")
           .update({ tier })
           .eq("id", user_id);
+        if (profileError) throw profileError;
 
         console.log(
           `✅ Stripe: ${user_id} → ${tier} (${period}) subscription ${subId}`
         );
 
         // Rekod komisen affiliate kalau ada
-        try {
-          await janaKomisenAffiliate(admin, {
-            user_id,
-            tier,
-            period,
-            price_rm: priceRm,
-          });
-        } catch (e) {
-          console.error("Komisen affiliate gagal:", e);
-        }
+        await janaKomisenAffiliate(admin, {
+          user_id,
+          subscription_id: subscription.id,
+          tier,
+          period,
+          price_rm: priceRm,
+        });
         break;
       }
 
@@ -124,10 +126,11 @@ export async function POST(req: NextRequest) {
         const sub: LegacySubscription = event.data.object;
         const periodEnd = resolvePeriodEnd(sub);
         if (periodEnd !== undefined) {
-          await admin
+          const { error } = await admin
             .from("subscriptions")
             .update({ expires_at: new Date(periodEnd * 1000).toISOString() })
             .eq("stripe_subscription_id", sub.id);
+          if (error) throw error;
         }
         break;
       }
@@ -159,17 +162,19 @@ export async function POST(req: NextRequest) {
           updates.expires_at = new Date(periodEnd * 1000).toISOString();
         }
 
-        await admin
+        const { error: subscriptionError } = await admin
           .from("subscriptions")
           .update(updates)
           .eq("stripe_subscription_id", sub.id);
+        if (subscriptionError) throw subscriptionError;
 
         // Kalau cancelled, turunkan tier ke basic
         if (status === "canceled" || status === "unpaid") {
-          await admin
+          const { error: profileError } = await admin
             .from("profiles")
             .update({ tier: "basic" })
             .eq("id", user_id);
+          if (profileError) throw profileError;
         }
 
         console.log(
@@ -183,10 +188,11 @@ export async function POST(req: NextRequest) {
         const subId = resolveInvoiceSubscriptionId(invoice);
 
         if (subId) {
-          await admin
+          const { error } = await admin
             .from("subscriptions")
             .update({ status: "active" })
             .eq("stripe_subscription_id", subId);
+          if (error) throw error;
         }
         break;
       }
@@ -196,17 +202,19 @@ export async function POST(req: NextRequest) {
         const subId = resolveInvoiceSubscriptionId(invoice);
 
         if (subId) {
-          await admin
+          const { error } = await admin
             .from("subscriptions")
             .update({ status: "past_due" })
             .eq("stripe_subscription_id", subId);
+          if (error) throw error;
         }
         break;
       }
     }
   } catch (e) {
     console.error("Webhook handler error:", e);
-    // Jangan return error — Stripe akan retry. Lebih baik log dan ack.
+    // Return a retryable failure instead of acknowledging an incomplete write.
+    return new Response("db write failed", { status: 500 });
   }
 
   return new Response("ok");
@@ -217,8 +225,9 @@ async function janaKomisenAffiliate(
   admin: SupabaseClient,
   {
     user_id,
+    subscription_id,
     price_rm,
-  }: { user_id: string; tier: string; period: string; price_rm: number }
+  }: { user_id: string; subscription_id: number | string; tier: string; period: string; price_rm: number }
 ) {
   const { data: pembayar } = await admin
     .from("profiles")
@@ -227,13 +236,14 @@ async function janaKomisenAffiliate(
     .single();
   if (!pembayar?.referred_by) return;
 
-  await admin.from("affiliate_commissions").upsert(
+  const { error } = await admin.from("affiliate_commissions").upsert(
     {
       referrer_id: pembayar.referred_by,
       referred_user_id: user_id,
-      subscription_id: user_id, // guna user_id sebagai ref sementara
+      subscription_id,
       amount_rm: Math.round(price_rm * 10) / 100, // 10% flat, 2 d.p.
     },
     { onConflict: "subscription_id", ignoreDuplicates: true }
   );
+  if (error) throw error;
 }

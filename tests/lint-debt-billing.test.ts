@@ -47,22 +47,42 @@ function loadModule(
   return { exports, assertOffline: () => assert.equal(networkCalls, 0) };
 }
 
-function database(referrer: string | null = null, failWrite = false) {
+type DatabaseOptions = {
+  failWrite?: boolean | number;
+  throwWrite?: boolean;
+  subscriptionId?: number | string | null;
+};
+
+function database(referrer: string | null = null, options: DatabaseOptions = {}) {
   const writes: Write[] = [];
+  const selections: [string, string][] = [];
+  const subscriptionId = options.subscriptionId === undefined ? 7301 : options.subscriptionId;
   return {
-    writes,
+    writes, selections,
     admin: {
       from(table: string) {
         let write: Write | undefined;
+        let writeNumber = 0;
+        const result = () => ({
+          data: write
+            ? table === "subscriptions" && write.kind === "upsert" ? { id: subscriptionId } : null
+            : { referred_by: referrer },
+          error: write && (options.failWrite === true || options.failWrite === writeNumber)
+            ? { message: "fixture database failure" } : null,
+        });
+        const beginWrite = () => {
+          if (options.throwWrite) throw new Error("fixture database failure");
+          writeNumber = writes.length + 1;
+        };
         const chain = {
           update(value: unknown) {
-            if (failWrite) throw new Error("fixture database failure");
+            beginWrite();
             write = { table, kind: "update", value: structuredClone(value), filters: [] };
             writes.push(write);
             return chain;
           },
           upsert(value: unknown, options: unknown) {
-            if (failWrite) throw new Error("fixture database failure");
+            beginWrite();
             write = {
               table, kind: "upsert", value: structuredClone(value),
               options: structuredClone(options), filters: [],
@@ -74,8 +94,11 @@ function database(referrer: string | null = null, failWrite = false) {
             write?.filters.push([column, value]);
             return chain;
           },
-          select() { return chain; },
-          single() { return Promise.resolve({ data: { referred_by: referrer } }); },
+          select(columns: string) { selections.push([table, columns]); return chain; },
+          single() { return Promise.resolve(result()); },
+          then(resolve: (value: ReturnType<typeof result>) => unknown, reject?: (reason: unknown) => unknown) {
+            return Promise.resolve(result()).then(resolve, reject);
+          },
         };
         return chain;
       },
@@ -87,9 +110,9 @@ type FixtureEvent = { type: Stripe.Event.Type; data: { object: Record<string, un
 
 async function deliver(
   event: FixtureEvent,
-  options: { referrer?: string; failWrite?: boolean; invalidSignature?: boolean; missingKey?: boolean } = {},
+  options: DatabaseOptions & { referrer?: string; invalidSignature?: boolean; missingKey?: boolean } = {},
 ) {
-  const db = database(options.referrer, options.failWrite);
+  const db = database(options.referrer, options);
   let adminCalls = 0;
   const loaded = loadModule("../src/app/api/stripe/webhook/route.ts", {
     "@/lib/stripe": {
@@ -122,7 +145,7 @@ async function deliver(
     body: JSON.stringify(event),
   }));
   loaded.assertOffline();
-  return { response, writes: db.writes, adminCalls };
+  return { response, writes: db.writes, selections: db.selections, adminCalls };
 }
 
 const subscription = {
@@ -163,7 +186,7 @@ test("checkout.session.completed preserves billing, profile and affiliate writes
   assert.equal(writes.length, 3);
   assert.equal(writes[0].table, "subscriptions");
   assert.equal(writes[0].kind, "upsert");
-  assert.deepEqual(writes[0].options, { onConflict: "user_id,tier", ignoreDuplicates: false });
+  assert.deepEqual(writes[0].options, { onConflict: "stripe_subscription_id", ignoreDuplicates: false });
   assert.deepEqual(writes[1], {
     table: "profiles", kind: "update", value: { tier: "pro" },
     filters: [["id", "user-fixture"]],
@@ -171,7 +194,7 @@ test("checkout.session.completed preserves billing, profile and affiliate writes
   assert.deepEqual(writes[2], {
     table: "affiliate_commissions", kind: "upsert", value: {
       referrer_id: "referrer-fixture", referred_user_id: "user-fixture",
-      subscription_id: "user-fixture", amount_rm: 4.9,
+      subscription_id: 7301, amount_rm: 4.9,
     }, options: { onConflict: "subscription_id", ignoreDuplicates: true }, filters: [],
   });
 });
@@ -406,10 +429,89 @@ test("missing service key refuses the webhook before admin construction", async 
   assert.equal(adminCalls, 0);
 });
 
-test("database errors retain the existing webhook acknowledgement", async () => {
+test("database write errors return HTTP 500 for Stripe retry", async () => {
   const { response } = await deliver(invoiceEvent("invoice.payment_failed"), { failWrite: true });
-  assert.equal(response.status, 200);
-  assert.equal(await response.text(), "ok");
+  assert.equal(response.status, 500);
+  assert.equal(await response.text(), "db write failed");
+});
+
+const checkoutEvent: FixtureEvent = {
+  type: "checkout.session.completed", data: { object: {
+    id: "cs_retry_fixture", subscription: "sub_fixture", customer: "cus_fixture",
+    metadata: { user_id: "user-fixture", tier: "pro", period: "bulanan" },
+  } },
+};
+
+test("checkout selects the subscription bigint id and uses it as the commission foreign key", async () => {
+  for (const subscriptionId of [7301, "9007199254740993"]) {
+    const { response, writes, selections } = await deliver(checkoutEvent, {
+      referrer: "referrer-fixture", subscriptionId,
+    });
+    assert.equal(response.status, 200);
+    assert.deepEqual(selections, [["subscriptions", "id"], ["profiles", "referred_by"]]);
+    assert.equal((writes[2].value as Record<string, unknown>).subscription_id, subscriptionId);
+  }
+});
+
+for (const failWrite of [1, 2, 3]) {
+  test("checkout DB error at write " + failWrite + " stops later writes and returns 500", async () => {
+    const { response, writes } = await deliver(checkoutEvent, { referrer: "referrer-fixture", failWrite });
+    assert.equal(response.status, 500);
+    assert.equal(await response.text(), "db write failed");
+    assert.equal(writes.length, failWrite);
+  });
+}
+
+for (const type of [
+  "customer.subscription.created", "customer.subscription.updated", "customer.subscription.deleted",
+] as const) {
+  test(type + " DB error stops later writes and returns 500", async () => {
+    const { response, writes } = await deliver(subscriptionEvent(type, { status: "canceled" }), { failWrite: 1 });
+    assert.equal(response.status, 500);
+    assert.equal(await response.text(), "db write failed");
+    assert.equal(writes.length, 1);
+  });
+}
+
+for (const type of ["customer.subscription.updated", "customer.subscription.deleted"] as const) {
+  test(type + " downgrade DB error returns 500", async () => {
+    const { response, writes } = await deliver(subscriptionEvent(type, { status: "canceled" }), { failWrite: 2 });
+    assert.equal(response.status, 500);
+    assert.equal(await response.text(), "db write failed");
+    assert.equal(writes.length, 2);
+  });
+}
+
+for (const type of ["invoice.paid", "invoice.payment_failed"] as const) {
+  test(type + " returned DB error returns 500", async () => {
+    const { response } = await deliver(invoiceEvent(type), { failWrite: 1 });
+    assert.equal(response.status, 500);
+    assert.equal(await response.text(), "db write failed");
+  });
+}
+
+test("thrown write errors also return 500", async () => {
+  const { response } = await deliver(invoiceEvent("invoice.payment_failed"), { throwWrite: true });
+  assert.equal(response.status, 500);
+  assert.equal(await response.text(), "db write failed");
+});
+
+test("missing returned subscription id returns 500 before profile or commission writes", async () => {
+  const { response, writes } = await deliver(checkoutEvent, { subscriptionId: null, referrer: "referrer-fixture" });
+  assert.equal(response.status, 500);
+  assert.equal(writes.length, 1);
+});
+
+test("checkout retries use the same Stripe conflict key and commission subscription id", async () => {
+  const first = await deliver(checkoutEvent, { referrer: "referrer-fixture", failWrite: 3 });
+  const retry = await deliver(checkoutEvent, { referrer: "referrer-fixture" });
+  assert.equal(first.response.status, 500);
+  assert.equal(retry.response.status, 200);
+  for (const delivery of [first, retry]) {
+    assert.deepEqual(delivery.writes[0].options, { onConflict: "stripe_subscription_id", ignoreDuplicates: false });
+    assert.deepEqual(delivery.writes[2].options, { onConflict: "subscription_id", ignoreDuplicates: true });
+    assert.equal((delivery.writes[2].value as Record<string, unknown>).subscription_id, 7301);
+  }
 });
 
 async function saveProfile(options: { user?: boolean; valid?: boolean; key?: boolean } = {}) {

@@ -197,28 +197,66 @@ test("incomplete checkout metadata is acknowledged without writes", async () => 
   assert.equal(await response.text(), "ok");
 });
 
-test("subscription.updated preserves the top-level expiry even when item expiry differs", async () => {
+test("subscription.updated prefers the Dahlia item expiry over the legacy field", async () => {
   const { writes } = await deliver(subscriptionEvent("customer.subscription.updated"));
   assert.deepEqual(writes, [{
     table: "subscriptions", kind: "update",
-    value: { status: "active", expires_at: "2027-01-15T08:00:00.000Z" },
+    value: { status: "active", expires_at: "2030-03-17T17:46:40.000Z" },
     filters: [["stripe_subscription_id", "sub_fixture"]],
   }]);
 });
 
 for (const end of [undefined, 0]) {
-  test(`subscription.updated does not substitute item expiry for top-level ${String(end)}`, async () => {
+  test(`subscription.updated uses the Dahlia item when legacy expiry is ${String(end)}`, async () => {
     const { writes } = await deliver(subscriptionEvent("customer.subscription.updated", { current_period_end: end }));
-    assert.deepEqual(writes[0].value, { status: "active" });
+    assert.deepEqual(writes[0].value, { status: "active", expires_at: "2030-03-17T17:46:40.000Z" });
   });
 }
+
+test("subscription.updated selects the maximum item expiry regardless of order", async () => {
+  for (const ends of [[2000000000, 1900000000], [1900000000, 2000000000]]) {
+    const { writes } = await deliver(subscriptionEvent("customer.subscription.updated", {
+      items: { data: ends.map((current_period_end) => ({ current_period_end })) },
+    }));
+    assert.deepEqual(writes[0].value, { status: "active", expires_at: "2033-05-18T03:33:20.000Z" });
+    assert.equal(writes.length, 1);
+  }
+});
+
+const invalidItems = { data: [
+  { current_period_end: 0 }, {}, { current_period_end: "2000000000" },
+  { current_period_end: null }, { current_period_end: -1 },
+] };
+
+test("subscription.updated falls back to legacy expiry when all item values are invalid", async () => {
+  const { writes } = await deliver(subscriptionEvent("customer.subscription.updated", { items: invalidItems }));
+  assert.deepEqual(writes[0].value, { status: "active", expires_at: "2027-01-15T08:00:00.000Z" });
+});
+
+for (const end of [undefined, 0, "2000000000", null]) {
+  test(`subscription.updated omits expiry when neither source is valid: ${String(end)}`, async () => {
+    const { writes, response } = await deliver(subscriptionEvent("customer.subscription.updated", {
+      items: invalidItems, current_period_end: end,
+    }));
+    assert.equal(await response.text(), "ok");
+    assert.deepEqual(writes, [{
+      table: "subscriptions", kind: "update", value: { status: "active" },
+      filters: [["stripe_subscription_id", "sub_fixture"]],
+    }]);
+  });
+}
+
+test("subscription.updated retains legacy expiry for an empty item list", async () => {
+  const { writes } = await deliver(subscriptionEvent("customer.subscription.updated", { items: { data: [] } }));
+  assert.deepEqual(writes[0].value, { status: "active", expires_at: "2027-01-15T08:00:00.000Z" });
+});
 
 for (const [status, stored, downgrade] of [
   ["past_due", "past_due", false], ["canceled", "cancelled", true],
   ["unpaid", "unpaid", true], ["trialing", "incomplete", false],
 ] as const) {
   test(`subscription.updated preserves ${status} mapping and profile side effects`, async () => {
-    const { writes } = await deliver(subscriptionEvent("customer.subscription.updated", { status }));
+    const { writes } = await deliver(subscriptionEvent("customer.subscription.updated", { status, items: { data: [] } }));
     assert.deepEqual(writes[0].value, { status: stored, expires_at: "2027-01-15T08:00:00.000Z" });
     assert.equal(writes.length, downgrade ? 2 : 1);
     if (downgrade) assert.deepEqual(writes[1], {
@@ -228,10 +266,23 @@ for (const [status, stored, downgrade] of [
 }
 
 test("subscription.deleted uses the first matching case and its supplied legacy expiry", async () => {
-  const { writes } = await deliver(subscriptionEvent("customer.subscription.deleted", { status: "canceled" }));
+  const { writes } = await deliver(subscriptionEvent("customer.subscription.deleted", { status: "canceled", items: { data: [] } }));
   assert.deepEqual(writes, [
     { table: "subscriptions", kind: "update", value: {
       status: "cancelled", expires_at: "2027-01-15T08:00:00.000Z",
+    }, filters: [["stripe_subscription_id", "sub_fixture"]] },
+    { table: "profiles", kind: "update", value: { tier: "basic" }, filters: [["id", "user-fixture"]] },
+  ]);
+});
+
+test("Dahlia subscription.deleted preserves status and basic downgrade with item expiry", async () => {
+  const { writes, response } = await deliver(subscriptionEvent("customer.subscription.deleted", {
+    status: "canceled", current_period_end: undefined,
+  }));
+  assert.equal(await response.text(), "ok");
+  assert.deepEqual(writes, [
+    { table: "subscriptions", kind: "update", value: {
+      status: "cancelled", expires_at: "2030-03-17T17:46:40.000Z",
     }, filters: [["stripe_subscription_id", "sub_fixture"]] },
     { table: "profiles", kind: "update", value: { tier: "basic" }, filters: [["id", "user-fixture"]] },
   ]);
@@ -256,12 +307,42 @@ for (const [type, status] of [["invoice.paid", "active"], ["invoice.payment_fail
       filters: [["stripe_subscription_id", "sub_fixture"]],
     }]);
   });
-  test(`${type} does not substitute a modern nested subscription`, async () => {
+  test(`${type} uses a Dahlia nested subscription string`, async () => {
     const { writes } = await deliver(invoiceEvent(type, {
       subscription: undefined,
       parent: { type: "subscription_details", subscription_details: { subscription: "sub_nested" } },
     }));
+    assert.deepEqual(writes, [{
+      table: "subscriptions", kind: "update", value: { status },
+      filters: [["stripe_subscription_id", "sub_nested"]],
+    }]);
+  });
+  test(`${type} uses the expanded Dahlia subscription id ahead of legacy`, async () => {
+    const { writes, response } = await deliver(invoiceEvent(type, {
+      parent: { type: "subscription_details", subscription_details: { subscription: {
+        id: "sub_expanded", object: "subscription",
+      } } },
+    }));
+    assert.equal(await response.text(), "ok");
+    assert.deepEqual(writes, [{
+      table: "subscriptions", kind: "update", value: { status },
+      filters: [["stripe_subscription_id", "sub_expanded"]],
+    }]);
+  });
+  test(`${type} without either subscription source is acknowledged without writes`, async () => {
+    const { writes, response } = await deliver(invoiceEvent(type, { subscription: undefined }));
     assert.deepEqual(writes, []);
+    assert.equal(await response.text(), "ok");
+  });
+  test(`${type} falls back to an expanded legacy subscription without nested details`, async () => {
+    const { writes } = await deliver(invoiceEvent(type, {
+      parent: { type: "subscription_details", subscription_details: null },
+      subscription: { id: "sub_legacy_expanded", object: "subscription" },
+    }));
+    assert.deepEqual(writes, [{
+      table: "subscriptions", kind: "update", value: { status },
+      filters: [["stripe_subscription_id", "sub_legacy_expanded"]],
+    }]);
   });
 }
 

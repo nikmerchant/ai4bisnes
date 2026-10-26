@@ -3,10 +3,29 @@ import { NextRequest } from "next/server";
 import { dapatkanStripe } from "@/lib/stripe";
 import { createClient as createAdminClient, type SupabaseClient } from "@supabase/supabase-js";
 
-// Preserve legacy top-level fields; migrating to subscription items/nested invoice
-// parents is a separate billing behavior change, outside A4B-024 L3a.
+// Dahlia uses item periods and nested invoice subscriptions; keep legacy fallbacks.
 type LegacySubscription = Stripe.Subscription & { current_period_end?: number };
 type LegacyInvoice = Stripe.Invoice & { subscription?: Stripe.Invoice.Parent.SubscriptionDetails["subscription"] };
+
+function resolvePeriodEnd(sub: LegacySubscription): number | undefined {
+  const validEnd = (value: unknown): value is number =>
+    typeof value === "number" && Number.isFinite(value) && value > 0 &&
+    Number.isFinite(new Date(value * 1000).getTime());
+  const ends = (sub.items?.data ?? [])
+    .map((item) => item.current_period_end)
+    .filter(validEnd);
+  return ends.length > 0
+    ? Math.max(...ends)
+    : validEnd(sub.current_period_end) ? sub.current_period_end : undefined;
+}
+
+function resolveInvoiceSubscriptionId(invoice: LegacyInvoice): string | undefined {
+  const subscription = invoice.parent?.subscription_details?.subscription;
+  const id = typeof subscription === "string" ? subscription : subscription?.id;
+  if (id) return id;
+  const legacy = invoice.subscription;
+  return typeof legacy === "string" ? legacy : legacy?.id;
+}
 
 export const dynamic = "force-dynamic";
 
@@ -121,10 +140,9 @@ export async function POST(req: NextRequest) {
                     : "incomplete",
         };
 
-        if (sub.current_period_end) {
-          updates.expires_at = new Date(
-            sub.current_period_end * 1000
-          ).toISOString();
+        const periodEnd = resolvePeriodEnd(sub);
+        if (periodEnd !== undefined) {
+          updates.expires_at = new Date(periodEnd * 1000).toISOString();
         }
 
         await admin
@@ -146,29 +164,9 @@ export async function POST(req: NextRequest) {
         break;
       }
 
-      case "customer.subscription.deleted": {
-        const sub: LegacySubscription = event.data.object;
-        const { user_id } = sub.metadata ?? {};
-
-        if (!user_id) return new Response("ok");
-
-        await admin
-          .from("subscriptions")
-          .update({ status: "cancelled", expires_at: new Date().toISOString() })
-          .eq("stripe_subscription_id", sub.id);
-
-        await admin
-          .from("profiles")
-          .update({ tier: "basic" })
-          .eq("id", user_id);
-
-        console.log(`🗑️ Stripe: sub ${sub.id} deleted, ${user_id} → basic`);
-        break;
-      }
-
       case "invoice.paid": {
         const invoice: LegacyInvoice = event.data.object;
-        const subId = invoice.subscription as string;
+        const subId = resolveInvoiceSubscriptionId(invoice);
 
         if (subId) {
           await admin
@@ -181,7 +179,7 @@ export async function POST(req: NextRequest) {
 
       case "invoice.payment_failed": {
         const invoice: LegacyInvoice = event.data.object;
-        const subId = invoice.subscription as string;
+        const subId = resolveInvoiceSubscriptionId(invoice);
 
         if (subId) {
           await admin

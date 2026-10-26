@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import { HARGA, type TierBayar, type Tempoh } from "@/lib/harga";
+import { type TierBayar, type Tempoh } from "@/lib/harga";
 import { hantarEmel, resendDikonfigurasi } from "@/lib/resend";
 import { dapatkanStripe, HARGA_STRIPE, dapatkanDomain } from "@/lib/stripe";
 import { cookies } from "next/headers";
@@ -263,7 +263,6 @@ export async function simpanProfil(formData: FormData) {
     redirect("/onboarding?ralat=Konfigurasi+pelayan+tidak+lengkap.+Sila+hubungi+sokongan.");
   }
 
-  const { createClient: createAdminClient } = require("@supabase/supabase-js");
   const admin = createAdminClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, serviceKey);
 
   const { error } = await admin

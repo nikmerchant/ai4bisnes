@@ -1,6 +1,31 @@
+import type Stripe from "stripe";
 import { NextRequest } from "next/server";
 import { dapatkanStripe } from "@/lib/stripe";
-import { createClient as createAdminClient } from "@supabase/supabase-js";
+import { createClient as createAdminClient, type SupabaseClient } from "@supabase/supabase-js";
+
+// Dahlia uses item periods and nested invoice subscriptions; keep legacy fallbacks.
+type LegacySubscription = Stripe.Subscription & { current_period_end?: number };
+type LegacyInvoice = Stripe.Invoice & { subscription?: Stripe.Invoice.Parent.SubscriptionDetails["subscription"] };
+
+function resolvePeriodEnd(sub: LegacySubscription): number | undefined {
+  const validEnd = (value: unknown): value is number =>
+    typeof value === "number" && Number.isFinite(value) && value > 0 &&
+    Number.isFinite(new Date(value * 1000).getTime());
+  const ends = (sub.items?.data ?? [])
+    .map((item) => item.current_period_end)
+    .filter(validEnd);
+  return ends.length > 0
+    ? Math.max(...ends)
+    : validEnd(sub.current_period_end) ? sub.current_period_end : undefined;
+}
+
+function resolveInvoiceSubscriptionId(invoice: LegacyInvoice): string | undefined {
+  const subscription = invoice.parent?.subscription_details?.subscription;
+  const id = typeof subscription === "string" ? subscription : subscription?.id;
+  if (id) return id;
+  const legacy = invoice.subscription;
+  return typeof legacy === "string" ? legacy : legacy?.id;
+}
 
 export const dynamic = "force-dynamic";
 
@@ -17,7 +42,7 @@ export async function POST(req: NextRequest) {
     return new Response("not configured", { status: 500 });
   }
 
-  let event;
+  let event: Stripe.Event;
   try {
     const body = await req.text();
     event = stripe.webhooks.constructEvent(body, sig, webhookSecret);
@@ -40,7 +65,7 @@ export async function POST(req: NextRequest) {
   try {
     switch (event.type) {
       case "checkout.session.completed": {
-        const session = event.data.object as any;
+        const session: Stripe.Checkout.Session = event.data.object;
         const subId = session.subscription as string;
         const customerId = session.customer as string;
         const { user_id, tier, period } = session.metadata ?? {};
@@ -54,7 +79,7 @@ export async function POST(req: NextRequest) {
         const priceRm =
           tier === "max" ? (period === "tahunan" ? 690 : 69) : period === "tahunan" ? 490 : 49;
 
-        await admin.from("subscriptions").upsert(
+        const { data: subscription, error: subscriptionError } = await admin.from("subscriptions").upsert(
           {
             user_id,
             tier,
@@ -66,36 +91,53 @@ export async function POST(req: NextRequest) {
             starts_at: new Date().toISOString(),
             // expires_at diisi webhook customer.subscription.updated
           },
-          { onConflict: "user_id,tier", ignoreDuplicates: false }
-        );
+          { onConflict: "stripe_subscription_id", ignoreDuplicates: false }
+        ).select("id").single();
+        if (subscriptionError) throw subscriptionError;
+        if (!subscription || (typeof subscription.id !== "number" && typeof subscription.id !== "string")) {
+          throw new Error("Subscription upsert did not return an id");
+        }
 
         // Naik taraf profile user
-        await admin
+        const { error: profileError } = await admin
           .from("profiles")
           .update({ tier })
           .eq("id", user_id);
+        if (profileError) throw profileError;
 
         console.log(
           `✅ Stripe: ${user_id} → ${tier} (${period}) subscription ${subId}`
         );
 
         // Rekod komisen affiliate kalau ada
-        try {
-          await janaKomisenAffiliate(admin, {
-            user_id,
-            tier,
-            period,
-            price_rm: priceRm,
-          });
-        } catch (e) {
-          console.error("Komisen affiliate gagal:", e);
+        await janaKomisenAffiliate(admin, {
+          user_id,
+          subscription_id: subscription.id,
+          tier,
+          period,
+          price_rm: priceRm,
+        });
+        break;
+      }
+
+      case "customer.subscription.created": {
+        // Expiry only: events can arrive before or after checkout, so status
+        // stays owned by checkout.session.completed and subscription.updated.
+        const sub: LegacySubscription = event.data.object;
+        const periodEnd = resolvePeriodEnd(sub);
+        if (periodEnd !== undefined) {
+          const { error } = await admin
+            .from("subscriptions")
+            .update({ expires_at: new Date(periodEnd * 1000).toISOString() })
+            .eq("stripe_subscription_id", sub.id);
+          if (error) throw error;
         }
         break;
       }
 
       case "customer.subscription.updated":
       case "customer.subscription.deleted": {
-        const sub = event.data.object as any;
+        const sub: LegacySubscription = event.data.object;
         const status = sub.status; // active, past_due, canceled, unpaid
         const { user_id } = sub.metadata ?? {};
 
@@ -104,7 +146,7 @@ export async function POST(req: NextRequest) {
         // Update status dan expiry
         const updates: Record<string, string | null> = {
           status:
-            status === "active"
+            status === "active" || status === "trialing"
               ? "active"
               : status === "past_due"
                 ? "past_due"
@@ -115,23 +157,24 @@ export async function POST(req: NextRequest) {
                     : "incomplete",
         };
 
-        if ((sub as any).current_period_end) {
-          updates.expires_at = new Date(
-            (sub as any).current_period_end * 1000
-          ).toISOString();
+        const periodEnd = resolvePeriodEnd(sub);
+        if (periodEnd !== undefined) {
+          updates.expires_at = new Date(periodEnd * 1000).toISOString();
         }
 
-        await admin
+        const { error: subscriptionError } = await admin
           .from("subscriptions")
-          .update(updates as any)
+          .update(updates)
           .eq("stripe_subscription_id", sub.id);
+        if (subscriptionError) throw subscriptionError;
 
         // Kalau cancelled, turunkan tier ke basic
         if (status === "canceled" || status === "unpaid") {
-          await admin
+          const { error: profileError } = await admin
             .from("profiles")
             .update({ tier: "basic" })
             .eq("id", user_id);
+          if (profileError) throw profileError;
         }
 
         console.log(
@@ -140,55 +183,38 @@ export async function POST(req: NextRequest) {
         break;
       }
 
-      case "customer.subscription.deleted": {
-        const sub = event.data.object as any;
-        const { user_id } = sub.metadata ?? {};
-
-        if (!user_id) return new Response("ok");
-
-        await admin
-          .from("subscriptions")
-          .update({ status: "cancelled", expires_at: new Date().toISOString() })
-          .eq("stripe_subscription_id", sub.id);
-
-        await admin
-          .from("profiles")
-          .update({ tier: "basic" })
-          .eq("id", user_id);
-
-        console.log(`🗑️ Stripe: sub ${sub.id} deleted, ${user_id} → basic`);
-        break;
-      }
-
       case "invoice.paid": {
-        const invoice = event.data.object as any;
-        const subId = invoice.subscription as string;
+        const invoice: LegacyInvoice = event.data.object;
+        const subId = resolveInvoiceSubscriptionId(invoice);
 
         if (subId) {
-          await admin
+          const { error } = await admin
             .from("subscriptions")
             .update({ status: "active" })
             .eq("stripe_subscription_id", subId);
+          if (error) throw error;
         }
         break;
       }
 
       case "invoice.payment_failed": {
-        const invoice = event.data.object as any;
-        const subId = invoice.subscription as string;
+        const invoice: LegacyInvoice = event.data.object;
+        const subId = resolveInvoiceSubscriptionId(invoice);
 
         if (subId) {
-          await admin
+          const { error } = await admin
             .from("subscriptions")
             .update({ status: "past_due" })
             .eq("stripe_subscription_id", subId);
+          if (error) throw error;
         }
         break;
       }
     }
   } catch (e) {
     console.error("Webhook handler error:", e);
-    // Jangan return error — Stripe akan retry. Lebih baik log dan ack.
+    // Return a retryable failure instead of acknowledging an incomplete write.
+    return new Response("db write failed", { status: 500 });
   }
 
   return new Response("ok");
@@ -196,11 +222,12 @@ export async function POST(req: NextRequest) {
 
 // Fungsi komisen affiliate (porting dari callback toyyibPay)
 async function janaKomisenAffiliate(
-  admin: any,
+  admin: SupabaseClient,
   {
     user_id,
+    subscription_id,
     price_rm,
-  }: { user_id: string; tier: string; period: string; price_rm: number }
+  }: { user_id: string; subscription_id: number | string; tier: string; period: string; price_rm: number }
 ) {
   const { data: pembayar } = await admin
     .from("profiles")
@@ -209,13 +236,14 @@ async function janaKomisenAffiliate(
     .single();
   if (!pembayar?.referred_by) return;
 
-  await admin.from("affiliate_commissions").upsert(
+  const { error } = await admin.from("affiliate_commissions").upsert(
     {
       referrer_id: pembayar.referred_by,
       referred_user_id: user_id,
-      subscription_id: user_id, // guna user_id sebagai ref sementara
-      amount_rm: price_rm * 0.2,
+      subscription_id,
+      amount_rm: Math.round(price_rm * 10) / 100, // 10% flat, 2 d.p.
     },
     { onConflict: "subscription_id", ignoreDuplicates: true }
   );
+  if (error) throw error;
 }

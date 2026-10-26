@@ -61,8 +61,8 @@ export default function Terma() {
         <ul className="mt-3 list-disc space-y-2 pl-5">
           <li className={li}>
             Pelan Basic adalah percuma. Pelan Pro dan Max adalah langganan
-            berbayar (bulanan atau tahunan) yang diproses melalui toyyibPay
-            (FPX & kad).
+            berbayar (bulanan atau tahunan) yang diproses melalui Stripe
+            (kad & FPX).
           </li>
           <li className={li}>
             Harga "founding member" dikunci selagi langganan anda kekal
@@ -70,8 +70,10 @@ export default function Terma() {
             akan terpakai untuk langganan baharu.
           </li>
           <li className={li}>
-            Langganan tidak diperbaharui secara automatik — anda membuat
-            bayaran baharu untuk setiap tempoh.
+            Langganan diperbaharui secara automatik pada akhir setiap tempoh
+            (bulanan atau tahunan) sehingga anda membatalkannya. Anda boleh
+            membatalkan pembaharuan pada bila-bila masa melalui halaman
+            pengurusan langganan.
           </li>
           <li className={li}>
             <strong>Jaminan 14 hari:</strong> jika anda tidak berpuas hati
@@ -84,7 +86,7 @@ export default function Terma() {
         <ul className="mt-3 list-disc space-y-2 pl-5">
           <li className={li}>
             Setiap pengguna berdaftar menerima pautan rujukan dan layak
-            menerima komisen 20% daripada setiap bayaran langganan oleh
+            menerima komisen 10% daripada setiap bayaran langganan oleh
             pengguna yang mereka rujuk, selagi langganan tersebut aktif.
           </li>
           <li className={li}>

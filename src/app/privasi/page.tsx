@@ -20,7 +20,7 @@ export default function Privasi() {
           Dasar Privasi
         </h1>
         <p className="mt-2 text-xs text-zinc-400">
-          Kemas kini terakhir: 11 Julai 2026
+          Kemas kini terakhir: 26 Oktober 2026
         </p>
 
         <p className={p}>
@@ -46,7 +46,7 @@ export default function Privasi() {
           <li className={li}>
             <strong>Maklumat langganan:</strong> rekod pelan, tempoh, jumlah
             bayaran dan status. Butiran kad/perbankan anda diproses
-            sepenuhnya oleh toyyibPay — kami tidak menyimpan nombor kad atau
+            sepenuhnya oleh Stripe — kami tidak menyimpan nombor kad atau
             butiran bank anda.
           </li>
           <li className={li}>
@@ -93,7 +93,7 @@ export default function Privasi() {
             <strong>Vercel</strong> — pengehosan laman web.
           </li>
           <li className={li}>
-            <strong>toyyibPay</strong> — pemprosesan bayaran (FPX & kad).
+            <strong>Stripe</strong> — pemprosesan bayaran dan langganan (kad & FPX).
           </li>
           <li className={li}>
             <strong>Resend</strong> — penghantaran emel transaksional.

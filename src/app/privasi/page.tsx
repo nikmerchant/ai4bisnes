@@ -20,7 +20,7 @@ export default function Privasi() {
           Dasar Privasi
         </h1>
         <p className="mt-2 text-xs text-zinc-400">
-          Kemas kini terakhir: 26 Oktober 2026
+          Kemas kini terakhir: 28 Oktober 2026
         </p>
 
         <p className={p}>
@@ -90,10 +90,11 @@ export default function Privasi() {
             (pelayan rantau Asia Tenggara).
           </li>
           <li className={li}>
-            <strong>Vercel</strong> — pengehosan laman web.
+            <strong>Contabo</strong> — pelayan pengehosan laman web (pusat data di
+            Kesatuan Eropah).
           </li>
           <li className={li}>
-            <strong>Stripe</strong> — pemprosesan bayaran dan langganan (kad & FPX).
+            <strong>Stripe</strong> — pemprosesan bayaran dan langganan (kad).
           </li>
           <li className={li}>
             <strong>Resend</strong> — penghantaran emel transaksional.

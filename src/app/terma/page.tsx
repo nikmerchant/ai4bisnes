@@ -20,7 +20,7 @@ export default function Terma() {
           Terma Perkhidmatan
         </h1>
         <p className="mt-2 text-xs text-zinc-400">
-          Kemas kini terakhir: 26 Oktober 2026
+          Kemas kini terakhir: 28 Oktober 2026
         </p>
 
         <p className={p}>
@@ -62,7 +62,7 @@ export default function Terma() {
           <li className={li}>
             Pelan Basic adalah percuma. Pelan Pro dan Max adalah langganan
             berbayar (bulanan atau tahunan) yang diproses melalui Stripe
-            (kad & FPX).
+            (kad).
           </li>
           <li className={li}>
             Harga "founding member" dikunci selagi langganan anda kekal

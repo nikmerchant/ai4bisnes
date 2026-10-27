@@ -109,14 +109,6 @@ export async function POST(req: NextRequest) {
           `✅ Stripe: ${user_id} → ${tier} (${period}) subscription ${subId}`
         );
 
-        // Rekod komisen affiliate kalau ada
-        await janaKomisenAffiliate(admin, {
-          user_id,
-          subscription_id: subscription.id,
-          tier,
-          period,
-          price_rm: priceRm,
-        });
         break;
       }
 
@@ -193,6 +185,7 @@ export async function POST(req: NextRequest) {
             .update({ status: "active" })
             .eq("stripe_subscription_id", subId);
           if (error) throw error;
+          await rekodKomisen(admin, invoice, subId);
         }
         break;
       }
@@ -220,30 +213,39 @@ export async function POST(req: NextRequest) {
   return new Response("ok");
 }
 
-// Fungsi komisen affiliate (porting dari callback toyyibPay)
-async function janaKomisenAffiliate(
+// Satu komisen bagi setiap invois MYR yang dibayar, termasuk pembaharuan/prorata.
+async function rekodKomisen(
   admin: SupabaseClient,
-  {
-    user_id,
-    subscription_id,
-    price_rm,
-  }: { user_id: string; subscription_id: number | string; tier: string; period: string; price_rm: number }
+  invoice: Stripe.Invoice,
+  subId: string
 ) {
-  const { data: pembayar } = await admin
+  if (invoice.amount_paid <= 0 || invoice.currency !== "myr") return;
+
+  const { data: subscription, error: subscriptionError } = await admin
+    .from("subscriptions")
+    .select("id, user_id")
+    .eq("stripe_subscription_id", subId)
+    .single();
+  if (subscriptionError) throw subscriptionError;
+  if (!subscription) throw new Error("Subscription not found for paid invoice");
+
+  const { data: pembayar, error: profileError } = await admin
     .from("profiles")
     .select("referred_by")
-    .eq("id", user_id)
+    .eq("id", subscription.user_id)
     .single();
-  if (!pembayar?.referred_by) return;
+  if (profileError) throw profileError;
+  if (!pembayar?.referred_by || pembayar.referred_by === subscription.user_id) return;
 
   const { error } = await admin.from("affiliate_commissions").upsert(
     {
       referrer_id: pembayar.referred_by,
-      referred_user_id: user_id,
-      subscription_id,
-      amount_rm: Math.round(price_rm * 10) / 100, // 10% flat, 2 d.p.
+      referred_user_id: subscription.user_id,
+      subscription_id: subscription.id,
+      stripe_invoice_id: invoice.id,
+      amount_rm: Math.round(invoice.amount_paid / 10) / 100,
     },
-    { onConflict: "subscription_id", ignoreDuplicates: true }
+    { onConflict: "stripe_invoice_id", ignoreDuplicates: true }
   );
   if (error) throw error;
 }

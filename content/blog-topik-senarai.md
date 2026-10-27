@@ -57,7 +57,7 @@ bertanda `- [ ]` dari atas.
 - [x] Panduan Guna AI untuk Tulis Bio & Deskripsi Bisnes yang Menjual (Semua Platform) (slug: panduan-guna-ai-untuk-tulis-bio-deskripsi-bisnes-yang-menjual-semua-platform)
 - [x] Cara Guna AI untuk Bina FAQ Automatik dari Soalan Pelanggan yang Sama Berulang (slug: cara-guna-ai-untuk-bina-faq-automatik-dari-soalan-pelanggan-yang-sama-berulang)
 - [x] Panduan Guna AI untuk Sedia Promo Deepavali: Idea, Caption & Banner dalam Sehari (slug: panduan-guna-ai-untuk-sedia-promo-deepavali-idea-caption-banner-dalam-sehari)
-- [ ] Cara AI Bantu SME Tulis Ucapan Perayaan yang Tak Bunyi Template
+- [x] Cara AI Bantu SME Tulis Ucapan Perayaan yang Tak Bunyi Template (slug: cara-ai-bantu-sme-tulis-ucapan-perayaan-yang-tak-bunyi-template)
 - [ ] Prompt AI untuk Buat Reminder Hutang & Invois Tertunggak — Lembut ke Tegas
 - [ ] Cara Guna AI untuk Analisis Data Jualan — Siapa Beli, Apa Laku, Bila Ramai
 - [ ] Panduan Guna AI untuk Bina Program Loyalty Pelanggan Ringkas (Tanpa App Mahal)

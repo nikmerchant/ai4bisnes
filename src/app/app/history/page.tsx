@@ -1,6 +1,16 @@
 import Link from "next/link";
 import { dapatkanProfil } from "@/app/app/shared";
 
+type HistoryRow = {
+  id: number;
+  task_slug: string;
+  task_title: string;
+  inputs: Record<string, unknown> | null;
+  prompt_text: string;
+  feedback: string | null;
+  created_at: string;
+};
+
 function timeAgo(dateStr: string): string {
   const now = Date.now();
   const then = new Date(dateStr).getTime();
@@ -91,13 +101,13 @@ export default async function HistoryPage() {
         </div>
       ) : (
         <div className="space-y-3">
-          {(outputs ?? []).map((item: any) => {
+          {(outputs ?? []).map((item: HistoryRow) => {
             const emoji = TASK_EMOJIS[item.task_slug] || "📝";
             const inputs = item.inputs || {};
             const inputSummary = Object.values(inputs)
               .filter(Boolean)
               .slice(0, 2)
-              .map((v: any) => String(v).slice(0, 40))
+              .map((v: unknown) => String(v).slice(0, 40))
               .join(" · ");
 
             return (

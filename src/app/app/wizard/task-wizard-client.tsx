@@ -5,7 +5,6 @@ import { useState } from "react";
 /* Client component — form wizard + copy output */
 export function TaskWizardClient({
   slug,
-  taskTitle,
   taskEmoji,
   fields,
 }: {

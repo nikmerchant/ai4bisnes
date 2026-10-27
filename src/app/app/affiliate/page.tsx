@@ -44,8 +44,8 @@ export default async function Affiliate() {
       </p>
       <h1 className="text-2xl font-bold">🤝 Program Affiliate</h1>
       <p className="mt-2 text-sm text-neutral-600 dark:text-neutral-300">
-        Kongsi pautan anda — dapat 20% komisen berulang setiap bulan orang
-        yang anda rujuk terus melanggan Pro atau Max.
+        Kongsi pautan anda — dapat 10% komisen daripada bayaran langganan
+        Pro atau Max oleh orang yang anda rujuk.
       </p>
 
       <div className="mt-6 rounded-xl border border-neutral-200 p-4 dark:border-neutral-800">

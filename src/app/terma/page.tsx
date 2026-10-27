@@ -27,7 +27,7 @@ export default function Terma() {
           Selamat datang ke AI4Bisnes (ai4bisnes.com), platform koleksi prompt
           AI dalam Bahasa Melayu untuk perniagaan kecil dan sederhana di
           Malaysia, dikendalikan oleh <strong>NiagaIQ Technologies</strong>{" "}
-          (No. Pendaftaran SSM: 202603174768 (JM1046442-D)) ("kami").
+          (No. Pendaftaran SSM: 202603174768 (JM1046442-D)) (&quot;kami&quot;).
           Dengan mendaftar atau menggunakan perkhidmatan ini, anda bersetuju
           dengan terma-terma di bawah.
         </p>
@@ -65,7 +65,7 @@ export default function Terma() {
             (kad).
           </li>
           <li className={li}>
-            Harga "founding member" dikunci selagi langganan anda kekal
+            Harga &quot;founding member&quot; dikunci selagi langganan anda kekal
             aktif. Jika langganan tamat dan tidak diperbaharui, kadar semasa
             akan terpakai untuk langganan baharu.
           </li>
@@ -161,7 +161,7 @@ export default function Terma() {
           Prompt kami adalah alat bantu — hasil perniagaan anda bergantung
           kepada banyak faktor di luar kawalan kami. Kami tidak menjamin
           sebarang hasil jualan, pendapatan, atau prestasi tertentu.
-          Perkhidmatan disediakan "seadanya" (as is). Sentiasa semak output
+          Perkhidmatan disediakan &quot;seadanya&quot; (as is). Sentiasa semak output
           AI sebelum digunakan, terutamanya bagi kandungan berkaitan
           undang-undang, kewangan, atau tuntutan produk.
         </p>

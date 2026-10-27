@@ -37,6 +37,17 @@ export default async function Daftar({
             placeholder="Sekurang-kurangnya 6 aksara"
           />
         </label>
+        <p className="text-xs text-white/60">
+          Dengan mendaftar, anda bersetuju dengan{" "}
+          <Link href="/terma" className="text-violet-300 underline underline-offset-2 hover:text-violet-200">
+            Terma Perkhidmatan
+          </Link>{" "}
+          dan{" "}
+          <Link href="/privasi" className="text-violet-300 underline underline-offset-2 hover:text-violet-200">
+            Dasar Privasi
+          </Link>{" "}
+          kami.
+        </p>
         <SubmitButton className={btnAuth}>Daftar</SubmitButton>
       </form>
       <p className="mt-5 text-sm text-white/60">

@@ -51,25 +51,47 @@ type DatabaseOptions = {
   failWrite?: boolean | number;
   throwWrite?: boolean;
   subscriptionId?: number | string | null;
+  subscriptionExists?: boolean;
+  failRead?: "subscriptions" | "profiles";
 };
 
 function database(referrer: string | null = null, options: DatabaseOptions = {}) {
   const writes: Write[] = [];
   const selections: [string, string][] = [];
+  const reads: { table: string; filters: [string, unknown][] }[] = [];
+  const commissions = new Map<string, Record<string, unknown>>();
   const subscriptionId = options.subscriptionId === undefined ? 7301 : options.subscriptionId;
+  let subscriptionExists = options.subscriptionExists !== false;
   return {
-    writes, selections,
+    writes, selections, reads, commissions,
     admin: {
       from(table: string) {
         let write: Write | undefined;
         let writeNumber = 0;
-        const result = () => ({
-          data: write
+        const filters: [string, unknown][] = [];
+        let settled: { data: Record<string, unknown> | null; error: { message: string } | null } | undefined;
+        const result = () => {
+          if (settled) return settled;
+          const error = (write && (options.failWrite === true || options.failWrite === writeNumber)) ||
+            (!write && options.failRead === table) ? { message: "fixture database failure" } : null;
+          if (!write) reads.push({ table, filters });
+          if (write && !error) {
+            if (table === "subscriptions" && write.kind === "upsert") subscriptionExists = true;
+            if (table === "affiliate_commissions") {
+              const value = write.value as Record<string, unknown>;
+              const conflict = write.options as { onConflict: string; ignoreDuplicates: boolean };
+              const key = String(value[conflict.onConflict]);
+              if (!commissions.has(key) || !conflict.ignoreDuplicates) commissions.set(key, value);
+            }
+          }
+          const data = write
             ? table === "subscriptions" && write.kind === "upsert" ? { id: subscriptionId } : null
-            : { referred_by: referrer },
-          error: write && (options.failWrite === true || options.failWrite === writeNumber)
-            ? { message: "fixture database failure" } : null,
-        });
+            : table === "subscriptions"
+              ? subscriptionExists ? { id: subscriptionId, user_id: "user-fixture" } : null
+              : { referred_by: referrer };
+          settled = { data, error };
+          return settled;
+        };
         const beginWrite = () => {
           if (options.throwWrite) throw new Error("fixture database failure");
           writeNumber = writes.length + 1;
@@ -91,7 +113,8 @@ function database(referrer: string | null = null, options: DatabaseOptions = {})
             return chain;
           },
           eq(column: string, value: unknown) {
-            write?.filters.push([column, value]);
+            if (write) write.filters.push([column, value]);
+            else filters.push([column, value]);
             return chain;
           },
           select(columns: string) { selections.push([table, columns]); return chain; },
@@ -110,9 +133,9 @@ type FixtureEvent = { type: Stripe.Event.Type; data: { object: Record<string, un
 
 async function deliver(
   event: FixtureEvent,
-  options: DatabaseOptions & { referrer?: string; invalidSignature?: boolean; missingKey?: boolean } = {},
+  options: DatabaseOptions & { referrer?: string; invalidSignature?: boolean; missingKey?: boolean; db?: ReturnType<typeof database> } = {},
 ) {
-  const db = database(options.referrer, options);
+  const db = options.db ?? database(options.referrer, options);
   let adminCalls = 0;
   const loaded = loadModule("../src/app/api/stripe/webhook/route.ts", {
     "@/lib/stripe": {
@@ -161,11 +184,11 @@ function subscriptionEvent(type: Stripe.Event.Type, changes: Record<string, unkn
 
 function invoiceEvent(type: Stripe.Event.Type, changes: Record<string, unknown> = {}): FixtureEvent {
   return { type, data: { object: {
-    id: "in_fixture", object: "invoice", subscription: "sub_fixture", ...changes,
+    id: "in_fixture", object: "invoice", subscription: "sub_fixture", amount_paid: 0, currency: "myr", ...changes,
   } } };
 }
 
-test("checkout.session.completed preserves billing, profile and affiliate writes", async () => {
+test("checkout.session.completed preserves billing and profile writes without creating commission", async () => {
   const { response, writes } = await deliver({
     type: "checkout.session.completed", data: { object: {
       id: "cs_fixture", object: "checkout.session", subscription: "sub_fixture",
@@ -183,7 +206,7 @@ test("checkout.session.completed preserves billing, profile and affiliate writes
     user_id: "user-fixture", tier: "pro", period: "bulanan", price_rm: 49,
     status: "active", stripe_subscription_id: "sub_fixture", stripe_customer_id: "cus_fixture",
   });
-  assert.equal(writes.length, 3);
+  assert.equal(writes.length, 2);
   assert.equal(writes[0].table, "subscriptions");
   assert.equal(writes[0].kind, "upsert");
   assert.deepEqual(writes[0].options, { onConflict: "stripe_subscription_id", ignoreDuplicates: false });
@@ -191,12 +214,7 @@ test("checkout.session.completed preserves billing, profile and affiliate writes
     table: "profiles", kind: "update", value: { tier: "pro" },
     filters: [["id", "user-fixture"]],
   });
-  assert.deepEqual(writes[2], {
-    table: "affiliate_commissions", kind: "upsert", value: {
-      referrer_id: "referrer-fixture", referred_user_id: "user-fixture",
-      subscription_id: 7301, amount_rm: 4.9,
-    }, options: { onConflict: "subscription_id", ignoreDuplicates: true }, filters: [],
-  });
+  assert.equal(writes.some((write) => write.table === "affiliate_commissions"), false);
 });
 
 for (const [tier, period, price] of [
@@ -212,15 +230,10 @@ for (const [tier, period, price] of [
   });
 }
 
-for (const [tier, period, commission] of [
-  ["pro", "tahunan", 49], ["max", "bulanan", 6.9], ["max", "tahunan", 69],
-] as const) {
-  test(`checkout records a 10% affiliate commission for ${tier}/${period}`, async () => {
-    const { writes } = await deliver({ type: "checkout.session.completed", data: { object: {
-      id: "cs_fixture", subscription: "sub_fixture", customer: "cus_fixture",
-      metadata: { user_id: "user-fixture", tier, period },
-    } } }, { referrer: "referrer-fixture" });
-    assert.equal((writes[2].value as Record<string, unknown>).amount_rm, commission);
+for (const [paid, commission] of [[49000, 49], [6900, 6.9], [69000, 69]] as const) {
+  test("paid invoice records 10% of " + paid + " sen, including annual payments", async () => {
+    const { writes } = await deliver(invoiceEvent("invoice.paid", { amount_paid: paid }), { referrer: "referrer-fixture" });
+    assert.equal((writes[1].value as Record<string, unknown>).amount_rm, commission);
   });
 }
 
@@ -442,18 +455,23 @@ const checkoutEvent: FixtureEvent = {
   } },
 };
 
-test("checkout selects the subscription bigint id and uses it as the commission foreign key", async () => {
+test("invoice lookup preserves the subscription bigint id as commission foreign key", async () => {
   for (const subscriptionId of [7301, "9007199254740993"]) {
-    const { response, writes, selections } = await deliver(checkoutEvent, {
+    const { response, writes, selections } = await deliver(invoiceEvent("invoice.paid", { amount_paid: 4900 }), {
       referrer: "referrer-fixture", subscriptionId,
     });
     assert.equal(response.status, 200);
-    assert.deepEqual(selections, [["subscriptions", "id"], ["profiles", "referred_by"]]);
-    assert.equal((writes[2].value as Record<string, unknown>).subscription_id, subscriptionId);
+    assert.deepEqual(selections, [["subscriptions", "id, user_id"], ["profiles", "referred_by"]]);
+    assert.deepEqual(writes[1], {
+      table: "affiliate_commissions", kind: "upsert",
+      value: { referrer_id: "referrer-fixture", referred_user_id: "user-fixture",
+        subscription_id: subscriptionId, stripe_invoice_id: "in_fixture", amount_rm: 4.9 },
+      options: { onConflict: "stripe_invoice_id", ignoreDuplicates: true }, filters: [],
+    });
   }
 });
 
-for (const failWrite of [1, 2, 3]) {
+for (const failWrite of [1, 2]) {
   test("checkout DB error at write " + failWrite + " stops later writes and returns 500", async () => {
     const { response, writes } = await deliver(checkoutEvent, { referrer: "referrer-fixture", failWrite });
     assert.equal(response.status, 500);
@@ -502,17 +520,93 @@ test("missing returned subscription id returns 500 before profile or commission 
   assert.equal(writes.length, 1);
 });
 
-test("checkout retries use the same Stripe conflict key and commission subscription id", async () => {
-  const first = await deliver(checkoutEvent, { referrer: "referrer-fixture", failWrite: 3 });
+test("checkout retries preserve the Stripe conflict key without commission writes", async () => {
+  const first = await deliver(checkoutEvent, { referrer: "referrer-fixture", failWrite: 2 });
   const retry = await deliver(checkoutEvent, { referrer: "referrer-fixture" });
   assert.equal(first.response.status, 500);
   assert.equal(retry.response.status, 200);
   for (const delivery of [first, retry]) {
     assert.deepEqual(delivery.writes[0].options, { onConflict: "stripe_subscription_id", ignoreDuplicates: false });
-    assert.deepEqual(delivery.writes[2].options, { onConflict: "subscription_id", ignoreDuplicates: true });
-    assert.equal((delivery.writes[2].value as Record<string, unknown>).subscription_id, 7301);
+    assert.equal(delivery.writes.some((write) => write.table === "affiliate_commissions"), false);
   }
 });
+
+for (const order of ["checkout-first", "invoice-first"]) {
+  test("first payment creates exactly one commission: " + order, async () => {
+    const db = database("referrer-fixture", { subscriptionExists: false });
+    const paid = invoiceEvent("invoice.paid", { amount_paid: 4900 });
+    if (order === "invoice-first") {
+      const early = await deliver(paid, { db });
+      assert.equal(early.response.status, 500);
+      assert.equal(db.commissions.size, 0);
+    }
+    assert.equal((await deliver(checkoutEvent, { db })).response.status, 200);
+    assert.equal(db.commissions.size, 0);
+    assert.equal((await deliver(paid, { db })).response.status, 200);
+    assert.equal(db.commissions.size, 1);
+    assert.deepEqual([...db.commissions.values()], [{
+      referrer_id: "referrer-fixture", referred_user_id: "user-fixture",
+      subscription_id: 7301, stripe_invoice_id: "in_fixture", amount_rm: 4.9,
+    }]);
+    assert.ok(db.reads.some((read) => read.table === "subscriptions" &&
+      read.filters.some(([key, value]) => key === "stripe_subscription_id" && value === "sub_fixture")));
+  });
+}
+
+test("three monthly invoices create three commissions and replaying each invoice adds none", async () => {
+  const db = database("referrer-fixture");
+  for (const id of ["in_month1", "in_month2", "in_month3"]) {
+    const paid = invoiceEvent("invoice.paid", { id, amount_paid: 4900 });
+    assert.equal((await deliver(paid, { db })).response.status, 200);
+    assert.equal((await deliver(paid, { db })).response.status, 200);
+  }
+  assert.deepEqual([...db.commissions.keys()], ["in_month1", "in_month2", "in_month3"]);
+  assert.deepEqual([...db.commissions.values()].map((row) => row.amount_rm), [4.9, 4.9, 4.9]);
+});
+
+for (const referrer of [null, "user-fixture"]) {
+  test("paid invoice skips absent or self referrer: " + String(referrer), async () => {
+    const db = database(referrer);
+    const { response } = await deliver(invoiceEvent("invoice.paid", { amount_paid: 4900 }), { db });
+    assert.equal(response.status, 200);
+    assert.equal(db.commissions.size, 0);
+  });
+}
+
+for (const changes of [{ amount_paid: 0 }, { amount_paid: -1 }, { amount_paid: 4900, currency: "usd" }]) {
+  test("non-commissionable invoice skips lookup: " + JSON.stringify(changes), async () => {
+    const db = database("referrer-fixture", { subscriptionExists: false, failRead: "profiles" });
+    const { response, selections } = await deliver(invoiceEvent("invoice.paid", changes), { db });
+    assert.equal(response.status, 200);
+    assert.equal(db.commissions.size, 0);
+    assert.deepEqual(selections, []);
+  });
+}
+
+for (const failRead of ["subscriptions", "profiles"] as const) {
+  test("paid invoice read error returns 500: " + failRead, async () => {
+    const db = database("referrer-fixture", { failRead });
+    const { response } = await deliver(invoiceEvent("invoice.paid", { amount_paid: 4900 }), { db });
+    assert.equal(response.status, 500);
+    assert.equal(await response.text(), "db write failed");
+    assert.equal(db.commissions.size, 0);
+  });
+}
+
+test("paid invoice commission write error returns 500", async () => {
+  const db = database("referrer-fixture", { failWrite: 2 });
+  const { response } = await deliver(invoiceEvent("invoice.paid", { amount_paid: 4900 }), { db });
+  assert.equal(response.status, 500);
+  assert.equal(db.commissions.size, 0);
+});
+
+for (const [amount_paid, amount_rm] of [[3900, 3.9], [1500, 1.5], [1255, 1.26]] as const) {
+  test("commission uses actual discounted or prorated amount: " + amount_paid, async () => {
+    const db = database("referrer-fixture");
+    await deliver(invoiceEvent("invoice.paid", { amount_paid, billing_reason: "subscription_update" }), { db });
+    assert.equal([...db.commissions.values()][0]?.amount_rm, amount_rm);
+  });
+}
 
 async function saveProfile(options: { user?: boolean; valid?: boolean; key?: boolean } = {}) {
   const db = database();

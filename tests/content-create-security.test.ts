@@ -115,5 +115,7 @@ test("no dashboard launcher, visual/image/video/publish/schedule/send integratio
     "202608290001_native_whatsapp_rls.sql",
     "202608300001_native_content_engine_artifacts.sql",
     "202610260001_stripe_subscription_columns.sql",
+    "202610270001_affiliate_invoice_id.sql",
+    "202610270002_affiliate_drop_subscription_unique.sql",
   ]);
 });

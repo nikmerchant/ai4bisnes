@@ -59,7 +59,7 @@ bertanda `- [ ]` dari atas.
 - [x] Panduan Guna AI untuk Sedia Promo Deepavali: Idea, Caption & Banner dalam Sehari (slug: panduan-guna-ai-untuk-sedia-promo-deepavali-idea-caption-banner-dalam-sehari)
 - [x] Cara AI Bantu SME Tulis Ucapan Perayaan yang Tak Bunyi Template (slug: cara-ai-bantu-sme-tulis-ucapan-perayaan-yang-tak-bunyi-template)
 - [x] Prompt AI untuk Buat Reminder Hutang & Invois Tertunggak — Lembut ke Tegas (slug: prompt-ai-untuk-buat-reminder-hutang-invois-tertunggak-lembut-ke-tegas)
-- [ ] Cara Guna AI untuk Analisis Data Jualan — Siapa Beli, Apa Laku, Bila Ramai
+- [x] Cara Guna AI untuk Analisis Data Jualan — Siapa Beli, Apa Laku, Bila Ramai (slug: cara-guna-ai-untuk-analisis-data-jualan-siapa-beli-apa-laku-bila-ramai)
 - [ ] Panduan Guna AI untuk Bina Program Loyalty Pelanggan Ringkas (Tanpa App Mahal)
 - [ ] Cara Guna AI untuk Buat Laporan Tahunan / Ringkasan Prestasi Bisnes 2026
 - [ ] Prompt AI untuk Tulis Proposal Tawaran 2027 — Menang Projek Awal Tahun

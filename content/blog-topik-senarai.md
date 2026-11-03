@@ -60,7 +60,7 @@ bertanda `- [ ]` dari atas.
 - [x] Cara AI Bantu SME Tulis Ucapan Perayaan yang Tak Bunyi Template (slug: cara-ai-bantu-sme-tulis-ucapan-perayaan-yang-tak-bunyi-template)
 - [x] Prompt AI untuk Buat Reminder Hutang & Invois Tertunggak — Lembut ke Tegas (slug: prompt-ai-untuk-buat-reminder-hutang-invois-tertunggak-lembut-ke-tegas)
 - [x] Cara Guna AI untuk Analisis Data Jualan — Siapa Beli, Apa Laku, Bila Ramai (slug: cara-guna-ai-untuk-analisis-data-jualan-siapa-beli-apa-laku-bila-ramai)
-- [ ] Panduan Guna AI untuk Bina Program Loyalty Pelanggan Ringkas (Tanpa App Mahal)
+- [x] Panduan Guna AI untuk Bina Program Loyalty Pelanggan Ringkas (Tanpa App Mahal) (slug: panduan-guna-ai-untuk-bina-program-loyalty-pelanggan-ringkas-tanpa-app-mahal)
 - [ ] Cara Guna AI untuk Buat Laporan Tahunan / Ringkasan Prestasi Bisnes 2026
 - [ ] Prompt AI untuk Tulis Proposal Tawaran 2027 — Menang Projek Awal Tahun
 - [ ] Cara AI Bantu SME Susun Bajet & Rancang Perbelanjaan 2027

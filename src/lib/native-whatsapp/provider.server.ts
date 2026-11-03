@@ -45,14 +45,6 @@ function deterministicResult(input: {
   };
 }
 
-function estimateCostRm(inputTokens: number, outputTokens: number) {
-  const inputRate = Number(process.env.DEEPSEEK_INPUT_USD_PER_MTOK);
-  const outputRate = Number(process.env.DEEPSEEK_OUTPUT_USD_PER_MTOK);
-  const usdMyr = Number(process.env.AI4B_USD_MYR || 4.5);
-  if (![inputRate, outputRate, usdMyr].every((value) => Number.isFinite(value) && value >= 0)) return null;
-  return ((inputTokens / 1_000_000) * inputRate + (outputTokens / 1_000_000) * outputRate) * usdMyr;
-}
-
 export async function generateNativeWhatsAppDraft(input: {
   business: WhatsAppBusinessContextSnapshot;
   request: NativeWhatsAppRequest;

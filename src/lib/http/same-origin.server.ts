@@ -33,3 +33,24 @@ export function isSameOriginRequest(req: SameOriginRequest) {
 
   return normalizedSuppliedOrigin === req.nextUrl.origin;
 }
+
+// Behind the Coolify proxy, request.url is the container address (localhost:3000).
+// Absolute redirects must use the public host the browser actually requested.
+export function publicOrigin(req: SameOriginRequest) {
+  const host = firstHeaderValue(req.headers.get("host"));
+  const forwardedProto = firstHeaderValue(req.headers.get("x-forwarded-proto")).toLowerCase();
+  if (host && (forwardedProto === "https" || forwardedProto === "http")) {
+    try {
+      return new URL(`${forwardedProto}://${host}`).origin;
+    } catch {
+      // fall through to the framework origin
+    }
+  }
+  return req.nextUrl.origin;
+}
+
+// Only same-site paths; anything else (absolute, protocol-relative, backslash) goes to /app.
+export function safeNextPath(next: string | null) {
+  if (!next || !next.startsWith("/") || next.startsWith("//") || next.startsWith("/\\")) return "/app";
+  return next;
+}

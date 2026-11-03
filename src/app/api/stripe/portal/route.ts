@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { dapatkanStripe, dapatkanDomain } from "@/lib/stripe";
 import { createClient } from "@/lib/supabase/server";
+import { publicOrigin } from "@/lib/http/same-origin.server";
 
 export const dynamic = "force-dynamic";
 
@@ -12,7 +13,7 @@ export async function GET(req: NextRequest) {
   } = await supabase.auth.getUser();
 
   if (!user) {
-    return NextResponse.redirect(new URL("/masuk", req.url));
+    return NextResponse.redirect(new URL("/masuk", publicOrigin(req)));
   }
 
   // Dapatkan stripe_customer_id dari subscriptions
@@ -27,7 +28,7 @@ export async function GET(req: NextRequest) {
 
   if (!sub?.stripe_customer_id) {
     return NextResponse.redirect(
-      new URL("/naik-taraf?ralat=Tiada+langganan+aktif", req.url)
+      new URL("/naik-taraf?ralat=Tiada+langganan+aktif", publicOrigin(req))
     );
   }
 
@@ -42,7 +43,7 @@ export async function GET(req: NextRequest) {
   } catch (e) {
     console.error("Portal session error:", e);
     return NextResponse.redirect(
-      new URL("/naik-taraf?ralat=Gagal+membuka+portal", req.url)
+      new URL("/naik-taraf?ralat=Gagal+membuka+portal", publicOrigin(req))
     );
   }
 }

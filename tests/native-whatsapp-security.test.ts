@@ -44,11 +44,10 @@ test("all privileged whatsapp operations use slice 3 shadow table with explicit 
   assert.doesNotMatch(ROUTE + PATCH + PAGE, /generated_outputs/);
 });
 
-test("whatsapp provider secrets stay server-only and host allowlisted", () => {
+test("whatsapp provider stays server-only with no outbound path", () => {
   const provider = readFileSync(new URL("../src/lib/native-whatsapp/provider.server.ts", import.meta.url), "utf8");
   assert.match(provider, /"server-only"/);
-  assert.match(provider, /AI4B_NATIVE_PROVIDER_ALLOWED_HOSTS/);
-  assert.match(provider, /AI4B_NATIVE_WHATSAPP_PROVIDER/);
+  assert.doesNotMatch(provider, /\bfetch\s*\(|\/chat\/completions|DEEPSEEK_API_KEY|AI4B_NATIVE_WHATSAPP_PROVIDER/);
 });
 
 test("slice 3 feature access requires independent flag and allowlist", () => {

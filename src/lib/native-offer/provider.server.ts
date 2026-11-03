@@ -56,8 +56,8 @@ function deterministicResult(input: {
 function providerConfig() {
   const baseUrl = process.env.DEEPSEEK_API_BASE_URL?.trim();
   const apiKey = process.env.DEEPSEEK_API_KEY?.trim();
-  const model = process.env.DEEPSEEK_MODEL_ID?.trim();
-  if (!baseUrl || !apiKey || !model) return null;
+  const model = process.env.DEEPSEEK_MODEL_ID;
+  if (!baseUrl || !apiKey || model !== "deepseek-flash") return null;
 
   let url: URL;
   try {
@@ -120,9 +120,12 @@ export async function generateNativeOffer(input: {
       },
       body: JSON.stringify({
         model: config.model,
+        thinking: { type: "disabled" },
+        reasoning_effort: "none",
         temperature: 0.4,
-        max_tokens: 1600,
+        max_tokens: 8192,
         response_format: { type: "json_object" },
+        stream: false,
         messages: [{ role: "user", content: buildNativeOfferPrompt(input) }],
       }),
       signal: controller.signal,

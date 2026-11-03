@@ -33,6 +33,16 @@ export const HARGA_RM: Record<TierBayar, Record<Tempoh, number>> = {
   max: { bulanan: 69, tahunan: 690 },
 };
 
+// Reverse lookup for portal plan switches; null for any price we do not sell.
+export function pelanDariHarga(priceId: string | null | undefined): { tier: TierBayar; period: Tempoh } | null {
+  for (const tier of Object.keys(HARGA_STRIPE) as TierBayar[]) {
+    for (const period of Object.keys(HARGA_STRIPE[tier]) as Tempoh[]) {
+      if (HARGA_STRIPE[tier][period] === priceId) return { tier, period };
+    }
+  }
+  return null;
+}
+
 export function dikonfigurasi(): boolean {
   return !!process.env.STRIPE_SECRET_KEY;
 }

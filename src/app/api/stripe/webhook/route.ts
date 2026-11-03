@@ -1,6 +1,6 @@
 import type Stripe from "stripe";
 import { NextRequest } from "next/server";
-import { dapatkanStripe } from "@/lib/stripe";
+import { dapatkanStripe, HARGA_RM, pelanDariHarga, type TierBayar, type Tempoh } from "@/lib/stripe";
 import { createClient as createAdminClient, type SupabaseClient } from "@supabase/supabase-js";
 
 // Dahlia uses item periods and nested invoice subscriptions; keep legacy fallbacks.
@@ -76,8 +76,11 @@ export async function POST(req: NextRequest) {
         }
 
         // Simpan rekod langganan dalam Supabase
-        const priceRm =
-          tier === "max" ? (period === "tahunan" ? 690 : 69) : period === "tahunan" ? 490 : 49;
+        const priceRm = HARGA_RM[tier as TierBayar]?.[period as Tempoh];
+        if (priceRm === undefined) {
+          console.error("Webhook: unknown tier/period in metadata", session.id);
+          return new Response("ok");
+        }
 
         const { data: subscription, error: subscriptionError } = await admin.from("subscriptions").upsert(
           {
@@ -136,7 +139,7 @@ export async function POST(req: NextRequest) {
         if (!user_id) return new Response("ok");
 
         // Update status dan expiry
-        const updates: Record<string, string | null> = {
+        const updates: Record<string, string | number | null> = {
           status:
             status === "active" || status === "trialing"
               ? "active"
@@ -154,6 +157,18 @@ export async function POST(req: NextRequest) {
           updates.expires_at = new Date(periodEnd * 1000).toISOString();
         }
 
+        // A4B-034: portal plan switches change the price; tier/period/price follow it.
+        const plan = (sub.items?.data ?? [])
+          .map((item) => pelanDariHarga(item.price?.id))
+          .find((candidate) => candidate !== null) ?? null;
+        if (plan) {
+          updates.tier = plan.tier;
+          updates.period = plan.period;
+          updates.price_rm = HARGA_RM[plan.tier][plan.period];
+        } else if (event.type === "customer.subscription.updated") {
+          console.error("Webhook: unknown subscription price, tier unchanged", sub.id);
+        }
+
         const { error: subscriptionError } = await admin
           .from("subscriptions")
           .update(updates)
@@ -165,6 +180,12 @@ export async function POST(req: NextRequest) {
           const { error: profileError } = await admin
             .from("profiles")
             .update({ tier: "basic" })
+            .eq("id", user_id);
+          if (profileError) throw profileError;
+        } else if (plan && ["active", "trialing", "past_due"].includes(status)) {
+          const { error: profileError } = await admin
+            .from("profiles")
+            .update({ tier: plan.tier })
             .eq("id", user_id);
           if (profileError) throw profileError;
         }

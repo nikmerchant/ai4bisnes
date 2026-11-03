@@ -20,7 +20,9 @@ export async function GET(req: NextRequest) {
     .from("subscriptions")
     .select("stripe_customer_id")
     .eq("user_id", user.id)
-    .eq("status", "active")
+    .in("status", ["active", "past_due", "unpaid"])
+    .order("created_at", { ascending: false })
+    .limit(1)
     .maybeSingle();
 
   if (!sub?.stripe_customer_id) {

@@ -17,10 +17,12 @@ const PROFILE = {
   platforms: "Instagram, WhatsApp",
 };
 const SOCIAL_INPUT = {
+  aiConsent: true,
   business: buildBusinessContextSnapshot(PROFILE),
   request: parseNativeSocialPostRequest({ platform: "instagram", objective: "sales", angle: "promotion", topic: "Set lunch", offer: "Set lunch RM12" }),
 };
 const OFFER_INPUT = {
+  aiConsent: true,
   business: buildOfferBusinessContextSnapshot(PROFILE),
   request: parseNativeOfferRequest({ entry: "standalone", offer_type: "promotion", product: "Set lunch", goal: "sales" }),
 };

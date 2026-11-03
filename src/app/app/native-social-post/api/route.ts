@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { hasAiProviderConsent } from "@/lib/ai-consent";
 import { isSameOriginRequest } from "@/lib/http/same-origin.server";
 import { currentSlice1Access } from "@/lib/native-social-post/access";
 import { canUseNativeSocialPostTier, parseNativeSocialPostRequest } from "@/lib/native-social-post/domain";
@@ -83,7 +84,7 @@ export async function POST(req: NextRequest) {
       const usage = await checkUsage(admin, context.user.id);
       if (!usage.allowed) return json({ error: "Had candidate Slice 1 telah dicapai. Cuba semula selepas reset." }, 429);
 
-      const generated = await generateNativeSocialPost({ business: context.business, request });
+      const generated = await generateNativeSocialPost({ business: context.business, request, aiConsent: hasAiProviderConsent(context.user) });
       const stored = await saveNativeSocialPost({
         admin,
         userId: context.user.id,
@@ -97,6 +98,7 @@ export async function POST(req: NextRequest) {
         artifact: stored.artifact,
         telemetry: stored.telemetry,
         warning: generated.warning,
+        consentRequired: generated.consentRequired ?? false,
         idempotentReplay: false,
         candidateLimits: { hourly: MAX_PER_HOUR, monthly: MAX_PER_MONTH },
       });

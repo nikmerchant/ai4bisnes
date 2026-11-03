@@ -41,6 +41,13 @@ export default function Terma() {
           Claude atau mana-mana AI adalah tertakluk kepada terma penyedia
           masing-masing.
         </p>
+        <p className={p}>
+          Bagi ciri tertentu (Social dan Tawaran), AI4Bisnes menjana draf
+          menggunakan penyedia AI pihak ketiga (DeepSeek) selepas anda
+          memberi persetujuan. Draf dijana oleh AI dan mungkin mengandungi
+          kesilapan atau maklumat yang tidak lengkap; anda bertanggungjawab
+          menyemak setiap draf sebelum menerbitkannya.
+        </p>
 
         <h2 className={h2}>2. Akaun & Kelayakan</h2>
         <ul className="mt-3 list-disc space-y-2 pl-5">

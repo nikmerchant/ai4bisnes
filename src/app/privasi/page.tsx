@@ -67,6 +67,12 @@ export default function Privasi() {
             utama platform).
           </li>
           <li className={li}>
+            Menjana draf kandungan dengan AI bagi ciri Social dan Tawaran:
+            profil perniagaan dan arahan yang anda isi dihantar kepada
+            penyedia AI kami untuk menghasilkan draf, selepas anda memberi
+            persetujuan. Draf ini perlu anda semak sebelum digunakan.
+          </li>
+          <li className={li}>
             Memproses langganan, pengesahan emel, dan reset kata laluan.
           </li>
           <li className={li}>
@@ -99,12 +105,21 @@ export default function Privasi() {
           <li className={li}>
             <strong>Resend</strong> — penghantaran emel transaksional.
           </li>
+          <li className={li}>
+            <strong>DeepSeek</strong> (Hangzhou DeepSeek Artificial
+            Intelligence Co., Ltd., China) — penjanaan draf AI bagi ciri
+            Social dan Tawaran. Data yang dihantar ialah profil perniagaan dan
+            arahan anda. Mesej pelanggan dalam ciri WhatsApp{" "}
+            <strong>tidak</strong> dihantar kepada penyedia AI. DeepSeek
+            memproses data di China dan boleh menggunakan data yang telah
+            dinyahidentifikasi untuk menambah baik perkhidmatannya.
+          </li>
         </ul>
         <p className={p}>
-          Maklumat perniagaan yang anda masukkan ke dalam prompt dan
-          kemudian tampal ke ChatGPT/Claude adalah tertakluk kepada dasar
-          privasi penyedia AI tersebut — bukan kami yang menghantar data
-          anda kepada mereka.
+          Bagi ciri AI terbina dalam, kami menghantar maklumat di atas kepada
+          DeepSeek. Bagi prompt yang anda salin dan tampal sendiri ke
+          ChatGPT, Claude atau perkhidmatan lain, data tersebut tertakluk
+          kepada dasar privasi penyedia berkenaan.
         </p>
 
         <h2 className={h2}>4. Cookies</h2>
@@ -140,7 +155,18 @@ export default function Privasi() {
           </li>
         </ul>
 
-        <h2 className={h2}>6. Hak Anda (PDPA)</h2>
+        <h2 className={h2}>6. Pemindahan Data ke Luar Malaysia</h2>
+        <p className={p}>
+          Sebahagian pembekal kami memproses data di luar Malaysia: Supabase
+          (Singapura), Contabo (Kesatuan Eropah), Stripe dan Resend (Amerika
+          Syarikat), serta DeepSeek (China). Ciri AI hanya menghantar data
+          kepada DeepSeek selepas anda memberi persetujuan dalam platform.
+          Jangan masukkan data peribadi sensitif (contohnya nombor IC,
+          maklumat kesihatan atau butiran pelanggan anda) ke dalam medan
+          arahan.
+        </p>
+
+        <h2 className={h2}>7. Hak Anda (PDPA)</h2>
         <p className={p}>
           Di bawah PDPA 2010, anda berhak untuk:
         </p>
@@ -159,7 +185,9 @@ export default function Privasi() {
           </li>
           <li className={li}>
             <strong>Menarik balik persetujuan</strong> — berhenti menggunakan
-            perkhidmatan dan meminta pemadaman data.
+            perkhidmatan dan meminta pemadaman data, atau menarik balik
+            persetujuan penjanaan AI sahaja dengan menghubungi kami (draf
+            seterusnya akan dijana secara lokal).
           </li>
         </ul>
         <p className={p}>
@@ -173,7 +201,7 @@ export default function Privasi() {
           . Kami akan membalas dalam tempoh 21 hari.
         </p>
 
-        <h2 className={h2}>7. Pengekalan Data</h2>
+        <h2 className={h2}>8. Pengekalan Data</h2>
         <p className={p}>
           Data akaun disimpan selagi akaun anda aktif. Selepas permintaan
           pemadaman, data peribadi akan dipadam dalam tempoh 30 hari, kecuali
@@ -181,13 +209,13 @@ export default function Privasi() {
           transaksi untuk tujuan cukai).
         </p>
 
-        <h2 className={h2}>8. Kanak-kanak</h2>
+        <h2 className={h2}>9. Kanak-kanak</h2>
         <p className={p}>
           Perkhidmatan ini tidak ditujukan kepada individu bawah 18 tahun dan
           kami tidak mengumpul data mereka dengan sengaja.
         </p>
 
-        <h2 className={h2}>9. Perubahan Dasar</h2>
+        <h2 className={h2}>10. Perubahan Dasar</h2>
         <p className={p}>
           Kami mungkin mengemas kini dasar ini dari semasa ke semasa.
           Perubahan penting akan dimaklumkan melalui emel atau notis dalam
@@ -195,7 +223,7 @@ export default function Privasi() {
           semasa.
         </p>
 
-        <h2 className={h2}>10. Hubungi Kami</h2>
+        <h2 className={h2}>11. Hubungi Kami</h2>
         <p className={p}>
           NiagaIQ Technologies
           <br />

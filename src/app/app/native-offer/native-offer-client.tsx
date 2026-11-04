@@ -1,5 +1,6 @@
 "use client";
 
+import { AiConsentNotice } from "../ai-consent/ai-consent-notice";
 import Link from "next/link";
 import { useMemo, useRef, useState } from "react";
 import {
@@ -22,6 +23,7 @@ type GenerateResponse = {
   artifact?: OfferArtifact;
   telemetry?: GenerationTelemetry;
   warning?: string | null;
+  consentRequired?: boolean;
   error?: string;
 };
 
@@ -83,6 +85,7 @@ export function NativeOfferClient({
   const [artifact, setArtifact] = useState<OfferArtifact | null>(initial?.artifact ?? null);
   const [telemetry, setTelemetry] = useState<GenerationTelemetry | null>(initial?.telemetry ?? null);
   const [warning, setWarning] = useState<string | null>(null);
+  const [consentRequired, setConsentRequired] = useState(false);
   const [message, setMessage] = useState(initial ? "Artifact dibuka semula." : "");
   const [busy, setBusy] = useState(false);
   const requestIdRef = useRef<string | null>(null);
@@ -129,6 +132,7 @@ export function NativeOfferClient({
       setArtifact(data.artifact);
       setTelemetry(data.telemetry);
       setWarning(data.warning || null);
+      setConsentRequired(Boolean(data.consentRequired));
       setMessage("Tawaran dijana dan disimpan sebagai DRAF.");
       requestIdRef.current = null;
     } catch (error) {
@@ -237,10 +241,16 @@ export function NativeOfferClient({
           {warning && <p className="rounded-lg bg-amber-50 p-3 text-sm text-amber-800 dark:bg-amber-950 dark:text-amber-200">{warning}</p>}
         </div>}
 
+        {consentRequired && <AiConsentNotice onConsented={() => {
+          setConsentRequired(false);
+          setWarning(null);
+          setMessage("Persetujuan direkod. Jana semula untuk draf yang dijana oleh AI.");
+        }} />}
+
         {artifact && <section className="space-y-4 rounded-2xl border-2 border-violet-300 bg-violet-50/40 p-5 dark:border-violet-900 dark:bg-violet-950/20">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div><p className="text-xs font-bold uppercase text-violet-600">Structured Artifact</p><h2 className="text-xl font-bold">Tawaran · {OFFER_TYPE_LABELS[artifact.offerType]}</h2></div>
-            <span className={`rounded-full px-3 py-1 text-xs font-bold ${artifact.status === "approved" ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-900 dark:text-emerald-200" : "bg-amber-100 text-amber-700 dark:bg-amber-900 dark:text-amber-200"}`}>{artifact.status === "approved" ? "DILULUSKAN" : "DRAF"}</span>
+            <div className="flex flex-wrap gap-2">{telemetry?.mode === "provider" && <span className="rounded-full bg-violet-100 px-3 py-1 text-xs font-bold text-violet-700 dark:bg-violet-900 dark:text-violet-200">Dijana oleh AI</span>}<span className={`rounded-full px-3 py-1 text-xs font-bold ${artifact.status === "approved" ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-900 dark:text-emerald-200" : "bg-amber-100 text-amber-700 dark:bg-amber-900 dark:text-amber-200"}`}>{artifact.status === "approved" ? "DILULUSKAN" : "DRAF"}</span></div>
           </div>
           <label className="grid gap-1 text-sm font-bold">Headline
             <input className={inputClass} maxLength={300} value={artifact.headline} onChange={(event) => updateArtifact("headline", event.target.value)} />

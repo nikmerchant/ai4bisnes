@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { hasAiProviderConsent } from "@/lib/ai-consent";
 import { isSameOriginRequest } from "@/lib/http/same-origin.server";
 import { currentSlice2Access } from "@/lib/native-offer/access";
 import { canUseNativeOfferTier, parseNativeOfferRequest } from "@/lib/native-offer/domain";
@@ -103,7 +104,7 @@ export async function POST(req: NextRequest) {
         };
       }
 
-      const generated = await generateNativeOffer({ business: context.business, request, sourcePost });
+      const generated = await generateNativeOffer({ business: context.business, request, sourcePost, aiConsent: hasAiProviderConsent(context.user) });
       const stored = await saveNativeOffer({
         admin,
         userId: context.user.id,
@@ -117,6 +118,7 @@ export async function POST(req: NextRequest) {
         artifact: stored.artifact,
         telemetry: stored.telemetry,
         warning: generated.warning,
+        consentRequired: generated.consentRequired ?? false,
         idempotentReplay: false,
         candidateLimits: { hourly: MAX_PER_HOUR, monthly: MAX_PER_MONTH },
       });

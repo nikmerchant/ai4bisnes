@@ -17,6 +17,7 @@ export type NativeOfferGenerationResult = {
   artifact: OfferArtifact;
   telemetry: GenerationTelemetry;
   warning: string | null;
+  consentRequired?: boolean;
 };
 
 type CompletionResponse = {
@@ -87,6 +88,7 @@ export async function generateNativeOffer(input: {
   business: OfferBusinessContextSnapshot;
   request: NativeOfferRequest;
   sourcePost?: OfferSourcePostSnapshot | null;
+  aiConsent: boolean;
 }): Promise<NativeOfferGenerationResult> {
   const startedAt = performance.now();
   const selectedProvider = process.env.AI4B_NATIVE_OFFER_PROVIDER?.trim().toLowerCase();
@@ -97,6 +99,19 @@ export async function generateNativeOffer(input: {
       mode: "deterministic_local",
       warning: "Local preview menggunakan generator deterministic; provider AI belum diaktifkan.",
     });
+  }
+
+  // PDPA cross-border transfer: no provider call without the user's recorded consent (A4B-035).
+  if (!input.aiConsent) {
+    return {
+      ...deterministicResult({
+        ...input,
+        startedAt,
+        mode: "deterministic_local",
+        warning: "Draf ini dijana secara lokal. Beri persetujuan AI untuk draf yang dijana oleh AI.",
+      }),
+      consentRequired: true,
+    };
   }
 
   const config = providerConfig();

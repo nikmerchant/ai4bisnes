@@ -20,7 +20,7 @@ export default function Terma() {
           Terma Perkhidmatan
         </h1>
         <p className="mt-2 text-xs text-zinc-400">
-          Kemas kini terakhir: 28 Oktober 2026
+          Kemas kini terakhir: 4 November 2026
         </p>
 
         <p className={p}>
@@ -40,6 +40,13 @@ export default function Terma() {
           perkhidmatan AI tersebut — output yang dihasilkan oleh ChatGPT,
           Claude atau mana-mana AI adalah tertakluk kepada terma penyedia
           masing-masing.
+        </p>
+        <p className={p}>
+          Bagi ciri tertentu (Social dan Tawaran), AI4Bisnes menjana draf
+          menggunakan penyedia AI pihak ketiga (DeepSeek) selepas anda
+          memberi persetujuan. Draf dijana oleh AI dan mungkin mengandungi
+          kesilapan atau maklumat yang tidak lengkap; anda bertanggungjawab
+          menyemak setiap draf sebelum menerbitkannya.
         </p>
 
         <h2 className={h2}>2. Akaun & Kelayakan</h2>

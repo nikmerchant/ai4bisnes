@@ -158,8 +158,9 @@ export default function Privasi() {
         <h2 className={h2}>6. Pemindahan Data ke Luar Malaysia</h2>
         <p className={p}>
           Sebahagian pembekal kami memproses data di luar Malaysia: Supabase
-          (Singapura), Contabo (Kesatuan Eropah), Stripe dan Resend (Amerika
-          Syarikat), serta DeepSeek (China). Ciri AI hanya menghantar data
+          (Singapura), Contabo (Kesatuan Eropah), Stripe (Amerika Syarikat
+          dan negara lain), Resend (syarikat Amerika Syarikat; emel kami
+          dihantar melalui pelayannya di Jepun), serta DeepSeek (China). Ciri AI hanya menghantar data
           kepada DeepSeek selepas anda memberi persetujuan dalam platform.
           Jangan masukkan data peribadi sensitif (contohnya nombor IC,
           maklumat kesihatan atau butiran pelanggan anda) ke dalam medan

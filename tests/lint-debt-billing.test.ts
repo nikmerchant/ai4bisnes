@@ -694,6 +694,13 @@ test("pelanDariHarga maps every live price and rejects unknown ids", () => {
   assert.equal(pelanDariHarga(undefined), null);
 });
 
+// The Pro yearly ID once lost a character (29 vs 30), which broke Pro yearly Checkout.
+test("live price IDs match the Stripe dashboard", () => {
+  assert.equal(HARGA_STRIPE.pro.tahunan, "price_1Tyo5RHdTmMBu5cVPYdqEHG7");
+  const ids = Object.values(HARGA_STRIPE).flatMap((periods) => Object.values(periods));
+  assert.equal(new Set(ids.map((id) => id.length)).size, 1, "price IDs differ in length");
+});
+
 function switchedTo(priceId: string, changes: Record<string, unknown> = {}) {
   return subscriptionEvent("customer.subscription.updated", {
     items: { object: "list", data: [{ id: "si_fixture", current_period_end: 1900000000, price: { id: priceId } }] },

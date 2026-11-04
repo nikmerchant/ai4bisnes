@@ -17,7 +17,7 @@ export default dapatkanStripe;
 export const HARGA_STRIPE = {
   pro: {
     bulanan: "price_1Tyo5RHdTmMBu5cVwkSuZESp",
-    tahunan: "price_1Tyo5RHdTmMBu5cVPdqEHG7",
+    tahunan: "price_1Tyo5RHdTmMBu5cVPYdqEHG7",
   },
   max: {
     bulanan: "price_1Tyo5vHdTmMBu5cVztUNecEE",

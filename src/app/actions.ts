@@ -146,6 +146,8 @@ export async function mulaBayar(formData: FormData) {
 
   const priceId = HARGA_STRIPE[tier][period];
 
+  // redirect() throws, so it must stay outside try/catch or the catch swallows it.
+  let sessionUrl: string | null = null;
   try {
     const stripe = dapatkanStripe();
     const session = await stripe.checkout.sessions.create({
@@ -168,16 +170,14 @@ export async function mulaBayar(formData: FormData) {
       success_url: `${dapatkanDomain()}/naik-taraf?status_id=1`,
       cancel_url: `${dapatkanDomain()}/naik-taraf?status_id=0`,
     });
-
-    if (!session.url) {
-      redirect("/naik-taraf?ralat=Gagal+mencipta+sesi+pembayaran");
-    }
-
-    redirect(session.url);
+    sessionUrl = session.url;
   } catch (e) {
     console.error("Stripe Checkout error:", e);
     redirect("/naik-taraf?ralat=Gagal+mencipta+pembayaran.+Cuba+sebentar+lagi.");
   }
+
+  if (!sessionUrl) redirect("/naik-taraf?ralat=Gagal+mencipta+sesi+pembayaran");
+  redirect(sessionUrl);
 }
 
 export async function simpanVault(input: {

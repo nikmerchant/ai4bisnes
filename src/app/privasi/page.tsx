@@ -20,7 +20,7 @@ export default function Privasi() {
           Dasar Privasi
         </h1>
         <p className="mt-2 text-xs text-zinc-400">
-          Kemas kini terakhir: 28 Oktober 2026
+          Kemas kini terakhir: 4 November 2026
         </p>
 
         <p className={p}>

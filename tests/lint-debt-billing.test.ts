@@ -5,6 +5,8 @@ import { runInNewContext } from "node:vm";
 import ts from "typescript";
 import type Stripe from "stripe";
 
+import { HARGA_RM, HARGA_STRIPE, pelanDariHarga } from "../src/lib/stripe.ts";
+
 type Write = {
   table: string;
   kind: "update" | "upsert";
@@ -139,6 +141,7 @@ async function deliver(
   let adminCalls = 0;
   const loaded = loadModule("../src/app/api/stripe/webhook/route.ts", {
     "@/lib/stripe": {
+      HARGA_RM, pelanDariHarga,
       dapatkanStripe: () => ({ webhooks: {
         constructEvent(body: string, signature: string, secret: string) {
           assert.equal(body, JSON.stringify(event));
@@ -678,4 +681,78 @@ test("simpanProfil retains delayed admin construction and owner-scoped profile u
       platforms: "WhatsApp, Instagram", website: "", onboarded: true,
     }, filters: [["id", "user-fixture"]],
   }]);
+});
+
+// A4B-034: a portal plan switch must move tier, period and price with the Stripe price.
+test("pelanDariHarga maps every live price and rejects unknown ids", () => {
+  for (const tier of ["pro", "max"] as const) {
+    for (const period of ["bulanan", "tahunan"] as const) {
+      assert.deepEqual(pelanDariHarga(HARGA_STRIPE[tier][period]), { tier, period });
+    }
+  }
+  assert.equal(pelanDariHarga("price_unknown"), null);
+  assert.equal(pelanDariHarga(undefined), null);
+});
+
+// The Pro yearly ID once lost a character (29 vs 30), which broke Pro yearly Checkout.
+test("live price IDs match the Stripe dashboard", () => {
+  assert.equal(HARGA_STRIPE.pro.tahunan, "price_1Tyo5RHdTmMBu5cVPYdqEHG7");
+  const ids = Object.values(HARGA_STRIPE).flatMap((periods) => Object.values(periods));
+  assert.equal(new Set(ids.map((id) => id.length)).size, 1, "price IDs differ in length");
+});
+
+function switchedTo(priceId: string, changes: Record<string, unknown> = {}) {
+  return subscriptionEvent("customer.subscription.updated", {
+    items: { object: "list", data: [{ id: "si_fixture", current_period_end: 1900000000, price: { id: priceId } }] },
+    ...changes,
+  });
+}
+
+for (const [label, tier, period, price] of [
+  ["Pro to Max", "max", "bulanan", 69],
+  ["Max to Pro yearly", "pro", "tahunan", 490],
+  ["Pro monthly to Max yearly", "max", "tahunan", 690],
+] as const) {
+  test(`subscription.updated syncs ${label} to subscriptions and profiles`, async () => {
+    const { writes } = await deliver(switchedTo(HARGA_STRIPE[tier][period]));
+    assert.deepEqual(writes, [
+      {
+        table: "subscriptions", kind: "update",
+        value: { status: "active", expires_at: "2030-03-17T17:46:40.000Z", tier, period, price_rm: price },
+        filters: [["stripe_subscription_id", "sub_fixture"]],
+      },
+      { table: "profiles", kind: "update", value: { tier }, filters: [["id", "user-fixture"]] },
+    ]);
+  });
+}
+
+test("subscription.updated with an unknown price keeps the existing tier", async () => {
+  const { writes } = await deliver(switchedTo("price_unknown"));
+  assert.deepEqual(writes.map((write) => write.table), ["subscriptions"]);
+  assert.deepEqual(writes[0].value, { status: "active", expires_at: "2030-03-17T17:46:40.000Z" });
+});
+
+test("cancelled subscription with a known price still drops the profile to basic", async () => {
+  const { writes } = await deliver(switchedTo(HARGA_STRIPE.max.bulanan, { status: "canceled" }));
+  assert.deepEqual(writes.filter((write) => write.table === "profiles").map((write) => write.value), [{ tier: "basic" }]);
+});
+
+test("incomplete subscription with a known price does not grant the tier", async () => {
+  const { writes } = await deliver(switchedTo(HARGA_STRIPE.max.bulanan, { status: "incomplete" }));
+  assert.deepEqual(writes.map((write) => write.table), ["subscriptions"]);
+});
+
+test("checkout with an unknown tier is acknowledged without writes", async () => {
+  const { writes } = await deliver({ type: "checkout.session.completed", data: { object: {
+    id: "cs_fixture", subscription: "sub_fixture", customer: "cus_fixture",
+    metadata: { user_id: "user-fixture", tier: "visibility", period: "bulanan" },
+  } } });
+  assert.deepEqual(writes, []);
+});
+
+test("checkout price comes from HARGA_RM, not a second hard-coded table", () => {
+  const route = readFileSync(new URL("../src/app/api/stripe/webhook/route.ts", import.meta.url), "utf8");
+  assert.match(route, /HARGA_RM\[/);
+  assert.doesNotMatch(route, /\? 690 : 69/);
+  assert.equal(HARGA_RM.max.tahunan, 690);
 });

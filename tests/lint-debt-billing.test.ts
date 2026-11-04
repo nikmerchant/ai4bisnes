@@ -683,6 +683,42 @@ test("simpanProfil retains delayed admin construction and owner-scoped profile u
   }]);
 });
 
+// next/navigation redirect() throws; inside try/catch it was swallowed and every Checkout showed the error page.
+async function startCheckout(stripeFailure = false) {
+  const loaded = loadModule("../src/app/actions.ts", {
+    "next/cache": { revalidatePath() {} },
+    "next/navigation": { redirect(path: string): never { throw new Error(`redirect:${path}`); } },
+    "next/headers": { cookies() { throw new Error("Unexpected cookies access"); } },
+    "@/lib/harga": {}, "@/lib/resend": {},
+    "@/lib/stripe": {
+      HARGA_STRIPE, dapatkanDomain: () => "https://ai4bisnes.com",
+      dapatkanStripe: () => ({ checkout: { sessions: { async create() {
+        if (stripeFailure) throw new Error("fixture stripe failure");
+        return { url: "https://checkout.stripe.com/c/pay/cs_fixture" };
+      } } } }),
+    },
+    "@/lib/supabase/server": { createClient: async () => ({ auth: {
+      getUser: async () => ({ data: { user: { id: "user-fixture", email: "sari@fixture.invalid" } } }),
+    } }) },
+    "@supabase/supabase-js": { createClient() { throw new Error("Unexpected admin client"); } },
+  }, {});
+  const form = new FormData();
+  form.set("tier", "pro");
+  form.set("period", "tahunan");
+  const action = loaded.exports.mulaBayar as (input: FormData) => Promise<void>;
+  const error = await action(form).then(() => null, (reason: Error) => reason);
+  loaded.assertOffline();
+  return error?.message;
+}
+
+test("mulaBayar sends a created Checkout session to Stripe", async () => {
+  assert.equal(await startCheckout(), "redirect:https://checkout.stripe.com/c/pay/cs_fixture");
+});
+
+test("mulaBayar shows the error page only when Stripe fails", async () => {
+  assert.equal(await startCheckout(true), "redirect:/naik-taraf?ralat=Gagal+mencipta+pembayaran.+Cuba+sebentar+lagi.");
+});
+
 // A4B-034: a portal plan switch must move tier, period and price with the Stripe price.
 test("pelanDariHarga maps every live price and rejects unknown ids", () => {
   for (const tier of ["pro", "max"] as const) {

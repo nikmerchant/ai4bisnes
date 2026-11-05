@@ -14,7 +14,7 @@ function Masa({ iso }: { iso: string }) {
   return <span className="tabular-nums">{Number.isNaN(masa.getTime()) ? "" : masa.toLocaleDateString("ms-MY", { day: "numeric", month: "short" })}</span>;
 }
 
-export function WorkspaceView({ businessName, tier, board }: { businessName: string; tier: string; board: WorkspaceBoardItem[] }) {
+export function WorkspaceView({ businessName, tier, board, nativeSocial }: { businessName: string; tier: string; board: WorkspaceBoardItem[]; nativeSocial: boolean }) {
   return (
     <div className="space-y-8">
       <header className="flex flex-wrap items-end justify-between gap-3">
@@ -32,7 +32,7 @@ export function WorkspaceView({ businessName, tier, board }: { businessName: str
         {LAUNCHERS.map((launcher) => (
           <Link
             key={launcher.nama}
-            href={launcher.href}
+            href={launcher.nama === "Tulis Post" ? (nativeSocial ? "/app/native-social-post" : "/app/wizard/social-post") : launcher.href}
             className="inline-flex min-h-11 items-center rounded-2xl bg-gradient-to-br from-violet-600 to-violet-800 p-5 text-white transition-transform hover:scale-[1.01] active:opacity-90"
           >
             <div>

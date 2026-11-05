@@ -98,7 +98,7 @@ export default async function Dashboard() {
     const board = await loadWorkspaceBoard(createAdminClient(), user.id);
     return (
       <main className="mx-auto w-full max-w-2xl px-6 py-10">
-        <WorkspaceView businessName={profil.business_name} tier={profil.tier} board={board} />
+        <WorkspaceView businessName={profil.business_name} tier={profil.tier} board={board} nativeSocial={currentSlice1Access(user).allowed} />
       </main>
     );
   }

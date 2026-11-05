@@ -1,3 +1,4 @@
+import { aiQuota, forViewer } from "@/lib/telemetry-view";
 import { NextRequest, NextResponse } from "next/server";
 import { currentVisualPackagingAccess } from "@/lib/visual-packaging/access";
 import { VisualPackagingBusyError, withVisualPackagingUserLock } from "@/lib/visual-packaging/concurrency.server";
@@ -26,7 +27,7 @@ async function checkUsage(admin: ReturnType<typeof createAdminClient>, userId: s
     admin.from("native_content_engine_artifacts").select("id", { count: "exact", head: true }).eq("user_id", userId).eq("artifact->>kind", "visual_packaging").eq("artifact->>revision", 1).gte("created_at", monthStart.toISOString()),
   ]);
   if (hourly.error || monthly.error) throw hourly.error ?? monthly.error;
-  return (hourly.count ?? 0) < MAX_PER_HOUR && (monthly.count ?? 0) < MAX_PER_MONTH;
+  return { allowed: (hourly.count ?? 0) < MAX_PER_HOUR && (monthly.count ?? 0) < MAX_PER_MONTH, monthly: monthly.count ?? 0, monthStart };
 }
 
 export async function POST(req: NextRequest) {
@@ -51,8 +52,10 @@ export async function POST(req: NextRequest) {
   try {
     return await withVisualPackagingUserLock(context.user.id, async () => {
       const existing = await findVisualPackagingByRequestId({ admin, userId: context.user.id, requestId });
-      if (existing) return json({ artifactId: existing.id, artifact: existing.artifact, sourceText: existing.sourceText, telemetry: existing.telemetry, warning: null, idempotentReplay: true });
-      if (!(await checkUsage(admin, context.user.id))) return json({ error: "Had Bina Visual Plan telah dicapai. Cuba semula selepas reset." }, 429);
+      const replayUsage = existing ? await checkUsage(admin, context.user.id).catch(() => null) : null;
+      if (existing) return json({ artifactId: existing.id, artifact: existing.artifact, sourceText: existing.sourceText, telemetry: forViewer(existing.telemetry, context.user), warning: null, quota: replayUsage ? aiQuota(replayUsage.monthly, MAX_PER_MONTH, replayUsage.monthStart) : null, idempotentReplay: true });
+      const usage = await checkUsage(admin, context.user.id);
+      if (!usage.allowed) return json({ error: "Had Bina Visual Plan telah dicapai. Cuba semula selepas reset." }, 429);
       const source = await loadContentCreateArtifact({ admin, userId: context.user.id, artifactId: request.sourceContentCreateId });
       if (!source || source.artifact.status !== "approved" || source.artifact.platform !== "tiktok") return json({ error: "Artifact sumber tidak ditemui." }, 404);
       let sourceSnapshot;
@@ -60,7 +63,7 @@ export async function POST(req: NextRequest) {
       catch { return json({ error: "Artifact sumber tidak ditemui." }, 404); }
       const generated = await generateVisualPackaging({ request, sourceSnapshot });
       const stored = await saveVisualPackagingArtifact({ admin, userId: context.user.id, requestId, request, artifact: generated.artifact, telemetry: generated.telemetry, sourceText: renderApprovedContentCreateSource(sourceSnapshot) });
-      return json({ artifactId: stored.id, artifact: stored.artifact, sourceText: stored.sourceText, telemetry: stored.telemetry, warning: generated.warning, idempotentReplay: false, candidateLimits: { hourly: MAX_PER_HOUR, monthly: MAX_PER_MONTH } });
+      return json({ artifactId: stored.id, artifact: stored.artifact, sourceText: stored.sourceText, telemetry: forViewer(stored.telemetry, context.user), warning: generated.warning, quota: aiQuota(usage.monthly + 1, MAX_PER_MONTH, usage.monthStart), idempotentReplay: false, candidateLimits: { hourly: MAX_PER_HOUR, monthly: MAX_PER_MONTH } });
     });
   } catch (error) {
     if (error instanceof VisualPackagingBusyError) return json({ error: "Satu generasi visual plan masih berjalan untuk akaun ini." }, 429);

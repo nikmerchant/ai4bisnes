@@ -1,3 +1,4 @@
+import { forViewer } from "@/lib/telemetry-view";
 import { NextRequest, NextResponse } from "next/server";
 import { isSameOriginRequest } from "@/lib/http/same-origin.server";
 import { currentSlice1Access } from "@/lib/native-social-post/access";
@@ -51,7 +52,7 @@ export async function PATCH(
     }
     const updated = await updateNativeSocialPost({ admin, userId: context.user.id, stored, artifact: edited });
     if (!updated) return json({ error: "Artifact tidak ditemui." }, 404);
-    return json({ artifactId: updated.id, artifact: updated.artifact, telemetry: updated.telemetry });
+    return json({ artifactId: updated.id, artifact: updated.artifact, telemetry: forViewer(updated.telemetry, context.user) });
   } catch (error) {
     console.error("native_social_post_update_failed", error instanceof Error ? error.message : "unknown");
     return json({ error: "Artifact tidak dapat disimpan." }, 500);

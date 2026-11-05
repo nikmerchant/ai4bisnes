@@ -1,5 +1,7 @@
 "use client";
 
+import type { AiQuota, ViewerTelemetry } from "@/lib/telemetry-view";
+import { AiQuotaNote } from "../ai-quota-note";
 import Link from "next/link";
 import { useMemo, useRef, useState } from "react";
 import {
@@ -16,14 +18,14 @@ export type ContentReviewInitial = {
   id: number;
   artifact: ContentReviewArtifactV1;
   request: ContentReviewRequestV1;
-  telemetry: GenerationTelemetry;
+  telemetry: ViewerTelemetry<GenerationTelemetry>;
   sourceText: string;
 } | null;
 
 type ReviewResponse = {
   artifactId?: number;
   artifact?: ContentReviewArtifactV1;
-  telemetry?: GenerationTelemetry;
+  telemetry?: ViewerTelemetry<GenerationTelemetry>; quota?: AiQuota;
   sourceText?: string;
   warning?: string | null;
   error?: string;
@@ -81,7 +83,8 @@ export function ContentReviewClient({
   const [sourceText, setSourceText] = useState(initial?.sourceText ?? seedRequest.sourceText);
   const [artifactId, setArtifactId] = useState<number | null>(initial?.id ?? null);
   const [artifact, setArtifact] = useState<ContentReviewArtifactV1 | null>(initial?.artifact ?? null);
-  const [telemetry, setTelemetry] = useState<GenerationTelemetry | null>(initial?.telemetry ?? null);
+  const [telemetry, setTelemetry] = useState<ViewerTelemetry<GenerationTelemetry> | null>(initial?.telemetry ?? null);
+  const [quota, setQuota] = useState<AiQuota | null>(null);
   const [warning, setWarning] = useState<string | null>(null);
   const [message, setMessage] = useState(initial ? "Artifact dibuka semula." : initialRequest ? "Social Post milik anda dimuat sebagai sumber canonical." : "");
   const [busy, setBusy] = useState(false);
@@ -127,7 +130,7 @@ export function ContentReviewClient({
       }
       setArtifactId(data.artifactId);
       setArtifact(data.artifact);
-      setTelemetry(data.telemetry);
+      setTelemetry(data.telemetry); if (data.quota) setQuota(data.quota);
       setSourceText(data.sourceText);
       setWarning(data.warning || null);
       setHasEdits(false);
@@ -272,7 +275,7 @@ export function ContentReviewClient({
 
       <aside className="space-y-4">
         <section className="rounded-2xl border border-zinc-200 p-4 dark:border-zinc-800"><h2 className="text-sm font-bold">Business Context digunakan</h2><dl className="mt-3 space-y-3">{contextFacts.map(([label, value]) => <div key={label}><dt className="text-[10px] font-bold uppercase tracking-wide text-neutral-400">{label}</dt><dd className="text-sm">{value}</dd></div>)}</dl></section>
-        {telemetry && <section className="rounded-2xl border border-zinc-200 p-4 text-xs dark:border-zinc-800"><h2 className="text-sm font-bold">Generation evidence</h2><dl className="mt-3 space-y-2 text-neutral-500"><div className="flex justify-between"><dt>Mode</dt><dd>{telemetry.mode}</dd></div><div className="flex justify-between"><dt>Model</dt><dd>{telemetry.model}</dd></div><div className="flex justify-between"><dt>Kos</dt><dd>{telemetry.estimatedCostRm === null ? "TBD" : `RM${telemetry.estimatedCostRm.toFixed(4)}`}</dd></div></dl></section>}
+        <AiQuotaNote quota={quota} />{telemetry?.detail && <section className="rounded-2xl border border-zinc-200 p-4 text-xs dark:border-zinc-800"><h2 className="text-sm font-bold">Generation evidence</h2><dl className="mt-3 space-y-2 text-neutral-500"><div className="flex justify-between"><dt>Mode</dt><dd>{telemetry.detail.mode}</dd></div><div className="flex justify-between"><dt>Model</dt><dd>{telemetry.detail.model}</dd></div><div className="flex justify-between"><dt>Kos</dt><dd>{telemetry.detail.estimatedCostRm === null ? "TBD" : `RM${telemetry.detail.estimatedCostRm.toFixed(4)}`}</dd></div></dl></section>}
         <p className="rounded-xl bg-zinc-100 p-3 text-xs text-neutral-500 dark:bg-zinc-900">Tiada auto-publish, schedule atau send. Review berhenti pada simpan, lulus dan salin.</p>
       </aside>
     </div>

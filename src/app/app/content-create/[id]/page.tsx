@@ -1,3 +1,4 @@
+import { forViewer } from "@/lib/telemetry-view";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { currentContentCreateAccess } from "@/lib/content-create/access";
@@ -29,7 +30,7 @@ export default async function ReopenContentCreatePage({ params }: { params: Prom
         <h1 className="mt-1 text-3xl font-bold tracking-tight">Buka semula Bina Content</h1>
         <p className="mt-2 text-sm text-neutral-500">Dicipta {new Date(stored.createdAt).toLocaleString("ms-MY")} · Status {stored.artifact.status.toUpperCase()} · Revision {stored.artifact.draft.revision}</p>
       </div>
-      <ContentCreateClient business={context.business} sourceOffer={stored.artifact.sourceOfferSnapshot} initial={{ id: stored.id, artifact: stored.artifact, request: stored.request, telemetry: stored.telemetry, sourceText: stored.sourceText }} />
+      <ContentCreateClient business={context.business} sourceOffer={stored.artifact.sourceOfferSnapshot} initial={{ id: stored.id, artifact: stored.artifact, request: stored.request, telemetry: forViewer(stored.telemetry, context.user), sourceText: stored.sourceText }} />
     </main>
   );
 }

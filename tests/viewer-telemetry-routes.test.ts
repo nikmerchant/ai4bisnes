@@ -34,27 +34,28 @@ function loadRoute(relativePath: string, modules: Record<string, unknown>) {
   return exports;
 }
 
-function countingAdmin(count: number) {
+function countingAdmin(count: number | "fail") {
   const chain: Record<string, unknown> = {};
   for (const method of ["from", "select", "eq", "gte"]) chain[method] = () => chain;
-  chain.then = (resolve: (value: unknown) => unknown) => Promise.resolve({ count, error: null }).then(resolve);
+  const result = count === "fail" ? { count: null, error: new Error("count unavailable") } : { count, error: null };
+  chain.then = (resolve: (value: unknown) => unknown) => Promise.resolve(result).then(resolve);
   return chain;
 }
 
-function common(userId: string) {
+function common(userId: string, count: number | "fail" = 4) {
   return {
     "next/server": { NextResponse: { json: (body: unknown, init?: ResponseInit) => Response.json(body, init) } },
     "@/lib/telemetry-view": telemetryView,
     "@/lib/ai-consent": { hasAiProviderConsent: () => true },
     "@/lib/http/same-origin.server": { isSameOriginRequest: () => true },
     "@/lib/native-social-post/http": { readBoundedJsonRequest: async () => ({ requestId: REQUEST_ID }) },
-    "@/lib/supabase/admin": { createAdminClient: () => countingAdmin(4) },
+    "@/lib/supabase/admin": { createAdminClient: () => countingAdmin(count) },
     context: { ok: true, user: { id: userId }, business: {}, tier: "max" },
   };
 }
 
-function socialPost(userId: string, replay = false) {
-  const base = common(userId);
+function socialPost(userId: string, replay = false, count: number | "fail" = 4) {
+  const base = common(userId, count);
   return loadRoute("../src/app/app/native-social-post/api/route.ts", {
     ...base,
     "@/lib/native-social-post/access": { currentSlice1Access: () => ({ allowed: true }) },
@@ -165,4 +166,16 @@ test("migration revokes owner SELECT on all four artifact tables (B1)", () => {
     assert.match(sql, new RegExp(`revoke select on table public\\.${table} from authenticated;`));
   }
   assert.doesNotMatch(sql, /^\s*grant\s/im);
+});
+
+// R1: a valid replay must not depend on the usage count; new generations still fail closed.
+test("replay succeeds without quota when the usage count fails", async (t) => {
+  const body = await asViewer(t, () => socialPost(CUSTOMER, true, "fail")(request()));
+  assert.equal(body.artifactId, 7);
+  assert.equal(body.quota, null);
+});
+
+test("a new generation still fails closed when the usage count fails", async () => {
+  const response = await socialPost(CUSTOMER, false, "fail")(request());
+  assert.equal(response.status, 500);
 });

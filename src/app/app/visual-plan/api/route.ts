@@ -51,9 +51,10 @@ export async function POST(req: NextRequest) {
   const admin = createAdminClient();
   try {
     return await withVisualPackagingUserLock(context.user.id, async () => {
-      const usage = await checkUsage(admin, context.user.id);
       const existing = await findVisualPackagingByRequestId({ admin, userId: context.user.id, requestId });
-      if (existing) return json({ artifactId: existing.id, artifact: existing.artifact, sourceText: existing.sourceText, telemetry: forViewer(existing.telemetry, context.user), warning: null, quota: aiQuota(usage.monthly, MAX_PER_MONTH, usage.monthStart), idempotentReplay: true });
+      const replayUsage = existing ? await checkUsage(admin, context.user.id).catch(() => null) : null;
+      if (existing) return json({ artifactId: existing.id, artifact: existing.artifact, sourceText: existing.sourceText, telemetry: forViewer(existing.telemetry, context.user), warning: null, quota: replayUsage ? aiQuota(replayUsage.monthly, MAX_PER_MONTH, replayUsage.monthStart) : null, idempotentReplay: true });
+      const usage = await checkUsage(admin, context.user.id);
       if (!usage.allowed) return json({ error: "Had Bina Visual Plan telah dicapai. Cuba semula selepas reset." }, 429);
       const source = await loadContentCreateArtifact({ admin, userId: context.user.id, artifactId: request.sourceContentCreateId });
       if (!source || source.artifact.status !== "approved" || source.artifact.platform !== "tiktok") return json({ error: "Artifact sumber tidak ditemui." }, 404);

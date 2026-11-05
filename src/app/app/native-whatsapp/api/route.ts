@@ -1,3 +1,4 @@
+import { aiQuota, forViewer } from "@/lib/telemetry-view";
 import { NextRequest, NextResponse } from "next/server";
 import { isSameOriginRequest } from "@/lib/http/same-origin.server";
 import { currentSlice3Access } from "@/lib/native-whatsapp/access";
@@ -79,7 +80,7 @@ export async function POST(req: NextRequest) {
     return await withNativeWhatsAppUserLock(context.user.id, async () => {
       const existing = await findNativeWhatsAppDraftByRequestId({ admin, userId: context.user.id, requestId });
       if (existing) {
-        return json({ artifactId: existing.id, artifact: existing.artifact, telemetry: existing.telemetry, warning: null, idempotentReplay: true });
+        return json({ artifactId: existing.id, artifact: existing.artifact, telemetry: forViewer(existing.telemetry, context.user), warning: null, idempotentReplay: true });
       }
       const usage = await checkUsage(admin, context.user.id);
       if (!usage.allowed) return json({ error: "Had Slice 3 telah dicapai. Cuba semula selepas reset." }, 429);
@@ -116,8 +117,9 @@ export async function POST(req: NextRequest) {
       return json({
         artifactId: stored.id,
         artifact: stored.artifact,
-        telemetry: stored.telemetry,
+        telemetry: forViewer(stored.telemetry, context.user),
         warning: generated.warning,
+        quota: aiQuota(usage.monthly + 1, MAX_PER_MONTH),
         idempotentReplay: false,
         candidateLimits: { hourly: MAX_PER_HOUR, monthly: MAX_PER_MONTH },
       });

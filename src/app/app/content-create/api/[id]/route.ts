@@ -1,3 +1,4 @@
+import { forViewer } from "@/lib/telemetry-view";
 import { NextRequest, NextResponse } from "next/server";
 import { currentContentCreateAccess } from "@/lib/content-create/access";
 import { loadContentCreateContext } from "@/lib/content-create/context.server";
@@ -50,7 +51,7 @@ export async function PATCH(req: NextRequest, ctx: { params: Promise<{ id: strin
       const revisionRequestId = String(body.requestId || "").trim();
       if (!REQUEST_ID_RE.test(revisionRequestId)) return json({ error: "Request ID revision tidak sah." }, 400);
       const replay = await findContentCreateByRequestId({ admin, userId: context.user.id, requestId: revisionRequestId });
-      if (replay && replay.id !== stored.id) return json({ artifactId: replay.id, artifact: replay.artifact, sourceText: replay.sourceText, telemetry: replay.telemetry, idempotentReplay: true });
+      if (replay && replay.id !== stored.id) return json({ artifactId: replay.id, artifact: replay.artifact, sourceText: replay.sourceText, telemetry: forViewer(replay.telemetry, context.user), idempotentReplay: true });
       if (replay) return json({ error: "Request ID revision telah digunakan." }, 400);
       let revision;
       try {
@@ -59,7 +60,7 @@ export async function PATCH(req: NextRequest, ctx: { params: Promise<{ id: strin
         return json({ error: error instanceof Error ? error.message : "Perubahan artifact tidak sah." }, 400);
       }
       const inserted = await saveContentCreateRevision({ admin, userId: context.user.id, requestId: revisionRequestId, stored, artifact: revision });
-      return json({ artifactId: inserted.id, artifact: inserted.artifact, sourceText: inserted.sourceText, telemetry: inserted.telemetry, idempotentReplay: false });
+      return json({ artifactId: inserted.id, artifact: inserted.artifact, sourceText: inserted.sourceText, telemetry: forViewer(inserted.telemetry, context.user), idempotentReplay: false });
     }
 
     if (action === "reopen") return json({ error: "Artifact ini sudah berstatus DRAF." }, 409);
@@ -72,7 +73,7 @@ export async function PATCH(req: NextRequest, ctx: { params: Promise<{ id: strin
     }
     const updated = await updateContentCreateArtifact({ admin, userId: context.user.id, stored, artifact: edited });
     if (!updated) return json({ error: "Artifact tidak ditemui." }, 404);
-    return json({ artifactId: updated.id, artifact: updated.artifact, sourceText: updated.sourceText, telemetry: updated.telemetry, idempotentReplay: false });
+    return json({ artifactId: updated.id, artifact: updated.artifact, sourceText: updated.sourceText, telemetry: forViewer(updated.telemetry, context.user), idempotentReplay: false });
   } catch (error) {
     console.error("content_create_update_failed", error instanceof Error ? error.message : "unknown");
     return json({ error: "Artifact tidak dapat disimpan." }, 500);

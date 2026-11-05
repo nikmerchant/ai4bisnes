@@ -1,11 +1,13 @@
 "use client";
 
+import type { AiQuota, ViewerTelemetry } from "@/lib/telemetry-view";
+import { AiQuotaNote } from "../ai-quota-note";
 import Link from "next/link";
 import { useRef, useState } from "react";
 import { renderVisualPackagingPlan, type ApprovedContentCreateSnapshotV1, type CoverDirectionV1, type GenerationTelemetry, type VisualPackagingArtifactV1, type VisualPackagingRequestV1 } from "@/lib/visual-packaging/domain";
 
-export type VisualPlanInitial = { id: number; artifact: VisualPackagingArtifactV1; request: VisualPackagingRequestV1; telemetry: GenerationTelemetry; sourceText: string } | null;
-type ApiResponse = { artifactId?: number; artifact?: VisualPackagingArtifactV1; telemetry?: GenerationTelemetry; warning?: string | null; error?: string };
+export type VisualPlanInitial = { id: number; artifact: VisualPackagingArtifactV1; request: VisualPackagingRequestV1; telemetry: ViewerTelemetry<GenerationTelemetry>; sourceText: string } | null;
+type ApiResponse = { artifactId?: number; artifact?: VisualPackagingArtifactV1; telemetry?: ViewerTelemetry<GenerationTelemetry>; quota?: AiQuota; warning?: string | null; error?: string };
 const inputClass = "min-h-11 rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm dark:border-zinc-700 dark:bg-zinc-900";
 const panelClass = "rounded-xl border border-zinc-200 bg-white p-4 dark:border-zinc-800 dark:bg-zinc-950";
 
@@ -33,7 +35,8 @@ export function VisualPlanClient({ source, initial, initialRequest }: { source: 
   const [request, setRequest] = useState(initial?.request ?? initialRequest ?? { entry: "from_content_create", sourceContentCreateId: source.id, format: "short_video", packagingIntent: "attention", productionConstraints: "" });
   const [artifactId, setArtifactId] = useState<number | null>(initial?.id ?? null);
   const [artifact, setArtifact] = useState<VisualPackagingArtifactV1 | null>(initial?.artifact ?? null);
-  const [telemetry, setTelemetry] = useState<GenerationTelemetry | null>(initial?.telemetry ?? null);
+  const [telemetry, setTelemetry] = useState<ViewerTelemetry<GenerationTelemetry> | null>(initial?.telemetry ?? null);
+  const [quota, setQuota] = useState<AiQuota | null>(null);
   const [warning, setWarning] = useState<string | null>(null);
   const [message, setMessage] = useState(initial ? "Visual plan dibuka." : "Approved TikTok Content milik anda dimuat sebagai sumber protected.");
   const [busy, setBusy] = useState(false);
@@ -73,7 +76,7 @@ export function VisualPlanClient({ source, initial, initialRequest }: { source: 
       const response = await fetch("/app/visual-plan/api", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ requestId: requestId.current, ...request }) });
       const data = await response.json() as ApiResponse;
       if (!response.ok || !data.artifact || !data.artifactId || !data.telemetry) throw new Error(data.error || "Visual plan tidak dapat dibina.");
-      setArtifactId(data.artifactId); setArtifact(data.artifact); setTelemetry(data.telemetry); setWarning(data.warning || null); setHasEdits(false); setMessage("Visual plan disimpan sebagai DRAF."); requestId.current = null;
+      setArtifactId(data.artifactId); setArtifact(data.artifact); setTelemetry(data.telemetry); if (data.quota) setQuota(data.quota); setWarning(data.warning || null); setHasEdits(false); setMessage("Visual plan disimpan sebagai DRAF."); requestId.current = null;
     } catch (error) { setMessage(error instanceof Error ? error.message : "Ralat tidak dijangka."); }
     finally { setBusy(false); }
   }
@@ -124,6 +127,6 @@ export function VisualPlanClient({ source, initial, initialRequest }: { source: 
         <div className="flex flex-wrap justify-end gap-2">{artifactId && <Link href={`/app/visual-plan/${artifactId}`} className="inline-flex min-h-11 items-center rounded-lg border border-zinc-300 px-4 py-2.5 text-sm font-medium dark:border-zinc-700">Pautan buka semula</Link>}<button type="button" disabled={busy} onClick={copyCurrent} className="min-h-11 rounded-lg border border-zinc-300 px-4 py-2.5 text-sm font-bold dark:border-zinc-700">Salin arahan</button>{artifact.status === "approved" ? <button type="button" disabled={busy} onClick={() => mutate("reopen")} className="min-h-11 rounded-lg border border-amber-400 px-4 py-2.5 text-sm font-bold text-amber-700 dark:text-amber-300">Buka semula sebagai Draf</button> : <><button type="button" disabled={busy} onClick={() => mutate("save")} className="min-h-11 rounded-lg border border-zinc-300 px-4 py-2.5 text-sm font-bold dark:border-zinc-700">Simpan Draf</button><button type="button" disabled={busy} onClick={() => mutate("approve", true)} className="min-h-11 rounded-lg bg-emerald-600 px-4 py-2.5 text-sm font-bold text-white hover:bg-emerald-700">Lulus & Salin</button></>}</div>
       </section>}
     </div>
-    <aside className="space-y-4"><section className="rounded-2xl border border-zinc-200 p-4 dark:border-zinc-800"><h2 className="text-sm font-bold">Approved Content protected</h2><dl className="mt-3 space-y-3 text-sm"><div><dt className="text-xs text-neutral-500">Audience</dt><dd>{source.audience}</dd></div><div><dt className="text-xs text-neutral-500">Tesis</dt><dd>{source.coreThesis}</dd></div><div><dt className="text-xs text-neutral-500">CTA</dt><dd>{source.callToAction}</dd></div></dl></section>{telemetry && <section className="rounded-2xl border border-zinc-200 p-4 text-xs dark:border-zinc-800"><h2 className="text-sm font-bold">Generation evidence</h2><dl className="mt-3 space-y-2 text-neutral-500"><div className="flex justify-between"><dt>Mode</dt><dd>{telemetry.mode}</dd></div><div className="flex justify-between"><dt>Model</dt><dd>{telemetry.model}</dd></div><div className="flex justify-between"><dt>Kos</dt><dd>{telemetry.estimatedCostRm === null ? "TBD" : `RM${telemetry.estimatedCostRm.toFixed(4)}`}</dd></div></dl></section>}<p className="rounded-xl bg-zinc-100 p-3 text-xs text-neutral-500 dark:bg-zinc-900">Tiada penjanaan media, upload, render, publish, schedule atau send. Output ialah production direction sahaja.</p></aside>
+    <aside className="space-y-4"><section className="rounded-2xl border border-zinc-200 p-4 dark:border-zinc-800"><h2 className="text-sm font-bold">Approved Content protected</h2><dl className="mt-3 space-y-3 text-sm"><div><dt className="text-xs text-neutral-500">Audience</dt><dd>{source.audience}</dd></div><div><dt className="text-xs text-neutral-500">Tesis</dt><dd>{source.coreThesis}</dd></div><div><dt className="text-xs text-neutral-500">CTA</dt><dd>{source.callToAction}</dd></div></dl></section><AiQuotaNote quota={quota} />{telemetry?.detail && <section className="rounded-2xl border border-zinc-200 p-4 text-xs dark:border-zinc-800"><h2 className="text-sm font-bold">Generation evidence</h2><dl className="mt-3 space-y-2 text-neutral-500"><div className="flex justify-between"><dt>Mode</dt><dd>{telemetry.detail.mode}</dd></div><div className="flex justify-between"><dt>Model</dt><dd>{telemetry.detail.model}</dd></div><div className="flex justify-between"><dt>Kos</dt><dd>{telemetry.detail.estimatedCostRm === null ? "TBD" : `RM${telemetry.detail.estimatedCostRm.toFixed(4)}`}</dd></div></dl></section>}<p className="rounded-xl bg-zinc-100 p-3 text-xs text-neutral-500 dark:bg-zinc-900">Tiada penjanaan media, upload, render, publish, schedule atau send. Output ialah production direction sahaja.</p></aside>
   </div>;
 }

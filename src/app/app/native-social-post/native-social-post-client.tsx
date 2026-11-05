@@ -1,5 +1,7 @@
 "use client";
 
+import type { AiQuota, ViewerTelemetry } from "@/lib/telemetry-view";
+import { AiQuotaNote } from "../ai-quota-note";
 import { AiConsentNotice } from "../ai-consent/ai-consent-notice";
 import Link from "next/link";
 import { useMemo, useRef, useState } from "react";
@@ -15,13 +17,13 @@ export type NativeSocialPostInitial = {
   id: number;
   artifact: SocialPostArtifact;
   request: NativeSocialPostRequest;
-  telemetry: GenerationTelemetry;
+  telemetry: ViewerTelemetry<GenerationTelemetry>;
 } | null;
 
 type GenerateResponse = {
   artifactId?: number;
   artifact?: SocialPostArtifact;
-  telemetry?: GenerationTelemetry;
+  telemetry?: ViewerTelemetry<GenerationTelemetry>; quota?: AiQuota;
   warning?: string | null;
   consentRequired?: boolean;
   error?: string;
@@ -68,7 +70,8 @@ export function NativeSocialPostClient({
   });
   const [artifactId, setArtifactId] = useState<number | null>(initial?.id ?? null);
   const [artifact, setArtifact] = useState<SocialPostArtifact | null>(initial?.artifact ?? null);
-  const [telemetry, setTelemetry] = useState<GenerationTelemetry | null>(initial?.telemetry ?? null);
+  const [telemetry, setTelemetry] = useState<ViewerTelemetry<GenerationTelemetry> | null>(initial?.telemetry ?? null);
+  const [quota, setQuota] = useState<AiQuota | null>(null);
   const [warning, setWarning] = useState<string | null>(null);
   const [consentRequired, setConsentRequired] = useState(false);
   const [message, setMessage] = useState(initial ? "Artifact dibuka semula." : "");
@@ -104,7 +107,7 @@ export function NativeSocialPostClient({
       }
       setArtifactId(data.artifactId);
       setArtifact(data.artifact);
-      setTelemetry(data.telemetry);
+      setTelemetry(data.telemetry); if (data.quota) setQuota(data.quota);
       setWarning(data.warning || null);
       setConsentRequired(Boolean(data.consentRequired));
       setMessage("Social Post dijana dan disimpan sebagai DRAF.");
@@ -189,7 +192,7 @@ export function NativeSocialPostClient({
             <textarea className={inputClass} rows={2} maxLength={300} value={request.extraInstruction} onChange={(event) => setField("extraInstruction", event.target.value)} placeholder="Contoh: Ringkas, sesuai untuk pekerja pejabat" />
           </label>
           <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-            <p className="text-xs text-neutral-500">Candidate cap: 20/jam · 100/bulan · tiada post dihantar</p>
+            <p className="text-xs text-neutral-500">100 penjanaan AI sebulan · tiada post dihantar</p>
             <button disabled={busy} className="min-h-11 rounded-lg bg-violet-600 px-5 py-2.5 font-bold text-white transition-colors hover:bg-violet-700 disabled:opacity-50">
               {busy ? "Menyiapkan…" : "Jana Social Post"}
             </button>
@@ -210,7 +213,7 @@ export function NativeSocialPostClient({
         {artifact && <section className="space-y-4 rounded-2xl border-2 border-violet-300 bg-violet-50/40 p-5 dark:border-violet-900 dark:bg-violet-950/20">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div><p className="text-xs font-bold uppercase text-violet-600">Structured Artifact</p><h2 className="text-xl font-bold">Social Post · {artifact.platform}</h2></div>
-            <div className="flex flex-wrap gap-2">{telemetry?.mode === "provider" && <span className="rounded-full bg-violet-100 px-3 py-1 text-xs font-bold text-violet-700 dark:bg-violet-900 dark:text-violet-200">Dijana oleh AI</span>}<span className={`rounded-full px-3 py-1 text-xs font-bold ${artifact.status === "approved" ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-900 dark:text-emerald-200" : "bg-amber-100 text-amber-700 dark:bg-amber-900 dark:text-amber-200"}`}>{artifact.status === "approved" ? "DILULUSKAN" : "DRAF"}</span></div>
+            <div className="flex flex-wrap gap-2">{telemetry?.aiGenerated && <span className="rounded-full bg-violet-100 px-3 py-1 text-xs font-bold text-violet-700 dark:bg-violet-900 dark:text-violet-200">Dijana oleh AI</span>}<span className={`rounded-full px-3 py-1 text-xs font-bold ${artifact.status === "approved" ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-900 dark:text-emerald-200" : "bg-amber-100 text-amber-700 dark:bg-amber-900 dark:text-amber-200"}`}>{artifact.status === "approved" ? "DILULUSKAN" : "DRAF"}</span></div>
           </div>
           <label className="grid gap-1 text-sm font-bold">Hook
             <textarea className={inputClass} rows={2} maxLength={500} value={artifact.hook} onChange={(event) => updateArtifact("hook", event.target.value)} />
@@ -241,9 +244,9 @@ export function NativeSocialPostClient({
           <h2 className="text-sm font-bold">Business Context digunakan</h2>
           <dl className="mt-3 space-y-3">{contextFacts.map(([label, value]) => <div key={label}><dt className="text-[10px] font-bold uppercase tracking-wide text-neutral-400">{label}</dt><dd className="text-sm">{value}</dd></div>)}</dl>
         </section>
-        {telemetry && <section className="rounded-2xl border border-zinc-200 p-4 text-xs dark:border-zinc-800">
+        <AiQuotaNote quota={quota} />{telemetry?.detail && <section className="rounded-2xl border border-zinc-200 p-4 text-xs dark:border-zinc-800">
           <h2 className="text-sm font-bold">Generation evidence</h2>
-          <dl className="mt-3 space-y-2 text-neutral-500"><div className="flex justify-between"><dt>Mode</dt><dd>{telemetry.mode}</dd></div><div className="flex justify-between"><dt>Model</dt><dd>{telemetry.model}</dd></div><div className="flex justify-between"><dt>Latency</dt><dd>{telemetry.latencyMs}ms</dd></div><div className="flex justify-between"><dt>Kos</dt><dd>{telemetry.estimatedCostRm === null ? "TBD" : `RM${telemetry.estimatedCostRm.toFixed(4)}`}</dd></div></dl>
+          <dl className="mt-3 space-y-2 text-neutral-500"><div className="flex justify-between"><dt>Mode</dt><dd>{telemetry.detail.mode}</dd></div><div className="flex justify-between"><dt>Model</dt><dd>{telemetry.detail.model}</dd></div><div className="flex justify-between"><dt>Latency</dt><dd>{telemetry.detail.latencyMs}ms</dd></div><div className="flex justify-between"><dt>Kos</dt><dd>{telemetry.detail.estimatedCostRm === null ? "TBD" : `RM${telemetry.detail.estimatedCostRm.toFixed(4)}`}</dd></div></dl>
         </section>}
         <p className="rounded-xl bg-zinc-100 p-3 text-xs text-neutral-500 dark:bg-zinc-900">Slice 1 lokal/staging sahaja. Tiada publish, scheduling atau WhatsApp send.</p>
       </aside>

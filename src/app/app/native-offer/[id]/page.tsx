@@ -1,3 +1,4 @@
+import { forViewer } from "@/lib/telemetry-view";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { currentSlice2Access } from "@/lib/native-offer/access";
@@ -22,7 +23,7 @@ export default async function ReopenNativeOfferPage({ params }: { params: Promis
     <main className="mx-auto w-full max-w-6xl px-5 py-8 sm:px-6 sm:py-10">
       <nav className="mb-5 flex flex-wrap items-center gap-4 text-sm"><Link href="/app/native-offer" className="text-neutral-500 underline">← Tawaran baharu</Link><Link href="/app" className="text-neutral-500 underline">Hari Ini</Link></nav>
       <div className="mb-7"><p className="text-xs font-bold uppercase tracking-wide text-violet-600">Artifact #{stored.id}</p><h1 className="mt-1 text-3xl font-bold tracking-tight">Buka semula Tawaran</h1><p className="mt-2 text-sm text-neutral-500">Dicipta {new Date(stored.createdAt).toLocaleString("ms-MY")} · Status {stored.artifact.status.toUpperCase()}</p></div>
-      <NativeOfferClient business={context.business} initial={{ id: stored.id, artifact: stored.artifact, request: stored.request, telemetry: stored.telemetry }} />
+      <NativeOfferClient business={context.business} initial={{ id: stored.id, artifact: stored.artifact, request: stored.request, telemetry: forViewer(stored.telemetry, context.user) }} />
     </main>
   );
 }

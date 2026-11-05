@@ -1,5 +1,7 @@
 "use client";
 
+import type { AiQuota, ViewerTelemetry } from "@/lib/telemetry-view";
+import { AiQuotaNote } from "../ai-quota-note";
 import Link from "next/link";
 import { useRef, useState } from "react";
 import {
@@ -14,7 +16,7 @@ export type NativeWhatsAppInitial = {
   id: number;
   artifact: WhatsAppDraftArtifact;
   request: NativeWhatsAppRequest;
-  telemetry: GenerationTelemetry;
+  telemetry: ViewerTelemetry<GenerationTelemetry>;
 } | null;
 
 export type ApprovedOfferOption = { id: number; headline: string };
@@ -22,7 +24,7 @@ export type ApprovedOfferOption = { id: number; headline: string };
 type GenerateResponse = {
   artifactId?: number;
   artifact?: WhatsAppDraftArtifact;
-  telemetry?: GenerationTelemetry;
+  telemetry?: ViewerTelemetry<GenerationTelemetry>; quota?: AiQuota;
   warning?: string | null;
   error?: string;
 };
@@ -81,7 +83,8 @@ export function NativeWhatsAppClient({
   });
   const [artifactId, setArtifactId] = useState<number | null>(initial?.id ?? null);
   const [artifact, setArtifact] = useState<WhatsAppDraftArtifact | null>(initial?.artifact ?? null);
-  const [telemetry, setTelemetry] = useState<GenerationTelemetry | null>(initial?.telemetry ?? null);
+  const [telemetry, setTelemetry] = useState<ViewerTelemetry<GenerationTelemetry> | null>(initial?.telemetry ?? null);
+  const [quota, setQuota] = useState<AiQuota | null>(null);
   const [warning, setWarning] = useState<string | null>(null);
   const [message, setMessage] = useState(initial ? "Artifact dibuka semula." : "");
   const [busy, setBusy] = useState(false);
@@ -117,7 +120,7 @@ export function NativeWhatsAppClient({
       }
       setArtifactId(data.artifactId);
       setArtifact(data.artifact);
-      setTelemetry(data.telemetry);
+      setTelemetry(data.telemetry); if (data.quota) setQuota(data.quota);
       setWarning(data.warning || null);
       setMessage("Draf balasan dijana dan disimpan sebagai DRAF. Semak, luluskan, kemudian salin ke WhatsApp anda.");
       requestIdRef.current = null;
@@ -266,9 +269,9 @@ export function NativeWhatsAppClient({
             ))}
           </dl>
         </section>
-        {telemetry && <section className="rounded-2xl border border-zinc-200 p-4 text-xs dark:border-zinc-800">
+        <AiQuotaNote quota={quota} />{telemetry?.detail && <section className="rounded-2xl border border-zinc-200 p-4 text-xs dark:border-zinc-800">
           <h2 className="text-sm font-bold">Generation evidence</h2>
-          <dl className="mt-3 space-y-2 text-neutral-500"><div className="flex justify-between"><dt>Mode</dt><dd>{telemetry.mode}</dd></div><div className="flex justify-between"><dt>Model</dt><dd>{telemetry.model}</dd></div><div className="flex justify-between"><dt>Latency</dt><dd>{telemetry.latencyMs}ms</dd></div><div className="flex justify-between"><dt>Kos</dt><dd>{telemetry.estimatedCostRm === null ? "TBD" : `RM${telemetry.estimatedCostRm.toFixed(4)}`}</dd></div></dl>
+          <dl className="mt-3 space-y-2 text-neutral-500"><div className="flex justify-between"><dt>Mode</dt><dd>{telemetry.detail.mode}</dd></div><div className="flex justify-between"><dt>Model</dt><dd>{telemetry.detail.model}</dd></div><div className="flex justify-between"><dt>Latency</dt><dd>{telemetry.detail.latencyMs}ms</dd></div><div className="flex justify-between"><dt>Kos</dt><dd>{telemetry.detail.estimatedCostRm === null ? "TBD" : `RM${telemetry.detail.estimatedCostRm.toFixed(4)}`}</dd></div></dl>
         </section>}
         <p className="rounded-xl bg-zinc-100 p-3 text-xs text-neutral-500 dark:bg-zinc-900">Draf sahaja — penghantaran WhatsApp dibuat oleh anda secara manual. Tiada mesej dihantar secara automatik.</p>
       </aside>

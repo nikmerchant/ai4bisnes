@@ -1,3 +1,4 @@
+import { aiQuota, forViewer } from "@/lib/telemetry-view";
 import { NextRequest, NextResponse } from "next/server";
 import { hasAiProviderConsent } from "@/lib/ai-consent";
 import { isSameOriginRequest } from "@/lib/http/same-origin.server";
@@ -79,7 +80,7 @@ export async function POST(req: NextRequest) {
     return await withNativeSocialPostUserLock(context.user.id, async () => {
       const existing = await findNativeSocialPostByRequestId({ admin, userId: context.user.id, requestId });
       if (existing) {
-        return json({ artifactId: existing.id, artifact: existing.artifact, telemetry: existing.telemetry, warning: null, idempotentReplay: true });
+        return json({ artifactId: existing.id, artifact: existing.artifact, telemetry: forViewer(existing.telemetry, context.user), warning: null, idempotentReplay: true });
       }
       const usage = await checkUsage(admin, context.user.id);
       if (!usage.allowed) return json({ error: "Had candidate Slice 1 telah dicapai. Cuba semula selepas reset." }, 429);
@@ -96,9 +97,10 @@ export async function POST(req: NextRequest) {
       return json({
         artifactId: stored.id,
         artifact: stored.artifact,
-        telemetry: stored.telemetry,
+        telemetry: forViewer(stored.telemetry, context.user),
         warning: generated.warning,
         consentRequired: generated.consentRequired ?? false,
+        quota: aiQuota(usage.monthly + 1, MAX_PER_MONTH),
         idempotentReplay: false,
         candidateLimits: { hourly: MAX_PER_HOUR, monthly: MAX_PER_MONTH },
       });

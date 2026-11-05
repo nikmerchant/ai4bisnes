@@ -1,3 +1,4 @@
+import { forViewer } from "@/lib/telemetry-view";
 import { NextRequest, NextResponse } from "next/server";
 import { currentContentReviewAccess } from "@/lib/content-review/access";
 import { loadContentReviewContext } from "@/lib/content-review/context.server";
@@ -55,7 +56,7 @@ export async function PATCH(req: NextRequest, ctx: { params: Promise<{ id: strin
     if (stored.artifact.status === "approved") {
       if (!REQUEST_ID_RE.test(revisionRequestId)) return json({ error: "Request ID revision tidak sah." }, 400);
       const replay = await findContentReviewByRequestId({ admin, userId: context.user.id, requestId: revisionRequestId });
-      if (replay && replay.id !== stored.id) return json({ artifactId: replay.id, artifact: replay.artifact, sourceText: replay.sourceText, telemetry: replay.telemetry, idempotentReplay: true });
+      if (replay && replay.id !== stored.id) return json({ artifactId: replay.id, artifact: replay.artifact, sourceText: replay.sourceText, telemetry: forViewer(replay.telemetry, context.user), idempotentReplay: true });
       if (replay) return json({ error: "Request ID revision telah digunakan." }, 400);
     }
     let edited;
@@ -69,7 +70,7 @@ export async function PATCH(req: NextRequest, ctx: { params: Promise<{ id: strin
       ? await saveContentReviewRevision({ admin, userId: context.user.id, requestId: revisionRequestId, stored, artifact: edited })
       : await updateContentReviewArtifact({ admin, userId: context.user.id, stored, artifact: edited });
     if (!updated) return json({ error: "Artifact tidak ditemui." }, 404);
-    return json({ artifactId: updated.id, artifact: updated.artifact, sourceText: updated.sourceText, telemetry: updated.telemetry, idempotentReplay: false });
+    return json({ artifactId: updated.id, artifact: updated.artifact, sourceText: updated.sourceText, telemetry: forViewer(updated.telemetry, context.user), idempotentReplay: false });
   } catch (error) {
     console.error("content_review_update_failed", error instanceof Error ? error.message : "unknown");
     return json({ error: "Artifact tidak dapat disimpan." }, 500);

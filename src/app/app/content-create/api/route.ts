@@ -1,3 +1,4 @@
+import { aiQuota, forViewer } from "@/lib/telemetry-view";
 import { NextRequest, NextResponse } from "next/server";
 import { currentContentCreateAccess } from "@/lib/content-create/access";
 import { ContentCreateBusyError, withContentCreateUserLock } from "@/lib/content-create/concurrency.server";
@@ -34,7 +35,7 @@ async function checkUsage(admin: ReturnType<typeof createAdminClient>, userId: s
       .eq("user_id", userId).eq("artifact->>kind", "content_create").eq("artifact->draft->>revision", 1).gte("created_at", monthStart.toISOString()),
   ]);
   if (hourly.error || monthly.error) throw hourly.error ?? monthly.error;
-  return (hourly.count ?? 0) < MAX_PER_HOUR && (monthly.count ?? 0) < MAX_PER_MONTH;
+  return { allowed: (hourly.count ?? 0) < MAX_PER_HOUR && (monthly.count ?? 0) < MAX_PER_MONTH, monthly: monthly.count ?? 0 };
 }
 
 export async function POST(req: NextRequest) {
@@ -72,8 +73,9 @@ export async function POST(req: NextRequest) {
   try {
     return await withContentCreateUserLock(context.user.id, async () => {
       const existing = await findContentCreateByRequestId({ admin, userId: context.user.id, requestId });
-      if (existing) return json({ artifactId: existing.id, artifact: existing.artifact, sourceText: existing.sourceText, telemetry: existing.telemetry, warning: null, idempotentReplay: true });
-      if (!(await checkUsage(admin, context.user.id))) return json({ error: "Had Bina Content telah dicapai. Cuba semula selepas reset." }, 429);
+      if (existing) return json({ artifactId: existing.id, artifact: existing.artifact, sourceText: existing.sourceText, telemetry: forViewer(existing.telemetry, context.user), warning: null, idempotentReplay: true });
+      const usage = await checkUsage(admin, context.user.id);
+      if (!usage.allowed) return json({ error: "Had Bina Content telah dicapai. Cuba semula selepas reset." }, 429);
 
       const sourceOffer = await loadNativeOffer({ admin, userId: context.user.id, artifactId: request.sourceOfferId });
       if (!sourceOffer || sourceOffer.artifact.status !== "approved") return json({ error: "Artifact sumber tidak ditemui." }, 404);
@@ -84,8 +86,9 @@ export async function POST(req: NextRequest) {
         artifactId: stored.id,
         artifact: stored.artifact,
         sourceText: stored.sourceText,
-        telemetry: stored.telemetry,
+        telemetry: forViewer(stored.telemetry, context.user),
         warning: generated.warning,
+        quota: aiQuota(usage.monthly + 1, MAX_PER_MONTH),
         idempotentReplay: false,
         candidateLimits: { hourly: MAX_PER_HOUR, monthly: MAX_PER_MONTH },
       });
